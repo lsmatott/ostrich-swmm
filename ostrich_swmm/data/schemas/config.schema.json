@@ -1,0 +1,88 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "OSTRICH-SWMM Config",
+    "description": "A configuration for the OSTRICH-SWMM package.",
+    "type": "object",
+    "properties": {
+        "binary_output_path": {
+            "type": "string"
+        },
+        "summary_dir": {
+            "type": "string"
+        },
+        "extract": {
+            "type": "object",
+            "properties": {
+                "steps": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/extract_step"
+                    }
+                }
+            },
+            "required": [
+                "steps"
+            ]
+        }
+    },
+    "definitions": {
+        "extract_step": {
+            "type": "object",
+            "oneOf": [
+                {
+                    "$ref": "#/definitions/node_extract_step"
+                }
+            ],
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "type": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "type"
+            ]
+        },
+        "node_extract_step": {
+            "type": "object",
+            "properties": {
+                "event_threshold_flow_rate": {
+                    "type": "number"
+                },
+                "type": {
+                    "type": "string",
+                    "pattern": "^node$"
+                },
+                "nodes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "output_path": {
+                    "type": "string"
+                },
+                "statistics": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/node_extract_statistic"
+                    }
+                }
+            },
+            "required": [
+                "statistics",
+                "nodes",
+                "output_path"
+            ]
+        },
+        "node_extract_statistic": {
+            "enum": [
+                "node_name",
+                "num_flow_events",
+                "total_flow_volume"
+            ]
+        }
+    }
+}

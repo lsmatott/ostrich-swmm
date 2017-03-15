@@ -1,0 +1,21 @@
+{
+    "binary_output_path": "swmm.out",
+    "summary_dir": ".",
+    "extract": {
+        "steps": [
+            {
+                "type": "node",
+                "enabled": true,
+                "output_path": "swmm_nodes.csv",
+                "statistics": [
+                    "node_name",
+                    "num_flow_events",
+                    "total_flow_volume"
+                ],
+                "nodes": [
+                ],
+                "event_threshold_flow_rate": 0
+            }
+        ]
+    }
+}

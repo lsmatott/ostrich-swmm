@@ -1,0 +1,4 @@
+-r requirements.txt
+
+flake8>=3.3.0,<4
+flake8-docstrings>=1.0.3,<2
