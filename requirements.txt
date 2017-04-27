@@ -14,6 +14,7 @@ matplotlib==2.0.0
 numpy==1.12.1
 packaging==16.8
 pandas==0.19.2
+Pint==0.8
 Pygments==2.2.0
 pyparsing==2.2.0
 python-dateutil==2.6.0
@@ -24,6 +25,7 @@ rst2ansi==0.1.5
 ruamel.ordereddict==0.4.9
 ruamel.yaml==0.14.8
 scipy==0.19.0
+Shapely==1.5.17.post1
 six==1.10.0
 snowballstemmer==1.2.1
 Sphinx==1.5.5

@@ -1,0 +1,35 @@
+{
+    "lids": [
+        {
+            "location": {
+                "map": {
+                    "x": 1082700,
+                    "y": 1077400
+                }
+            },
+            "type": "RB1",
+            "number": 1,
+            "area": 48,
+            "width": 0,
+            "initSat": 0,
+            "fromImp": 0,
+            "toPerv": 1
+        },
+        {
+            "location": {
+                "subcatchment": "126#1"
+            },
+            "type": "RB2",
+            "number": 1,
+            "area": 36,
+            "width": 0,
+            "initSat": 0,
+            "fromImp": 0,
+            "toPerv": 1,
+            "rptFile": "rb2.rpt",
+            "drainTo": {
+                "node": "102"
+            }
+        }
+    ]
+}
