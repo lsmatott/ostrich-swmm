@@ -7,6 +7,18 @@
         "binary_output_path": {
             "type": "string"
         },
+        "input_template_path": {
+            "type": "string",
+            "minLength": 1
+        },
+        "input_parameters_path": {
+            "type": "string",
+            "minLength": 1
+        },
+        "input_path": {
+            "type": "string",
+            "minLength": 1
+        },
         "summary_dir": {
             "type": "string"
         },

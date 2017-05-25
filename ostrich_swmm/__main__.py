@@ -8,6 +8,7 @@ import sys
 
 from . import config as cfg
 from . import extract
+from . import inject
 from .version import __version__
 
 
@@ -28,7 +29,7 @@ def load_config_with_args(args):
     configuration file.
 
     Args:
-        args (argparse.Namespace): Command-line arguments to apply.
+        args (dict): Command-line arguments to apply.
 
     Returns:
         dict: The configuration options for the program.
@@ -39,7 +40,7 @@ def load_config_with_args(args):
         UsageException: The configuration file was not found.
         ValueError: The config file was not valid JSON.
     """
-    config_path = args.config
+    config_path = args['config']
     if not os.path.isfile(config_path):
         raise UsageException((
             "Config file not found at \"{0}\". "
@@ -49,10 +50,16 @@ def load_config_with_args(args):
 
     config = cfg.load_config(config_path, False)
 
-    if args.binary_output_path is not None:
-        config['binary_output_path'] = args.binary_output_path
-    if args.summary_dir is not None:
-        config['summary_dir'] = args.summary_dir
+    if args.get('binary_output_path') is not None:
+        config['binary_output_path'] = args['binary_output_path']
+    if args.get('summary_dir') is not None:
+        config['summary_dir'] = args['summary_dir']
+    if args.get('output') is not None:
+        config['input_path'] = args['output']
+    if args.get('input_template') is not None:
+        config['input_template_path'] = args['input_template']
+    if args.get('parameters_file') is not None:
+        config['input_parameters_path'] = args['parameters_file']
 
     cfg.validate_config(config)
 
@@ -63,7 +70,7 @@ def extract_cmd(args):
     """Extract data from a SWMM binary output file.
 
     Args:
-        args (argparse.Namespace): Command-line arguments to use.
+        args (dict): Command-line arguments to use.
 
     Returns:
         int: An exit code for the script.
@@ -76,6 +83,27 @@ def extract_cmd(args):
     """
     config = load_config_with_args(args)
     extract.perform_extraction_steps(config)
+
+    return 0
+
+
+def inject_cmd(args):
+    """Inject OSTRICH parameters into SWMM input before a run.
+
+    Args:
+        args (dict): Command-line arguments to use.
+
+    Returns:
+        int: An exit code for the script.
+
+    Raises:
+        ConfigException: The configuration could not be validated.
+        IOError: The config file was not found or was not readable.
+        UsageException: The configuration file was not found.
+        ValueError: The config file was not valid JSON.
+    """
+    config = load_config_with_args(args)
+    inject.perform_injection(config)
 
     return 0
 
@@ -137,6 +165,33 @@ def main(argv=None):
             help='The directory for SWMM summary data.',
         )
 
+        # Create a parent parser for subcommands using SWMM input templates.
+        swmm_input_template_parser = argparse.ArgumentParser(add_help=False)
+        swmm_input_template_parser.add_argument(
+            '-i',
+            '--input-template',
+            default=None,
+            help='The input file template to use for a SWMM run.',
+        )
+
+        # Create a parent parser for subcommands using OSTRICH parameter files.
+        ostrich_parameters_parser = argparse.ArgumentParser(add_help=False)
+        ostrich_parameters_parser.add_argument(
+            '-p',
+            '--parameters-file',
+            default=None,
+            help='The file containing parameters set by OSTRICH.',
+        )
+
+        # Create a parent parser for subcommands creating new SWMM input files.
+        new_swmm_input_parser = argparse.ArgumentParser(add_help=False)
+        new_swmm_input_parser.add_argument(
+            '-o',
+            '--output',
+            default=None,
+            help='The path to store a new SWMM input file.',
+        )
+
         # Set up parsing for the extraction sub-command.
         subparsers.add_parser(
             'extract',
@@ -148,14 +203,27 @@ def main(argv=None):
             ],
         )
 
+        # Set up parsing for the injection sub-command.
+        subparsers.add_parser(
+            'inject',
+            help='Inject OSTRICH parameters into SWMM input before a run.',
+            parents=[
+                config_parser,
+                ostrich_parameters_parser,
+                swmm_input_template_parser,
+                new_swmm_input_parser,
+            ],
+        )
+
         # Parse arguments.
-        args = parser.parse_args(argv[1:])
+        args = vars(parser.parse_args(argv[1:]))
 
         # Call selected subcommand.
         subcommands = {
             'extract': extract_cmd,
+            'inject': inject_cmd,
         }
-        return subcommands[args.subcommand](args)
+        return subcommands[args['subcommand']](args)
     except (UsageException, cfg.ConfigException) as e:
         print(e.msg, file=sys.stderr)
         print('For help, use --help or [sub-command] --help.', file=sys.stderr)

@@ -95,13 +95,15 @@ def perform_extraction_steps(config):
         config: The config to get extraction steps from.
 
     Raises:
-        ConfigException: The configuration is missing required sections.
+        ConfigException: The configuration is invalid.
     """
     cfg.validate_required_sections(config, [
         'binary_output_path',
         'summary_dir',
         'extract',
     ], 'extract')
+    cfg.validate_file_exists(config, 'binary_output_path')
+    cfg.validate_dir_exists(config, 'summary_dir')
 
     binary_output = swmmtoolbox.SwmmExtract(
         config['binary_output_path']

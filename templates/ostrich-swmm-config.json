@@ -1,5 +1,8 @@
 {
     "binary_output_path": "swmm.out",
+    "input_template_path": "swmm.template.inp",
+    "input_parameters_path": "swmm_input_parameters.json",
+    "input_path": "swmm.inp",
     "summary_dir": ".",
     "extract": {
         "steps": [
