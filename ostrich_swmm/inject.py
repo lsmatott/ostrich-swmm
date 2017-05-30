@@ -277,6 +277,9 @@ def inject_parameters_into_input(input_parameters, input_template):
                     lid_num_units,
                 ),
             })
+
+            # Set the LID subcatchment to the child subcatchment.
+            lid['location']['subcatchment'] = lid_sc_name
         else:
             logging.warning(
                 (
