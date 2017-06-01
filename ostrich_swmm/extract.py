@@ -38,6 +38,7 @@ def perform_node_extraction(
     # Set up arrays to hold calculations for nodes.
     num_nodes = len(node_names)
     nodes_flow_previously_active = np.zeros(num_nodes, np.bool_)
+    nodes_flow_active_intervals = np.zeros(num_nodes, np.uint64)
     nodes_total_flow_events = np.zeros(num_nodes, np.uint64)
     nodes_total_flow_rate_sums = np.zeros(num_nodes, np.float64)
 
@@ -57,6 +58,7 @@ def perform_node_extraction(
         nodes_flow_currently_active = (
             nodes_current_values > event_threshold_flow_rate
         )
+        nodes_flow_active_intervals[nodes_flow_currently_active] += 1
         nodes_flow_newly_active = np.logical_and(
             nodes_flow_currently_active,
             np.logical_not(nodes_flow_previously_active)
@@ -70,6 +72,9 @@ def perform_node_extraction(
     nodes_total_flow_volumes = (
         nodes_total_flow_rate_sums * report_interval_seconds
     )
+    nodes_total_flow_durations = (
+        nodes_flow_active_intervals * report_interval_seconds
+    )
 
     # Write the requested statistics out to the given file as CSV.
     csv_writer = csv.writer(node_output_file)
@@ -80,6 +85,7 @@ def perform_node_extraction(
         'node_name': node_names,
         'num_flow_events': nodes_total_flow_events,
         'total_flow_volume': nodes_total_flow_volumes,
+        'total_flow_duration': nodes_total_flow_durations,
     }
 
     for statistic in statistics:
