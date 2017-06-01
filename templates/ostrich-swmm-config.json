@@ -13,7 +13,8 @@
                 "statistics": [
                     "node_name",
                     "num_flow_events",
-                    "total_flow_volume"
+                    "total_flow_volume",
+                    "total_flow_duration"
                 ],
                 "nodes": [
                 ],
