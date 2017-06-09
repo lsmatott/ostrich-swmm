@@ -3,7 +3,9 @@
     "input_template_path": "swmm.template.inp",
     "input_parameters_path": "swmm_input_parameters.json",
     "input_path": "swmm.inp",
+    "report_output_path": "swmm.rpt",
     "summary_dir": ".",
+    "swmm_path": "swmm5",
     "extract": {
         "steps": [
             {

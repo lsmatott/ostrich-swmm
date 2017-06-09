@@ -9,6 +9,7 @@ import sys
 from . import config as cfg
 from . import extract
 from . import inject
+from . import run
 from .version import __version__
 
 
@@ -96,6 +97,23 @@ def inject_cmd(config):
         ConfigException: The configuration was invalid.
     """
     inject.perform_injection(config)
+
+    return 0
+
+
+def run_cmd(config):
+    """Run SWMM with pre- and post-processing steps.
+
+    Args:
+        config (dict): The configuration to use.
+
+    Returns:
+        int: An exit code for the script.
+
+    Raises:
+        ConfigException: The configuration was invalid.
+    """
+    run.perform_run(config)
 
     return 0
 
@@ -207,6 +225,15 @@ def main(argv=None):
             ],
         )
 
+        # Set up parsing for the run sub-command.
+        subparsers.add_parser(
+            'run',
+            help='Run SWMM with pre- and post-processing steps.',
+            parents=[
+                config_parser,
+            ],
+        )
+
         # Parse arguments.
         args = vars(parser.parse_args(argv[1:]))
         config = load_config_with_args(args)
@@ -215,6 +242,7 @@ def main(argv=None):
         subcommands = {
             'extract': extract_cmd,
             'inject': inject_cmd,
+            'run': run_cmd,
         }
         return subcommands[args['subcommand']](config)
     except (UsageException, cfg.ConfigException) as e:

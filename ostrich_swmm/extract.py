@@ -94,22 +94,19 @@ def perform_node_extraction(
     csv_writer.writerows(zip(*csv_columns))
 
 
-def perform_extraction_steps(config):
+def perform_extraction_steps(config, validate=True):
     """Perform the extraction steps specified in a configuration.
 
     Args:
         config: The config to get extraction steps from.
+        validate (boolean): Validate the configuration before attempting
+            to use it. Defaults to True.
 
     Raises:
         ConfigException: The configuration is invalid.
     """
-    cfg.validate_required_sections(config, [
-        'binary_output_path',
-        'summary_dir',
-        'extract',
-    ], 'extract')
-    cfg.validate_file_exists(config, 'binary_output_path')
-    cfg.validate_dir_exists(config, 'summary_dir')
+    if validate:
+        validate_config(config)
 
     binary_output = swmmtoolbox.SwmmExtract(
         config['binary_output_path']
@@ -143,3 +140,25 @@ def perform_extraction_steps(config):
             perform_node_extraction(**node_extraction_args)
 
             node_output_file.close()
+
+
+def validate_config(config, perform_file_checks=True):
+    """Validate a configuration for use with this functionality.
+
+    Args:
+        config (dict): The configuration to validate.
+        perform_file_checks (boolean): Check if required files exist.
+            Defaults to true.
+
+    Raises:
+        ConfigException: The configuration is invalid.
+    """
+    cfg.validate_required_sections(config, [
+        'binary_output_path',
+        'summary_dir',
+        'extract',
+    ], 'extract')
+
+    if perform_file_checks:
+        cfg.validate_file_exists(config, 'binary_output_path')
+        cfg.validate_dir_exists(config, 'summary_dir')
