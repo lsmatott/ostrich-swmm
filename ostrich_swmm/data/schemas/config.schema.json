@@ -19,6 +19,14 @@
             "type": "string",
             "minLength": 1
         },
+        "report_output_path": {
+            "type": "string",
+            "minLength": 1
+        },
+        "swmm_path": {
+            "type": "string",
+            "minLength": 1
+        },
         "summary_dir": {
             "type": "string"
         },

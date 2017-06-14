@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 
+import distutils.spawn
 import json
 import os
 
@@ -95,6 +96,8 @@ def validate_config(config):
     if 'summary_dir' in config:
         if config['summary_dir'] == '':
             config['summary_dir'] = os.curdir
+    if 'swmm_path' not in config:
+        config['swmm_path'] = 'swmm5'
 
 
 def validate_against_json_schema(o, schema_path):
@@ -117,6 +120,27 @@ def validate_against_json_schema(o, schema_path):
         jsonschema.validate(o, schema)
     except jsonschema.ValidationError as e:
         raise ConfigException(e.message)
+
+
+def validate_executable_path(config, section):
+    """Validate that a path to an executable is valid.
+
+    Args:
+        config (dict): A configuration with an executable path to check.
+        section (string): The key to the executable path to check.
+
+    Raises:
+        ConfigException: The path was not valid.
+    """
+    executable_path = config[section]
+    if not distutils.spawn.find_executable(executable_path):
+        raise ConfigException(
+            (
+                'Executable "{0}" could not be found in PATH '
+                'or on file system.'
+            ).format(executable_path),
+            section,
+        )
 
 
 def validate_file_exists(config, section):

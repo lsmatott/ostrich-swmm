@@ -322,24 +322,20 @@ def inject_parameters_into_input(input_parameters, input_template):
         })
 
 
-def perform_injection(config):
+def perform_injection(config, validate=True):
     """Perform the injection as specified in a configuration.
 
     Args:
         config: The config to get injection configuration from.
+        validate (boolean): Validate the configuration before attempting
+            to use it. Defaults to True.
 
     Raises:
         ConfigException: The configuration is invalid.
         IOError: An error occurred during reading or writing.
     """
-    cfg.validate_required_sections(config, [
-        'input_path',
-        'input_template_path',
-        'input_parameters_path',
-    ], 'inject')
-    cfg.validate_file_exists(config, 'input_template_path')
-    cfg.validate_file_exists(config, 'input_parameters_path')
-    cfg.validate_dir_exists(config, 'input_path', path_is_file=True)
+    if validate:
+        validate_config(config)
 
     with open(config['input_template_path']) as input_template_file:
         input_template = sir.read(input_template_file)
@@ -351,3 +347,22 @@ def perform_injection(config):
 
     with open(config['input_path'], 'w') as input_file:
         siw.write(input_template, input_file)
+
+
+def validate_config(config):
+    """Validate a configuration for use with this functionality.
+
+    Args:
+        config (dict): The configuration to validate.
+
+    Raises:
+        ConfigException: The configuration is invalid.
+    """
+    cfg.validate_required_sections(config, [
+        'input_path',
+        'input_template_path',
+        'input_parameters_path',
+    ], 'inject')
+    cfg.validate_file_exists(config, 'input_template_path')
+    cfg.validate_file_exists(config, 'input_parameters_path')
+    cfg.validate_dir_exists(config, 'input_path', path_is_file=True)

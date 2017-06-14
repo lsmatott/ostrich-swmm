@@ -9,6 +9,7 @@ import sys
 from . import config as cfg
 from . import extract
 from . import inject
+from . import run
 from .version import __version__
 
 
@@ -66,44 +67,53 @@ def load_config_with_args(args):
     return config
 
 
-def extract_cmd(args):
+def extract_cmd(config):
     """Extract data from a SWMM binary output file.
 
     Args:
-        args (dict): Command-line arguments to use.
+        config (dict): The configuration to use.
 
     Returns:
         int: An exit code for the script.
 
     Raises:
-        ConfigException: The configuration could not be validated.
-        IOError: The config file was not found or was not readable.
-        UsageException: The configuration file was not found.
-        ValueError: The config file was not valid JSON.
+        ConfigException: The configuration was invalid.
     """
-    config = load_config_with_args(args)
     extract.perform_extraction_steps(config)
 
     return 0
 
 
-def inject_cmd(args):
+def inject_cmd(config):
     """Inject OSTRICH parameters into SWMM input before a run.
 
     Args:
-        args (dict): Command-line arguments to use.
+        config (dict): The configuration to use.
 
     Returns:
         int: An exit code for the script.
 
     Raises:
-        ConfigException: The configuration could not be validated.
-        IOError: The config file was not found or was not readable.
-        UsageException: The configuration file was not found.
-        ValueError: The config file was not valid JSON.
+        ConfigException: The configuration was invalid.
     """
-    config = load_config_with_args(args)
     inject.perform_injection(config)
+
+    return 0
+
+
+def run_cmd(config):
+    """Run SWMM with pre- and post-processing steps.
+
+    Args:
+        config (dict): The configuration to use.
+
+    Returns:
+        int: An exit code for the script.
+
+    Raises:
+        ConfigException: The configuration was invalid.
+    """
+    run.perform_run(config)
 
     return 0
 
@@ -215,15 +225,26 @@ def main(argv=None):
             ],
         )
 
+        # Set up parsing for the run sub-command.
+        subparsers.add_parser(
+            'run',
+            help='Run SWMM with pre- and post-processing steps.',
+            parents=[
+                config_parser,
+            ],
+        )
+
         # Parse arguments.
         args = vars(parser.parse_args(argv[1:]))
+        config = load_config_with_args(args)
 
         # Call selected subcommand.
         subcommands = {
             'extract': extract_cmd,
             'inject': inject_cmd,
+            'run': run_cmd,
         }
-        return subcommands[args['subcommand']](args)
+        return subcommands[args['subcommand']](config)
     except (UsageException, cfg.ConfigException) as e:
         print(e.msg, file=sys.stderr)
         print('For help, use --help or [sub-command] --help.', file=sys.stderr)
