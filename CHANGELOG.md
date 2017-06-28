@@ -1,11 +1,12 @@
 # Change Log
 
-## [Unreleased](https://github.com/ubccr/ostrich-swmm/tree/HEAD)
-
-[Full Changelog](https://github.com/ubccr/ostrich-swmm/compare/v0.2.1...HEAD)
+## [v0.3.0](https://github.com/ubccr/ostrich-swmm/tree/v0.3.0) (2017-06-28)
+[Full Changelog](https://github.com/ubccr/ostrich-swmm/compare/v0.2.1...v0.3.0)
 
 **Merged pull requests:**
 
+- Added subcommand to run SWMM with pre- and post-processing steps [\#6](https://github.com/ubccr/ostrich-swmm/pull/6)
+- Added changelog and development dependency GitHub Changelog Generator [\#5](https://github.com/ubccr/ostrich-swmm/pull/5)
 - Extraction: Added statistic for total duration of flow events [\#4](https://github.com/ubccr/ostrich-swmm/pull/4)
 
 ## [v0.2.1](https://github.com/ubccr/ostrich-swmm/tree/v0.2.1) (2017-05-30)
