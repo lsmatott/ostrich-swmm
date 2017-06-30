@@ -102,7 +102,23 @@
                 "node_name",
                 "num_flow_events",
                 "total_flow_volume",
-                "total_flow_duration"
+                "total_flow_duration",
+                "first_flow_start",
+                "first_flow_end",
+                "first_flow_duration",
+                "first_flow_volume",
+                "last_flow_start",
+                "last_flow_end",
+                "last_flow_duration",
+                "last_flow_volume",
+                "max_volume_flow_start",
+                "max_volume_flow_end",
+                "max_volume_flow_duration",
+                "max_volume_flow_volume",
+                "max_duration_flow_start",
+                "max_duration_flow_end",
+                "max_duration_flow_duration",
+                "max_duration_flow_volume"
             ]
         }
     }

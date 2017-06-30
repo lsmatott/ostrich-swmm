@@ -1,12 +1,26 @@
 """Functionality for extracting data from SWMM output."""
 
 import csv
+import datetime as dt
 
 import numpy as np
 import os
 import swmmtoolbox.swmmtoolbox as swmmtoolbox
 
+from . import SWMM_EPOCH_DATETIME
 from . import config as cfg
+
+
+def convert_swmm_ts_to_datetime(swmm_ts):
+    """Convert a SWMM timestamp to a Python datetime.
+
+    Args:
+        swmm_ts: The SWMM timestamp to convert.
+
+    Returns:
+        datetime: The datetime equivalent of the SWMM timestamp.
+    """
+    return SWMM_EPOCH_DATETIME + dt.timedelta(days=swmm_ts)
 
 
 def perform_node_extraction(
@@ -42,10 +56,17 @@ def perform_node_extraction(
     nodes_total_flow_events = np.zeros(num_nodes, np.uint64)
     nodes_total_flow_rate_sums = np.zeros(num_nodes, np.float64)
 
+    nodes_current_flow_event_start_times = [None] * num_nodes
+    nodes_current_flow_event_rate_sums = np.zeros(num_nodes, np.float64)
+    nodes_current_flow_event_active_intervals = np.zeros(num_nodes, np.uint64)
+    nodes_flow_events = [[] for n in range(num_nodes)]
+
     # For each period recorded in the output, extract and calculate data.
+    previous_time = binary_output.startdate
     report_interval_seconds = binary_output.reportinterval.total_seconds()
     nodes_current_values = np.zeros(num_nodes, np.float64)
     for period in range(binary_output.nperiods):
+        # Get this period's values for each node.
         for node_index, node_name in enumerate(node_names):
             swmm_timestamp, value = binary_output.GetSwmmResults(
                 node_type,
@@ -55,18 +76,80 @@ def perform_node_extraction(
             )
             nodes_current_values[node_index] = value
 
+        # Convert this period's SWMM timestamp to a Python datetime.
+        current_time = convert_swmm_ts_to_datetime(swmm_timestamp)
+
+        # Determine the activity states for each node.
         nodes_flow_currently_active = (
             nodes_current_values > event_threshold_flow_rate
         )
-        nodes_flow_active_intervals[nodes_flow_currently_active] += 1
         nodes_flow_newly_active = np.logical_and(
             nodes_flow_currently_active,
             np.logical_not(nodes_flow_previously_active)
         )
+        nodes_flow_newly_inactive = np.logical_and(
+            np.logical_not(nodes_flow_currently_active),
+            nodes_flow_previously_active
+        )
+
+        # Perform calculations involving totals for each node.
+        nodes_flow_active_intervals[nodes_flow_currently_active] += 1
         nodes_total_flow_events[nodes_flow_newly_active] += 1
         nodes_total_flow_rate_sums += nodes_current_values
 
+        # Perform calculations involving current events for each node.
+        for node_index, newly_inactive in enumerate(nodes_flow_newly_inactive):
+            if not newly_inactive:
+                continue
+
+            nodes_flow_events[node_index].append({
+                'start': nodes_current_flow_event_start_times[node_index],
+                'end': previous_time,
+                'duration': (
+                    nodes_current_flow_event_active_intervals[node_index]
+                    * report_interval_seconds
+                ),
+                'volume': (
+                    nodes_current_flow_event_rate_sums[node_index]
+                    * report_interval_seconds
+                ),
+            })
+            nodes_current_flow_event_start_times[node_index] = None
+
+        for node_index, newly_active in enumerate(nodes_flow_newly_active):
+            if not newly_active:
+                continue
+
+            nodes_current_flow_event_start_times[node_index] = previous_time
+            nodes_current_flow_event_rate_sums[node_index] = 0
+            nodes_current_flow_event_active_intervals[node_index] = 0
+
+        nodes_current_flow_event_active_intervals[
+            nodes_flow_currently_active
+        ] += 1
+        nodes_current_flow_event_rate_sums += nodes_current_values
+
+        # Move values for the next period.
+        previous_time = current_time
         nodes_flow_previously_active = nodes_flow_currently_active
+
+    # Cleanup unfinished current events.
+    for node_index, active in enumerate(nodes_flow_currently_active):
+        if not active:
+            continue
+
+        nodes_flow_events[node_index].append({
+            'start': nodes_current_flow_event_start_times[node_index],
+            'end': current_time,
+            'duration': (
+                nodes_current_flow_event_active_intervals[node_index]
+                * report_interval_seconds
+            ),
+            'volume': (
+                nodes_current_flow_event_rate_sums[node_index]
+                * report_interval_seconds
+            ),
+        })
 
     # Calculate post-extraction statistics.
     nodes_total_flow_volumes = (
@@ -75,6 +158,81 @@ def perform_node_extraction(
     nodes_total_flow_durations = (
         nodes_flow_active_intervals * report_interval_seconds
     )
+
+    nodes_notable_events = {
+        'first': [
+            node_events[0]
+            if node_events
+            else None
+            for node_events
+            in nodes_flow_events
+        ],
+        'last': [
+            node_events[-1]
+            if node_events
+            else None
+            for node_events
+            in nodes_flow_events
+        ],
+        'max_volume': [
+            max(node_events, key=lambda event: event['volume'])
+            if node_events
+            else None
+            for node_events
+            in nodes_flow_events
+        ],
+        'max_duration': [
+            max(node_events, key=lambda event: event['duration'])
+            if node_events
+            else None
+            for node_events
+            in nodes_flow_events
+        ],
+    }
+    nodes_notable_events_start_strings = {
+        event_type: [
+            event['start'].isoformat()
+            if event is not None
+            else ''
+            for event
+            in events
+        ]
+        for event_type, events
+        in nodes_notable_events.iteritems()
+    }
+    nodes_notable_events_end_strings = {
+        event_type: [
+            event['end'].isoformat()
+            if event is not None
+            else ''
+            for event
+            in events
+        ]
+        for event_type, events
+        in nodes_notable_events.iteritems()
+    }
+    nodes_notable_events_volumes = {
+        event_type: [
+            event['volume']
+            if event is not None
+            else 0
+            for event
+            in events
+        ]
+        for event_type, events
+        in nodes_notable_events.iteritems()
+    }
+    nodes_notable_events_durations = {
+        event_type: [
+            event['duration']
+            if event is not None
+            else 0
+            for event
+            in events
+        ]
+        for event_type, events
+        in nodes_notable_events.iteritems()
+    }
 
     # Write the requested statistics out to the given file as CSV.
     csv_writer = csv.writer(node_output_file)
@@ -86,6 +244,42 @@ def perform_node_extraction(
         'num_flow_events': nodes_total_flow_events,
         'total_flow_volume': nodes_total_flow_volumes,
         'total_flow_duration': nodes_total_flow_durations,
+
+        'first_flow_start': nodes_notable_events_start_strings['first'],
+        'first_flow_end': nodes_notable_events_end_strings['first'],
+        'first_flow_duration': nodes_notable_events_durations['first'],
+        'first_flow_volume': nodes_notable_events_volumes['first'],
+
+        'last_flow_start': nodes_notable_events_start_strings['last'],
+        'last_flow_end': nodes_notable_events_end_strings['last'],
+        'last_flow_duration': nodes_notable_events_durations['last'],
+        'last_flow_volume': nodes_notable_events_volumes['last'],
+
+        'max_volume_flow_start': nodes_notable_events_start_strings[
+            'max_volume'
+        ],
+        'max_volume_flow_end': nodes_notable_events_end_strings[
+            'max_volume'
+        ],
+        'max_volume_flow_duration': nodes_notable_events_durations[
+            'max_volume'
+        ],
+        'max_volume_flow_volume': nodes_notable_events_volumes[
+            'max_volume'
+        ],
+
+        'max_duration_flow_start': nodes_notable_events_start_strings[
+            'max_duration'
+        ],
+        'max_duration_flow_end': nodes_notable_events_end_strings[
+            'max_duration'
+        ],
+        'max_duration_flow_duration': nodes_notable_events_durations[
+            'max_duration'
+        ],
+        'max_duration_flow_volume': nodes_notable_events_volumes[
+            'max_duration'
+        ],
     }
 
     for statistic in statistics:
