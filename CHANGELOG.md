@@ -1,5 +1,12 @@
 # Change Log
 
+## [v0.4.0](https://github.com/ubccr/ostrich-swmm/tree/v0.4.0) (2017-06-30)
+[Full Changelog](https://github.com/ubccr/ostrich-swmm/compare/v0.3.0...v0.4.0)
+
+**Merged pull requests:**
+
+- Added start/end time, duration, and volume metrics for notable events [\#8](https://github.com/ubccr/ostrich-swmm/pull/8)
+
 ## [v0.3.0](https://github.com/ubccr/ostrich-swmm/tree/v0.3.0) (2017-06-28)
 [Full Changelog](https://github.com/ubccr/ostrich-swmm/compare/v0.2.1...v0.3.0)
 
