@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "OSTRICH-SWMM Parameters",
-    "description": "A set of parameters produced by OSTRICH to inject into SWMM input.",
+    "description": "A set of lid and roof parameters produced by OSTRICH to inject into SWMM input.",
     "type": "object",
     "properties": {
         "lids": {
