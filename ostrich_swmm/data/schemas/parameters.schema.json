@@ -161,6 +161,10 @@
                     "type": "string",
                     "minLength": 1
                 },
+                   "number": {
+                    "type": "integer",
+                    "minimum": 0
+                },
                 "OutID": {
                     "type": "string",
                     "minLength": 1
