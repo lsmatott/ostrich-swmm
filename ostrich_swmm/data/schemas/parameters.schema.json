@@ -162,7 +162,7 @@
                     "type": "string",
                     "minLength": 1
                 },
-                   "number": {
+                "number": {
                     "type": "integer",
                     "minimum": 0
                 },
