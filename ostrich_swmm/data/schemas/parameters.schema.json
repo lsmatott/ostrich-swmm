@@ -9,6 +9,7 @@
             "items": {
                 "$ref": "#/definitions/lid"
             }
+        }
         "roofs": {
             "type": "array",
             "items": {
