@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "OSTRICH-SWMM Parameters",
-    "description": "A set of lid and roof parameters produced by OSTRICH to inject into SWMM input.",
+    "description": "A set of parameters produced by OSTRICH to inject into SWMM input.",
     "type": "object",
     "properties": {
         "lids": {
@@ -10,8 +10,8 @@
                 "$ref": "#/definitions/lid"
             }
         },
-        "roofs": {
-            "type": "array",
+	"roofs": {
+	    "type": "array",
             "items": {
                 "$ref": "#/definitions/roof"
             }
@@ -129,7 +129,7 @@
                 "toPerv"
             ]
         },
-        "roof": {
+	"roof": {
             "type": "object",
             "properties": {
                 "location": {
@@ -143,8 +143,8 @@
                             },
                             "required": [
                                 "map"
-                            ]
-                        },
+			    ]
+			},
                         {
                             "type": "object",
                             "properties": {
@@ -166,7 +166,7 @@
                     "type": "integer",
                     "minimum": 0
                 },
-                "OutID": {
+		"OutID": {
                     "type": "string",
                     "minLength": 1
                 },
@@ -174,7 +174,7 @@
                     "type": "number",
                     "minimum": 0
                 },
-                "%Imperv": {
+		"PctImperv": {
                     "type": "number",
                     "minimum":0
                 },
@@ -193,16 +193,18 @@
                 "Nperv": {
                     "type": "number"
                 },
-                "%Zero": {
+                "PctZero": {
                     "type": "number"
-                },
+                }
             },
             "required": [
                 "location",
+		"OutID",
                 "area",
-                "width",
+		"slope",
+                "width"
             ]
-        },
+	},
         "mapCoordinates": {
             "type": "object",
             "properties": {
