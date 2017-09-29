@@ -229,9 +229,9 @@ def inject_parameters_into_input(input_parameters, input_template):
             if 'map' in roofs[count]['location']:
                 if sc_polygons is None:
                     sc_polygons = extract_subcatchment_polygons(input_template)
-                    roofs[count]['location']['subcatchment'] = get_subcatchment_from_map_coords(
-                        roofs[count]['location']['map'],
-                        sc_polygons,
+                roofs[count]['location']['subcatchment'] = get_subcatchment_from_map_coords(
+                    roofs[count]['location']['map'],
+                    sc_polygons,
                     )
             roof_type = roofs[count]['type']
             # Count this instance of this roof type and give it an ID.
