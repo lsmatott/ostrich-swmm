@@ -10,12 +10,6 @@ import swmmtoolbox.swmmtoolbox as swmmtoolbox
 from . import SWMM_EPOCH_DATETIME
 from . import config as cfg
 
-#trying to grab excess rb
-#from .inject import *
-#excessRB = excess_rb
-#inject.perform_injection(config, validate=True)
-#excess_rb = inject.inject_parameters_into_input(input_parameters, input_template)
-
 def convert_swmm_ts_to_datetime(swmm_ts):
     """Convert a SWMM timestamp to a Python datetime.
 
@@ -29,7 +23,6 @@ def convert_swmm_ts_to_datetime(swmm_ts):
 
 
 def perform_node_extraction(
-    #excessRB,
     binary_output,
     node_output_file,
     node_names,
@@ -45,7 +38,6 @@ def perform_node_extraction(
         statistics (Iterable): A list of statistics to extract.
         event_threshold_flow_rate (Number): The flow rate above which a node
             is considered to have flow. Defaults to 0.
-        excess_rb - list of calculated excess rb from inject file
     """
     # Get the indicies of the relevant data in the binary output.
     node_type = binary_output.TypeCheck('node')
@@ -251,12 +243,6 @@ def perform_node_extraction(
         'num_flow_events': nodes_total_flow_events,
         'total_flow_volume': nodes_total_flow_volumes,
         'total_flow_duration': nodes_total_flow_durations,
-       # 'ExcessRB1SC1': excessRB[0],
-        #'ExcessRB2SC1': excessRB[1],
-        #'ExcessRB1SC2': excessRB[2],
-       # 'ExcessRB2SC2': excessRB[3],
-       # 'ExcessRB1SC3': excessRB[4],
-       # 'ExcessRB2SC3': excessRB[5],
         'first_flow_start': nodes_notable_events_start_strings['first'],
         'first_flow_end': nodes_notable_events_end_strings['first'],
         'first_flow_duration': nodes_notable_events_durations['first'],
