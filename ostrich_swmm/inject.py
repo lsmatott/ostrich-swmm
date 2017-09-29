@@ -142,6 +142,8 @@ def inject_parameters_into_input(input_parameters, input_template):
     count = -1
 
     excess_rb =[]
+    max_lid = []
+    all_lid_id = []
     excess_colnames = []
     nlid = []
     sc_names_list = []
@@ -188,6 +190,7 @@ def inject_parameters_into_input(input_parameters, input_template):
         # Count this instance of this LID type and give it an ID.
         lid_counter[lid_type] += 1
         lid_id = '{0}_{1}'.format(lid_type, lid_counter[lid_type])
+        all_lid_id.append(lid_id)
 
         # Adjust the LID's subcatchment as necessary.
         lid_type_type_index = si.data_indices['LID_CONTROLS']['Type']['Type']
@@ -318,7 +321,7 @@ def inject_parameters_into_input(input_parameters, input_template):
             else:  
                 lid_num_units = lid_num_units - excess
                 print "OSTRICH input for subcat {0} had too many lid units, changing to max number {1}".format(lid_sc_name, lid_num_units)
-            
+                max_lid.append(lid_num_units)
             excess_rb.append(excess)
             excess_colnames.append("Excess{0}".format(lid_id))
             
@@ -335,9 +338,6 @@ def inject_parameters_into_input(input_parameters, input_template):
 
             lid_sc[sc_area_index] = lid_sc_area.magnitude
             roof_sc[sc_area_index]= roof_sc_area.magnitude
-
-            #if lid_base_sc[sc_area_index] < 0:
-              #  raise cfg.ConfigException('LID "{0}" pushes subcatchment "{1}" below 0 area.'.format(lid_id,lid_base_sc_name))
         
             new_lid_base_sc_imperv_area = lid_base_sc_imperv_area - lid_sc_area - roof_sc_area
             new_lid_base_sc_imperv = (new_lid_base_sc_imperv_area / new_lid_base_sc_area)
@@ -350,12 +350,7 @@ def inject_parameters_into_input(input_parameters, input_template):
             
             #this step is why lid base sc imperv area keeps changing, and why its a neg value
             lid_base_sc[sc_imperv_index] = (new_lid_base_sc_imperv.to('percent').magnitude)
-
-            #if lid_base_sc[sc_imperv_index] < 0:
-               # raise cfg.ConfigException(('Subcatchment "{1}" does not have enough impervious land left to hold LID "{0}".'
-                   # ).format(lid_id, lid_base_sc_name))
             
-        
             input_template['SUBCATCHMENTS']['lines'].append({
                 'values': lid_sc,
                 'comment': '{0} LID units. (Added by OSTRICH-SWMM.)'.format(
@@ -417,8 +412,9 @@ def inject_parameters_into_input(input_parameters, input_template):
         })
         
             
-    with open('excess_rb.csv', 'wb') as outcsv:
+    with open('num_lid.csv', 'wb') as outcsv:
         writer = csv.writer(outcsv)
+        #writer.writerow("Subcat_Name", "X", "Y")
         writer.writerow(excess_colnames)
         writer.writerow(excess_rb)
         writer.writerow(nlid)
