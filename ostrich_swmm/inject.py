@@ -259,10 +259,10 @@ def inject_parameters_into_input(input_parameters, input_template):
                     roof_id,
                     roof_sc_name_index,
                 )
-            existing_roof_sc = get_subcatchment_definition(
-                input_template,
-                roof_sc_name,
-            )
+                existing_roof_sc = get_subcatchment_definition(
+                    input_template,
+                    roof_sc_name,
+                )
             roof_sc = list(roof_base_sc)
             roof_sc[si.data_indices['SUBCATCHMENTS']['Name']] = roof_sc_name
             r_area = roofs[count]['area']
