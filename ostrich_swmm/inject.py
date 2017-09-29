@@ -414,7 +414,8 @@ def inject_parameters_into_input(input_parameters, input_template):
             
     with open('num_lid.csv', 'wb') as outcsv:
         writer = csv.writer(outcsv)
-        #writer.writerow("Subcat_Name", "X", "Y")
+        writer.writerow("Subcat_Name", "X", "Y", all_lid_id)
+        writer.writerow(zip(sc_names_list, sc_polygons, nlid)
         writer.writerow(excess_colnames)
         writer.writerow(excess_rb)
         writer.writerow(nlid)
