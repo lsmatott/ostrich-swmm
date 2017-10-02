@@ -143,10 +143,11 @@ def inject_parameters_into_input(input_parameters, input_template):
 
     excess_rb =[]
     max_lid = []
-    all_lid_id = []
     excess_colnames = []
     nlid = []
     sc_names_list = []
+    all_lid_types = []
+    main_lid_types = []
     for lid in lids:
         count = count + 1
         # If the location is given in map coordinates, convert to subcatchment.
@@ -169,6 +170,8 @@ def inject_parameters_into_input(input_parameters, input_template):
 
         # Get the LID's type.
         lid_type = lid['type']
+        if lid_type not in lid_types:
+            all_lid_types.append(lid_type)
         if 'LID_CONTROLS' not in input_template:
             raise cfg.ConfigException(
                 'There are no LID controls defined in the SWMM input file.',
@@ -190,11 +193,12 @@ def inject_parameters_into_input(input_parameters, input_template):
         # Count this instance of this LID type and give it an ID.
         lid_counter[lid_type] += 1
         lid_id = '{0}_{1}'.format(lid_type, lid_counter[lid_type])
-        all_lid_id.append(lid_id)
-
+        
         # Adjust the LID's subcatchment as necessary.
         lid_type_type_index = si.data_indices['LID_CONTROLS']['Type']['Type']
         lid_type_type = lid_type_definition[0]['values'][lid_type_type_index]
+        if lid_type_type not in main_lid_types:
+            main_lid_types.append(lid_type_type)
 
         # If the LID is a rain barrel...
         if lid_type_type == 'RB':
@@ -366,6 +370,7 @@ def inject_parameters_into_input(input_parameters, input_template):
 
             # Set the LID subcatchment to the child subcatchment.
             lid['location']['subcatchment'] = lid_sc_name
+            
         else:
             logging.warning(
                 (
@@ -374,8 +379,9 @@ def inject_parameters_into_input(input_parameters, input_template):
                     'subcatchments, may be necessary.'
                 ).format(lid_type_type)
             )
-
+            
         # Add the LID to the input.
+        nlid.append(lid_num_units)
         lid_drain_to = ''
         if 'drainTo' in lid:
             lid_drain_to_obj = lid['drainTo']
@@ -383,8 +389,7 @@ def inject_parameters_into_input(input_parameters, input_template):
                 lid_drain_to = lid_drain_to_obj['subcatchment']
             elif 'node' in lid_drain_to_obj:
                 lid_drain_to = lid_drain_to_obj['node']
-        
-        nlid.append(lid_num_units)
+     
         #adjust fromImp parameter according to subcat area and number of roofs/lids
         #check this logic
         lid['fromImp']=float(lid['number']*ind_roof.to(sc_area_unit)/lid_base_sc_imperv_area*100)
@@ -410,23 +415,30 @@ def inject_parameters_into_input(input_parameters, input_template):
             'values': lid_values,
             'comment': None,
         })
-        
-            
+       
     with open('num_lid.csv', 'wb') as outcsv:
         writer = csv.writer(outcsv)
-        writer.writerow("Subcat_Name", "X", "Y", all_lid_id)
-        writer.writerow(zip(sc_names_list, sc_polygons, nlid)
-        writer.writerow(excess_colnames)
-        writer.writerow(excess_rb)
-        writer.writerow(nlid)
-    with open('summary.txt', 'w') as summary:
-        summary.write("Total Number of Rain Barrels =" + str(sum(nlid))+ '\n')
-        summary.write("Total Number of RB1 =" +str(sum(nlid[0:len(nlid):2]))+ '\n')
-        summary.write("Total Number of RB2 =" +str(sum(nlid[1:len(nlid):2]))+ '\n')
-        summary.write("Small Subcatchments\n")
-        for i in range(0,len(nlid),2):
-            if nlid[i] <10:
-                summary.write(str(sc_names_list[i])+ '\n')
+        writer.writerow("Subcat_Name"+"Polygon"+ all_lid_types)
+        nlid_col = []
+        for i in range(0, len(all_lid_types)):
+            nlid_col.append(i:len(nlid):len(all_lid_types))
+        for i in range(0, len(sc_names_list)):
+            line = sc_names_list[i]+ str(sc_polygons[i])   #need to figure out how to grab subcat coordinates
+            for j in range(0, len(nlid_col)):
+                line+= str(nlid_col[j][i])
+        writer.writerow(line)
+        sum_line = "Lid Sum" + "NA"
+        for i in range(0, len(nlid_col)):
+            sum_line+=str(sum(nlid_col[i]))
+        writer.writerow(sum_line)
+    #with open('summary.txt', 'w') as summary:
+      #  for i in range(0,len(nlid_col)):
+         #   for j in range(0,len(main_lid_types)):
+          #      summary.write("Total Number of Rain Barrels =" + str(sum(nlid))+ '\n'
+       # summary.write("Small Subcatchments\n")
+       # for i in range(0,len(nlid),2):
+           # if nlid[i] <10:
+               # summary.write(str(sc_names_list[i])+ '\n')
 
 
 def perform_injection(config, validate=True):
