@@ -142,12 +142,11 @@ def inject_parameters_into_input(input_parameters, input_template):
     count = -1
 
     excess_rb =[]
-    max_lid = []
     excess_colnames = []
     nlid = []
     sc_names_list = []
     all_lid_types = []
-    main_lid_types = []
+    
     for lid in lids:
         count = count + 1
         # If the location is given in map coordinates, convert to subcatchment.
@@ -167,7 +166,7 @@ def inject_parameters_into_input(input_parameters, input_template):
                 lid['drainTo']['map'],
                 sc_polygons,
             )
-
+        print sc_polygons
         # Get the LID's type.
         lid_type = lid['type']
         if lid_type not in lid_types:
@@ -197,8 +196,6 @@ def inject_parameters_into_input(input_parameters, input_template):
         # Adjust the LID's subcatchment as necessary.
         lid_type_type_index = si.data_indices['LID_CONTROLS']['Type']['Type']
         lid_type_type = lid_type_definition[0]['values'][lid_type_type_index]
-        if lid_type_type not in main_lid_types:
-            main_lid_types.append(lid_type_type)
 
         # If the LID is a rain barrel...
         if lid_type_type == 'RB':
@@ -325,7 +322,6 @@ def inject_parameters_into_input(input_parameters, input_template):
             else:  
                 lid_num_units = lid_num_units - excess
                 print "OSTRICH input for subcat {0} had too many lid units, changing to max number {1}".format(lid_sc_name, lid_num_units)
-                max_lid.append(lid_num_units)
             excess_rb.append(excess)
             excess_colnames.append("Excess{0}".format(lid_id))
             
@@ -418,15 +414,17 @@ def inject_parameters_into_input(input_parameters, input_template):
        
     with open('num_lid.csv', 'wb') as outcsv:
         writer = csv.writer(outcsv)
-        writer.writerow("Subcat_Name"+"Polygon"+ all_lid_types)
+        header = "Subcat_Name"+"Polygon"
         nlid_col = []
         for i in range(0, len(all_lid_types)):
+            header+=str(all_lid_types[i])
             nlid_col.append(i:len(nlid):len(all_lid_types))
+        writer.writerow(header)   
         for i in range(0, len(sc_names_list)):
             line = sc_names_list[i]+ str(sc_polygons[i])   #need to figure out how to grab subcat coordinates
             for j in range(0, len(nlid_col)):
                 line+= str(nlid_col[j][i])
-        writer.writerow(line)
+            writer.writerow(line)
         sum_line = "Lid Sum" + "NA"
         for i in range(0, len(nlid_col)):
             sum_line+=str(sum(nlid_col[i]))
