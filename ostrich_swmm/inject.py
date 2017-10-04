@@ -113,8 +113,6 @@ def inject_parameters_into_input(input_parameters, input_template):
 
     Raises:
         ConfigException: The configuration is invalid.
-    Returns:
-        excess_rb for input into extract csv
     """
     global input_parameters_schema_path
     if input_parameters_schema_path is None:
@@ -148,7 +146,7 @@ def inject_parameters_into_input(input_parameters, input_template):
     nlid = []
     sc_names_list = []
     all_lid_types = []
-    main_lid_types = []
+  
     for lid in lids:
         count = count + 1
         # If the location is given in map coordinates, convert to subcatchment.
