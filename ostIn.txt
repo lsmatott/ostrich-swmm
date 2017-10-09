@@ -1,0 +1,1182 @@
+ProgramType ModelEvaluation
+ModelExecutable ./ostrich-swmm.sh
+ModelSubdir mod
+ObjectiveFunction GCOP
+PreserveModelOutput no
+ 
+BeginFilePairs
+submodel_input_parameters.json.tpl; submodel_input_parameters.json
+EndFilePairs
+ 
+BeginExtraFiles
+submodel-ostrich-swmm-config.json
+submodel.template.inp
+TY_1993_Modified.dat
+TY_1993_Unmodified.dat
+EndExtraFiles
+ 
+BeginIntegerParams
+_NRB1_0_	1	0	2000
+_NRB2_0_	1	0	2000
+_NRB1_1_	1	0	2000
+_NRB2_1_	1	0	2000
+_NRB1_2_	1	0	2000
+_NRB2_2_	1	0	2000
+_NRB1_3_	1	0	2000
+_NRB2_3_	1	0	2000
+_NRB1_4_	1	0	2000
+_NRB2_4_	1	0	2000
+_NRB1_5_	1	0	2000
+_NRB2_5_	1	0	2000
+_NRB1_6_	1	0	2000
+_NRB2_6_	1	0	2000
+_NRB1_7_	1	0	2000
+_NRB2_7_	1	0	2000
+_NRB1_8_	1	0	2000
+_NRB2_8_	1	0	2000
+_NRB1_9_	1	0	2000
+_NRB2_9_	1	0	2000
+_NRB1_10_	1	0	2000
+_NRB2_10_	1	0	2000
+_NRB1_11_	1	0	2000
+_NRB2_11_	1	0	2000
+_NRB1_12_	1	0	2000
+_NRB2_12_	1	0	2000
+_NRB1_13_	1	0	2000
+_NRB2_13_	1	0	2000
+_NRB1_14_	1	0	2000
+_NRB2_14_	1	0	2000
+_NRB1_15_	1	0	2000
+_NRB2_15_	1	0	2000
+_NRB1_16_	1	0	2000
+_NRB2_16_	1	0	2000
+_NRB1_17_	1	0	2000
+_NRB2_17_	1	0	2000
+_NRB1_18_	1	0	2000
+_NRB2_18_	1	0	2000
+_NRB1_19_	1	0	2000
+_NRB2_19_	1	0	2000
+_NRB1_20_	1	0	2000
+_NRB2_20_	1	0	2000
+_NRB1_21_	1	0	2000
+_NRB2_21_	1	0	2000
+_NRB1_22_	1	0	2000
+_NRB2_22_	1	0	2000
+_NRB1_23_	1	0	2000
+_NRB2_23_	1	0	2000
+_NRB1_24_	1	0	2000
+_NRB2_24_	1	0	2000
+_NRB1_25_	1	0	2000
+_NRB2_25_	1	0	2000
+_NRB1_26_	1	0	2000
+_NRB2_26_	1	0	2000
+_NRB1_27_	1	0	2000
+_NRB2_27_	1	0	2000
+_NRB1_28_	1	0	2000
+_NRB2_28_	1	0	2000
+_NRB1_29_	1	0	2000
+_NRB2_29_	1	0	2000
+_NRB1_30_	1	0	2000
+_NRB2_30_	1	0	2000
+_NRB1_31_	1	0	2000
+_NRB2_31_	1	0	2000
+_NRB1_32_	1	0	2000
+_NRB2_32_	1	0	2000
+_NRB1_33_	1	0	2000
+_NRB2_33_	1	0	2000
+_NRB1_34_	1	0	2000
+_NRB2_34_	1	0	2000
+_NRB1_35_	1	0	2000
+_NRB2_35_	1	0	2000
+_NRB1_36_	1	0	2000
+_NRB2_36_	1	0	2000
+_NRB1_37_	1	0	2000
+_NRB2_37_	1	0	2000
+_NRB1_38_	1	0	2000
+_NRB2_38_	1	0	2000
+_NRB1_39_	1	0	2000
+_NRB2_39_	1	0	2000
+_NRB1_40_	1	0	2000
+_NRB2_40_	1	0	2000
+_NRB1_41_	1	0	2000
+_NRB2_41_	1	0	2000
+_NRB1_42_	1	0	2000
+_NRB2_42_	1	0	2000
+_NRB1_43_	1	0	2000
+_NRB2_43_	1	0	2000
+_NRB1_44_	1	0	2000
+_NRB2_44_	1	0	2000
+_NRB1_45_	1	0	2000
+_NRB2_45_	1	0	2000
+_NRB1_46_	1	0	2000
+_NRB2_46_	1	0	2000
+_NRB1_47_	1	0	2000
+_NRB2_47_	1	0	2000
+_NRB1_48_	1	0	2000
+_NRB2_48_	1	0	2000
+_NRB1_49_	1	0	2000
+_NRB2_49_	1	0	2000
+_NRB1_50_	1	0	2000
+_NRB2_50_	1	0	2000
+_NRB1_51_	1	0	2000
+_NRB2_51_	1	0	2000
+_NRB1_52_	1	0	2000
+_NRB2_52_	1	0	2000
+_NRB1_53_	1	0	2000
+_NRB2_53_	1	0	2000
+_NRB1_54_	1	0	2000
+_NRB2_54_	1	0	2000
+_NRB1_55_	1	0	2000
+_NRB2_55_	1	0	2000
+_NRB1_56_	1	0	2000
+_NRB2_56_	1	0	2000
+_NRB1_57_	1	0	2000
+_NRB2_57_	1	0	2000
+_NRB1_58_	1	0	2000
+_NRB2_58_	1	0	2000
+_NRB1_59_	1	0	2000
+_NRB2_59_	1	0	2000
+_NRB1_60_	1	0	2000
+_NRB2_60_	1	0	2000
+_NRB1_61_	1	0	2000
+_NRB2_61_	1	0	2000
+_NRB1_62_	1	0	2000
+_NRB2_62_	1	0	2000
+_NRB1_63_	1	0	2000
+_NRB2_63_	1	0	2000
+_NRB1_64_	1	0	2000
+_NRB2_64_	1	0	2000
+_NRB1_65_	1	0	2000
+_NRB2_65_	1	0	2000
+_NRB1_66_	1	0	2000
+_NRB2_66_	1	0	2000
+_NRB1_67_	1	0	2000
+_NRB2_67_	1	0	2000
+_NRB1_68_	1	0	2000
+_NRB2_68_	1	0	2000
+_NRB1_69_	1	0	2000
+_NRB2_69_	1	0	2000
+_NRB1_70_	1	0	2000
+_NRB2_70_	1	0	2000
+_NRB1_71_	1	0	2000
+_NRB2_71_	1	0	2000
+_NRB1_72_	1	0	2000
+_NRB2_72_	1	0	2000
+_NRB1_73_	1	0	2000
+_NRB2_73_	1	0	2000
+_NRB1_74_	1	0	2000
+_NRB2_74_	1	0	2000
+_NRB1_75_	1	0	2000
+_NRB2_75_	1	0	2000
+_NRB1_76_	1	0	2000
+_NRB2_76_	1	0	2000
+_NRB1_77_	1	0	2000
+_NRB2_77_	1	0	2000
+_NRB1_78_	1	0	2000
+_NRB2_78_	1	0	2000
+_NRB1_79_	1	0	2000
+_NRB2_79_	1	0	2000
+_NRB1_80_	1	0	2000
+_NRB2_80_	1	0	2000
+_NRB1_81_	1	0	2000
+_NRB2_81_	1	0	2000
+_NRB1_82_	1	0	2000
+_NRB2_82_	1	0	2000
+_NRB1_83_	1	0	2000
+_NRB2_83_	1	0	2000
+_NRB1_84_	1	0	2000
+_NRB2_84_	1	0	2000
+_NRB1_85_	1	0	2000
+_NRB2_85_	1	0	2000
+_NRB1_86_	1	0	2000
+_NRB2_86_	1	0	2000
+_NRB1_87_	1	0	2000
+_NRB2_87_	1	0	2000
+_NRB1_88_	1	0	2000
+_NRB2_88_	1	0	2000
+_NRB1_89_	1	0	2000
+_NRB2_89_	1	0	2000
+_NRB1_90_	1	0	2000
+_NRB2_90_	1	0	2000
+_NRB1_91_	1	0	2000
+_NRB2_91_	1	0	2000
+_NRB1_92_	1	0	2000
+_NRB2_92_	1	0	2000
+_NRB1_93_	1	0	2000
+_NRB2_93_	1	0	2000
+_NRB1_94_	1	0	2000
+_NRB2_94_	1	0	2000
+_NRB1_95_	1	0	2000
+_NRB2_95_	1	0	2000
+_NRB1_96_	1	0	2000
+_NRB2_96_	1	0	2000
+_NRB1_97_	1	0	2000
+_NRB2_97_	1	0	2000
+_NRB1_98_	1	0	2000
+_NRB2_98_	1	0	2000
+_NRB1_99_	1	0	2000
+_NRB2_99_	1	0	2000
+_NRB1_100_	1	0	2000
+_NRB2_100_	1	0	2000
+_NRB1_101_	1	0	2000
+_NRB2_101_	1	0	2000
+_NRB1_102_	1	0	2000
+_NRB2_102_	1	0	2000
+_NRB1_103_	1	0	2000
+_NRB2_103_	1	0	2000
+_NRB1_104_	1	0	2000
+_NRB2_104_	1	0	2000
+_NRB1_105_	1	0	2000
+_NRB2_105_	1	0	2000
+_NRB1_106_	1	0	2000
+_NRB2_106_	1	0	2000
+_NRB1_107_	1	0	2000
+_NRB2_107_	1	0	2000
+_NRB1_108_	1	0	2000
+_NRB2_108_	1	0	2000
+_NRB1_109_	1	0	2000
+_NRB2_109_	1	0	2000
+_NRB1_110_	1	0	2000
+_NRB2_110_	1	0	2000
+_NRB1_111_	1	0	2000
+_NRB2_111_	1	0	2000
+_NRB1_112_	1	0	2000
+_NRB2_112_	1	0	2000
+_NRB1_113_	1	0	2000
+_NRB2_113_	1	0	2000
+_NRB1_114_	1	0	2000
+_NRB2_114_	1	0	2000
+_NRB1_115_	1	0	2000
+_NRB2_115_	1	0	2000
+_NRB1_116_	1	0	2000
+_NRB2_116_	1	0	2000
+_NRB1_117_	1	0	2000
+_NRB2_117_	1	0	2000
+_NRB1_118_	1	0	2000
+_NRB2_118_	1	0	2000
+_NRB1_119_	1	0	2000
+_NRB2_119_	1	0	2000
+_NRB1_120_	1	0	2000
+_NRB2_120_	1	0	2000
+_NRB1_121_	1	0	2000
+_NRB2_121_	1	0	2000
+_NRB1_122_	1	0	2000
+_NRB2_122_	1	0	2000
+_NRB1_123_	1	0	2000
+_NRB2_123_	1	0	2000
+_NRB1_124_	1	0	2000
+_NRB2_124_	1	0	2000
+_NRB1_125_	1	0	2000
+_NRB2_125_	1	0	2000
+_NRB1_126_	1	0	2000
+_NRB2_126_	1	0	2000
+_NRB1_127_	1	0	2000
+_NRB2_127_	1	0	2000
+_NRB1_128_	1	0	2000
+_NRB2_128_	1	0	2000
+_NRB1_129_	1	0	2000
+_NRB2_129_	1	0	2000
+_NRB1_130_	1	0	2000
+_NRB2_130_	1	0	2000
+_NRB1_131_	1	0	2000
+_NRB2_131_	1	0	2000
+_NRB1_132_	1	0	2000
+_NRB2_132_	1	0	2000
+_NRB1_133_	1	0	2000
+_NRB2_133_	1	0	2000
+_NRB1_134_	1	0	2000
+_NRB2_134_	1	0	2000
+_NRB1_135_	1	0	2000
+_NRB2_135_	1	0	2000
+_NRB1_136_	1	0	2000
+_NRB2_136_	1	0	2000
+_NRB1_137_	1	0	2000
+_NRB2_137_	1	0	2000
+_NRB1_138_	1	0	2000
+_NRB2_138_	1	0	2000
+_NRB1_139_	1	0	2000
+_NRB2_139_	1	0	2000
+_NRB1_140_	1	0	2000
+_NRB2_140_	1	0	2000
+_NRB1_141_	1	0	2000
+_NRB2_141_	1	0	2000
+_NRB1_142_	1	0	2000
+_NRB2_142_	1	0	2000
+_NRB1_143_	1	0	2000
+_NRB2_143_	1	0	2000
+_NRB1_144_	1	0	2000
+_NRB2_144_	1	0	2000
+_NRB1_145_	1	0	2000
+_NRB2_145_	1	0	2000
+_NRB1_146_	1	0	2000
+_NRB2_146_	1	0	2000
+_NRB1_147_	1	0	2000
+_NRB2_147_	1	0	2000
+_NRB1_148_	1	0	2000
+_NRB2_148_	1	0	2000
+_NRB1_149_	1	0	2000
+_NRB2_149_	1	0	2000
+_NRB1_150_	1	0	2000
+_NRB2_150_	1	0	2000
+_NRB1_151_	1	0	2000
+_NRB2_151_	1	0	2000
+_NRB1_152_	1	0	2000
+_NRB2_152_	1	0	2000
+_NRB1_153_	1	0	2000
+_NRB2_153_	1	0	2000
+_NRB1_154_	1	0	2000
+_NRB2_154_	1	0	2000
+_NRB1_155_	1	0	2000
+_NRB2_155_	1	0	2000
+_NRB1_156_	1	0	2000
+_NRB2_156_	1	0	2000
+_NRB1_157_	1	0	2000
+_NRB2_157_	1	0	2000
+_NRB1_158_	1	0	2000
+_NRB2_158_	1	0	2000
+_NRB1_159_	1	0	2000
+_NRB2_159_	1	0	2000
+_NRB1_160_	1	0	2000
+_NRB2_160_	1	0	2000
+_NRB1_161_	1	0	2000
+_NRB2_161_	1	0	2000
+_NRB1_162_	1	0	2000
+_NRB2_162_	1	0	2000
+EndIntegerParams
+ 
+BeginCombinatorialParams
+_SUBCAT_0_	string	10076#1	1	10076#1
+_SUBCAT_1_	string	10136#1	1	10136#1
+_SUBCAT_2_	string	10136#2	1	10136#2
+_SUBCAT_3_	string	10148#1	1	10148#1
+_SUBCAT_4_	string	10148#2	1	10148#2
+_SUBCAT_5_	string	10148#3	1	10148#3
+_SUBCAT_6_	string	10148#4	1	10148#4
+_SUBCAT_7_	string	12448D#1	1	12448D#1
+_SUBCAT_8_	string	12455D#1	1	12455D#1
+_SUBCAT_9_	string	12460#1	1	12460#1
+_SUBCAT_10_	string	12502#1	1	12502#1
+_SUBCAT_11_	string	12506#1	1	12506#1
+_SUBCAT_12_	string	12524#1	1	12524#1
+_SUBCAT_13_	string	12539#1	1	12539#1
+_SUBCAT_14_	string	12549#1	1	12549#1
+_SUBCAT_15_	string	12552#1	1	12552#1
+_SUBCAT_16_	string	12579#1	1	12579#1
+_SUBCAT_17_	string	12593#1	1	12593#1
+_SUBCAT_18_	string	12601#1	1	12601#1
+_SUBCAT_19_	string	12603#1	1	12603#1
+_SUBCAT_20_	string	13832#1	1	13832#1
+_SUBCAT_21_	string	13872#1	1	13872#1
+_SUBCAT_22_	string	13899#1	1	13899#1
+_SUBCAT_23_	string	13919#1	1	13919#1
+_SUBCAT_24_	string	13922#1	1	13922#1
+_SUBCAT_25_	string	13939#1	1	13939#1
+_SUBCAT_26_	string	14021#1	1	14021#1
+_SUBCAT_27_	string	14021#2	1	14021#2
+_SUBCAT_28_	string	14062#1	1	14062#1
+_SUBCAT_29_	string	14076#1	1	14076#1
+_SUBCAT_30_	string	14103#1	1	14103#1
+_SUBCAT_31_	string	14142#1	1	14142#1
+_SUBCAT_32_	string	14142#2	1	14142#2
+_SUBCAT_33_	string	14169#1	1	14169#1
+_SUBCAT_34_	string	14219#1	1	14219#1
+_SUBCAT_35_	string	14433#1	1	14433#1
+_SUBCAT_36_	string	14453#1	1	14453#1
+_SUBCAT_37_	string	14478#1	1	14478#1
+_SUBCAT_38_	string	14557#1	1	14557#1
+_SUBCAT_39_	string	14591#1	1	14591#1
+_SUBCAT_40_	string	14601#1	1	14601#1
+_SUBCAT_41_	string	14656#1	1	14656#1
+_SUBCAT_42_	string	15191#1	1	15191#1
+_SUBCAT_43_	string	15407#1	1	15407#1
+_SUBCAT_44_	string	16095#1	1	16095#1
+_SUBCAT_45_	string	16105#1	1	16105#1
+_SUBCAT_46_	string	16106#1	1	16106#1
+_SUBCAT_47_	string	6902#1	1	6902#1
+_SUBCAT_48_	string	6946#1	1	6946#1
+_SUBCAT_49_	string	6946#2	1	6946#2
+_SUBCAT_50_	string	6948#1	1	6948#1
+_SUBCAT_51_	string	6985#1	1	6985#1
+_SUBCAT_52_	string	6992#1	1	6992#1
+_SUBCAT_53_	string	6992#2	1	6992#2
+_SUBCAT_54_	string	7028#1	1	7028#1
+_SUBCAT_55_	string	7032#1	1	7032#1
+_SUBCAT_56_	string	7040#1	1	7040#1
+_SUBCAT_57_	string	7053#1	1	7053#1
+_SUBCAT_58_	string	7069#1	1	7069#1
+_SUBCAT_59_	string	7106#1	1	7106#1
+_SUBCAT_60_	string	7115#1	1	7115#1
+_SUBCAT_61_	string	7135#1	1	7135#1
+_SUBCAT_62_	string	7138#1	1	7138#1
+_SUBCAT_63_	string	7142#1	1	7142#1
+_SUBCAT_64_	string	7145#1	1	7145#1
+_SUBCAT_65_	string	7167#1	1	7167#1
+_SUBCAT_66_	string	7177#1	1	7177#1
+_SUBCAT_67_	string	7233#1	1	7233#1
+_SUBCAT_68_	string	7233#2	1	7233#2
+_SUBCAT_69_	string	7279#1	1	7279#1
+_SUBCAT_70_	string	7281#1	1	7281#1
+_SUBCAT_71_	string	7335#1	1	7335#1
+_SUBCAT_72_	string	7383#1	1	7383#1
+_SUBCAT_73_	string	7387#1	1	7387#1
+_SUBCAT_74_	string	7417#1	1	7417#1
+_SUBCAT_75_	string	7464D#1	1	7464D#1
+_SUBCAT_76_	string	7475#1	1	7475#1
+_SUBCAT_77_	string	7523#1	1	7523#1
+_SUBCAT_78_	string	7539#1	1	7539#1
+_SUBCAT_79_	string	7560#1	1	7560#1
+_SUBCAT_80_	string	7588#1	1	7588#1
+_SUBCAT_81_	string	7593#1	1	7593#1
+_SUBCAT_82_	string	7604#1	1	7604#1
+_SUBCAT_83_	string	7701#1	1	7701#1
+_SUBCAT_84_	string	7704#1	1	7704#1
+_SUBCAT_85_	string	7716#1	1	7716#1
+_SUBCAT_86_	string	7729#1	1	7729#1
+_SUBCAT_87_	string	7771#1	1	7771#1
+_SUBCAT_88_	string	7780#1	1	7780#1
+_SUBCAT_89_	string	7789#1	1	7789#1
+_SUBCAT_90_	string	7819#1	1	7819#1
+_SUBCAT_91_	string	7828#1	1	7828#1
+_SUBCAT_92_	string	7958D#1	1	7958D#1
+_SUBCAT_93_	string	7960#1	1	7960#1
+_SUBCAT_94_	string	7960#2	1	7960#2
+_SUBCAT_95_	string	8013#1	1	8013#1
+_SUBCAT_96_	string	8013#2	1	8013#2
+_SUBCAT_97_	string	8070#1	1	8070#1
+_SUBCAT_98_	string	8085#1	1	8085#1
+_SUBCAT_99_	string	8085#2	1	8085#2
+_SUBCAT_100_	string	8139#1	1	8139#1
+_SUBCAT_101_	string	8139#2	1	8139#2
+_SUBCAT_102_	string	8151#1	1	8151#1
+_SUBCAT_103_	string	8183#1	1	8183#1
+_SUBCAT_104_	string	8183#2	1	8183#2
+_SUBCAT_105_	string	8191#1	1	8191#1
+_SUBCAT_106_	string	8193#1	1	8193#1
+_SUBCAT_107_	string	8208#1	1	8208#1
+_SUBCAT_108_	string	8231#1	1	8231#1
+_SUBCAT_109_	string	8254#1	1	8254#1
+_SUBCAT_110_	string	8689#1	1	8689#1
+_SUBCAT_111_	string	8689#2	1	8689#2
+_SUBCAT_112_	string	8736D#1	1	8736D#1
+_SUBCAT_113_	string	8794D#1	1	8794D#1
+_SUBCAT_114_	string	8800#1	1	8800#1
+_SUBCAT_115_	string	8822D#1	1	8822D#1
+_SUBCAT_116_	string	8841#1	1	8841#1
+_SUBCAT_117_	string	8841#2	1	8841#2
+_SUBCAT_118_	string	8841#3	1	8841#3
+_SUBCAT_119_	string	8852#1	1	8852#1
+_SUBCAT_120_	string	8864#1	1	8864#1
+_SUBCAT_121_	string	8867#1	1	8867#1
+_SUBCAT_122_	string	8877#1	1	8877#1
+_SUBCAT_123_	string	8877#2	1	8877#2
+_SUBCAT_124_	string	8885#1	1	8885#1
+_SUBCAT_125_	string	8896#1	1	8896#1
+_SUBCAT_126_	string	8896#2	1	8896#2
+_SUBCAT_127_	string	8899#1	1	8899#1
+_SUBCAT_128_	string	8915#1	1	8915#1
+_SUBCAT_129_	string	8915#2	1	8915#2
+_SUBCAT_130_	string	8915#3	1	8915#3
+_SUBCAT_131_	string	8926#1	1	8926#1
+_SUBCAT_132_	string	9321#1	1	9321#1
+_SUBCAT_133_	string	9325#1	1	9325#1
+_SUBCAT_134_	string	9325#2	1	9325#2
+_SUBCAT_135_	string	9776#1	1	9776#1
+_SUBCAT_136_	string	BAB01D#1	1	BAB01D#1
+_SUBCAT_137_	string	HOWBA2#1	1	HOWBA2#1
+_SUBCAT_138_	string	LJ#1	1	LJ#1
+_SUBCAT_139_	string	SPP123C#1	1	SPP123C#1
+_SUBCAT_140_	string	SPP125A#1	1	SPP125A#1
+_SUBCAT_141_	string	SPP208#1	1	SPP208#1
+_SUBCAT_142_	string	SPP291#1	1	SPP291#1
+_SUBCAT_143_	string	SPP292#1	1	SPP292#1
+_SUBCAT_144_	string	SPP293#1	1	SPP293#1
+_SUBCAT_145_	string	SPP294#1	1	SPP294#1
+_SUBCAT_146_	string	SPP295#1	1	SPP295#1
+_SUBCAT_147_	string	SPP329#1	1	SPP329#1
+_SUBCAT_148_	string	SPP344#1	1	SPP344#1
+_SUBCAT_149_	string	SPP79#1	1	SPP79#1
+_SUBCAT_150_	string	SPP80#1	1	SPP80#1
+_SUBCAT_151_	string	SPP81#1	1	SPP81#1
+_SUBCAT_152_	string	SPP82#1	1	SPP82#1
+_SUBCAT_153_	string	SPP84#1	1	SPP84#1
+_SUBCAT_154_	string	SPP85#1	1	SPP85#1
+_SUBCAT_155_	string	SPP87#1	1	SPP87#1
+_SUBCAT_156_	string	SPP88#1	1	SPP88#1
+_SUBCAT_157_	string	SPP89#1	1	SPP89#1
+_SUBCAT_158_	string	SPP90#1	1	SPP90#1
+_SUBCAT_159_	string	SPP91#1	1	SPP91#1
+_SUBCAT_160_	string	SPP92#1	1	SPP92#1
+_SUBCAT_161_	string	SPP94#1	1	SPP94#1
+_SUBCAT_162_	string	SPP97A#1	1	SPP97A#1
+EndCombinatorialParams
+ 
+BeginResponseVars
+#name   filename             keyword         line    col     token  aug?
+NCSO    submodel_nodes.csv ; node_name       1       2       ','    no
+FVOL    submodel_nodes.csv ; node_name       1       3       ','    yes
+FDUR    submodel_nodes.csv ; node_name       1       4       ','    yes
+_NRB1_0_n	num_lid.csv ;	Subcat_Name	1	1	','    no
+_NRB2_0_n	num_lid.csv ;	Subcat_Name	1	2	','    no
+_NRB1_1_n	num_lid.csv ;	Subcat_Name	2	1	','    no
+_NRB2_1_n	num_lid.csv ;	Subcat_Name	2	2	','    no
+_NRB1_2_n	num_lid.csv ;	Subcat_Name	3	1	','    no
+_NRB2_2_n	num_lid.csv ;	Subcat_Name	3	2	','    no
+_NRB1_3_n	num_lid.csv ;	Subcat_Name	4	1	','    no
+_NRB2_3_n	num_lid.csv ;	Subcat_Name	4	2	','    no
+_NRB1_4_n	num_lid.csv ;	Subcat_Name	5	1	','    no
+_NRB2_4_n	num_lid.csv ;	Subcat_Name	5	2	','    no
+_NRB1_5_n	num_lid.csv ;	Subcat_Name	6	1	','    no
+_NRB2_5_n	num_lid.csv ;	Subcat_Name	6	2	','    no
+_NRB1_6_n	num_lid.csv ;	Subcat_Name	7	1	','    no
+_NRB2_6_n	num_lid.csv ;	Subcat_Name	7	2	','    no
+_NRB1_7_n	num_lid.csv ;	Subcat_Name	8	1	','    no
+_NRB2_7_n	num_lid.csv ;	Subcat_Name	8	2	','    no
+_NRB1_8_n	num_lid.csv ;	Subcat_Name	9	1	','    no
+_NRB2_8_n	num_lid.csv ;	Subcat_Name	9	2	','    no
+_NRB1_9_n	num_lid.csv ;	Subcat_Name	10	1	','    no
+_NRB2_9_n	num_lid.csv ;	Subcat_Name	10	2	','    no
+_NRB1_10_n	num_lid.csv ;	Subcat_Name	11	1	','    no
+_NRB2_10_n	num_lid.csv ;	Subcat_Name	11	2	','    no
+_NRB1_11_n	num_lid.csv ;	Subcat_Name	12	1	','    no
+_NRB2_11_n	num_lid.csv ;	Subcat_Name	12	2	','    no
+_NRB1_12_n	num_lid.csv ;	Subcat_Name	13	1	','    no
+_NRB2_12_n	num_lid.csv ;	Subcat_Name	13	2	','    no
+_NRB1_13_n	num_lid.csv ;	Subcat_Name	14	1	','    no
+_NRB2_13_n	num_lid.csv ;	Subcat_Name	14	2	','    no
+_NRB1_14_n	num_lid.csv ;	Subcat_Name	15	1	','    no
+_NRB2_14_n	num_lid.csv ;	Subcat_Name	15	2	','    no
+_NRB1_15_n	num_lid.csv ;	Subcat_Name	16	1	','    no
+_NRB2_15_n	num_lid.csv ;	Subcat_Name	16	2	','    no
+_NRB1_16_n	num_lid.csv ;	Subcat_Name	17	1	','    no
+_NRB2_16_n	num_lid.csv ;	Subcat_Name	17	2	','    no
+_NRB1_17_n	num_lid.csv ;	Subcat_Name	18	1	','    no
+_NRB2_17_n	num_lid.csv ;	Subcat_Name	18	2	','    no
+_NRB1_18_n	num_lid.csv ;	Subcat_Name	19	1	','    no
+_NRB2_18_n	num_lid.csv ;	Subcat_Name	19	2	','    no
+_NRB1_19_n	num_lid.csv ;	Subcat_Name	20	1	','    no
+_NRB2_19_n	num_lid.csv ;	Subcat_Name	20	2	','    no
+_NRB1_20_n	num_lid.csv ;	Subcat_Name	21	1	','    no
+_NRB2_20_n	num_lid.csv ;	Subcat_Name	21	2	','    no
+_NRB1_21_n	num_lid.csv ;	Subcat_Name	22	1	','    no
+_NRB2_21_n	num_lid.csv ;	Subcat_Name	22	2	','    no
+_NRB1_22_n	num_lid.csv ;	Subcat_Name	23	1	','    no
+_NRB2_22_n	num_lid.csv ;	Subcat_Name	23	2	','    no
+_NRB1_23_n	num_lid.csv ;	Subcat_Name	24	1	','    no
+_NRB2_23_n	num_lid.csv ;	Subcat_Name	24	2	','    no
+_NRB1_24_n	num_lid.csv ;	Subcat_Name	25	1	','    no
+_NRB2_24_n	num_lid.csv ;	Subcat_Name	25	2	','    no
+_NRB1_25_n	num_lid.csv ;	Subcat_Name	26	1	','    no
+_NRB2_25_n	num_lid.csv ;	Subcat_Name	26	2	','    no
+_NRB1_26_n	num_lid.csv ;	Subcat_Name	27	1	','    no
+_NRB2_26_n	num_lid.csv ;	Subcat_Name	27	2	','    no
+_NRB1_27_n	num_lid.csv ;	Subcat_Name	28	1	','    no
+_NRB2_27_n	num_lid.csv ;	Subcat_Name	28	2	','    no
+_NRB1_28_n	num_lid.csv ;	Subcat_Name	29	1	','    no
+_NRB2_28_n	num_lid.csv ;	Subcat_Name	29	2	','    no
+_NRB1_29_n	num_lid.csv ;	Subcat_Name	30	1	','    no
+_NRB2_29_n	num_lid.csv ;	Subcat_Name	30	2	','    no
+_NRB1_30_n	num_lid.csv ;	Subcat_Name	31	1	','    no
+_NRB2_30_n	num_lid.csv ;	Subcat_Name	31	2	','    no
+_NRB1_31_n	num_lid.csv ;	Subcat_Name	32	1	','    no
+_NRB2_31_n	num_lid.csv ;	Subcat_Name	32	2	','    no
+_NRB1_32_n	num_lid.csv ;	Subcat_Name	33	1	','    no
+_NRB2_32_n	num_lid.csv ;	Subcat_Name	33	2	','    no
+_NRB1_33_n	num_lid.csv ;	Subcat_Name	34	1	','    no
+_NRB2_33_n	num_lid.csv ;	Subcat_Name	34	2	','    no
+_NRB1_34_n	num_lid.csv ;	Subcat_Name	35	1	','    no
+_NRB2_34_n	num_lid.csv ;	Subcat_Name	35	2	','    no
+_NRB1_35_n	num_lid.csv ;	Subcat_Name	36	1	','    no
+_NRB2_35_n	num_lid.csv ;	Subcat_Name	36	2	','    no
+_NRB1_36_n	num_lid.csv ;	Subcat_Name	37	1	','    no
+_NRB2_36_n	num_lid.csv ;	Subcat_Name	37	2	','    no
+_NRB1_37_n	num_lid.csv ;	Subcat_Name	38	1	','    no
+_NRB2_37_n	num_lid.csv ;	Subcat_Name	38	2	','    no
+_NRB1_38_n	num_lid.csv ;	Subcat_Name	39	1	','    no
+_NRB2_38_n	num_lid.csv ;	Subcat_Name	39	2	','    no
+_NRB1_39_n	num_lid.csv ;	Subcat_Name	40	1	','    no
+_NRB2_39_n	num_lid.csv ;	Subcat_Name	40	2	','    no
+_NRB1_40_n	num_lid.csv ;	Subcat_Name	41	1	','    no
+_NRB2_40_n	num_lid.csv ;	Subcat_Name	41	2	','    no
+_NRB1_41_n	num_lid.csv ;	Subcat_Name	42	1	','    no
+_NRB2_41_n	num_lid.csv ;	Subcat_Name	42	2	','    no
+_NRB1_42_n	num_lid.csv ;	Subcat_Name	43	1	','    no
+_NRB2_42_n	num_lid.csv ;	Subcat_Name	43	2	','    no
+_NRB1_43_n	num_lid.csv ;	Subcat_Name	44	1	','    no
+_NRB2_43_n	num_lid.csv ;	Subcat_Name	44	2	','    no
+_NRB1_44_n	num_lid.csv ;	Subcat_Name	45	1	','    no
+_NRB2_44_n	num_lid.csv ;	Subcat_Name	45	2	','    no
+_NRB1_45_n	num_lid.csv ;	Subcat_Name	46	1	','    no
+_NRB2_45_n	num_lid.csv ;	Subcat_Name	46	2	','    no
+_NRB1_46_n	num_lid.csv ;	Subcat_Name	47	1	','    no
+_NRB2_46_n	num_lid.csv ;	Subcat_Name	47	2	','    no
+_NRB1_47_n	num_lid.csv ;	Subcat_Name	48	1	','    no
+_NRB2_47_n	num_lid.csv ;	Subcat_Name	48	2	','    no
+_NRB1_48_n	num_lid.csv ;	Subcat_Name	49	1	','    no
+_NRB2_48_n	num_lid.csv ;	Subcat_Name	49	2	','    no
+_NRB1_49_n	num_lid.csv ;	Subcat_Name	50	1	','    no
+_NRB2_49_n	num_lid.csv ;	Subcat_Name	50	2	','    no
+_NRB1_50_n	num_lid.csv ;	Subcat_Name	51	1	','    no
+_NRB2_50_n	num_lid.csv ;	Subcat_Name	51	2	','    no
+_NRB1_51_n	num_lid.csv ;	Subcat_Name	52	1	','    no
+_NRB2_51_n	num_lid.csv ;	Subcat_Name	52	2	','    no
+_NRB1_52_n	num_lid.csv ;	Subcat_Name	53	1	','    no
+_NRB2_52_n	num_lid.csv ;	Subcat_Name	53	2	','    no
+_NRB1_53_n	num_lid.csv ;	Subcat_Name	54	1	','    no
+_NRB2_53_n	num_lid.csv ;	Subcat_Name	54	2	','    no
+_NRB1_54_n	num_lid.csv ;	Subcat_Name	55	1	','    no
+_NRB2_54_n	num_lid.csv ;	Subcat_Name	55	2	','    no
+_NRB1_55_n	num_lid.csv ;	Subcat_Name	56	1	','    no
+_NRB2_55_n	num_lid.csv ;	Subcat_Name	56	2	','    no
+_NRB1_56_n	num_lid.csv ;	Subcat_Name	57	1	','    no
+_NRB2_56_n	num_lid.csv ;	Subcat_Name	57	2	','    no
+_NRB1_57_n	num_lid.csv ;	Subcat_Name	58	1	','    no
+_NRB2_57_n	num_lid.csv ;	Subcat_Name	58	2	','    no
+_NRB1_58_n	num_lid.csv ;	Subcat_Name	59	1	','    no
+_NRB2_58_n	num_lid.csv ;	Subcat_Name	59	2	','    no
+_NRB1_59_n	num_lid.csv ;	Subcat_Name	60	1	','    no
+_NRB2_59_n	num_lid.csv ;	Subcat_Name	60	2	','    no
+_NRB1_60_n	num_lid.csv ;	Subcat_Name	61	1	','    no
+_NRB2_60_n	num_lid.csv ;	Subcat_Name	61	2	','    no
+_NRB1_61_n	num_lid.csv ;	Subcat_Name	62	1	','    no
+_NRB2_61_n	num_lid.csv ;	Subcat_Name	62	2	','    no
+_NRB1_62_n	num_lid.csv ;	Subcat_Name	63	1	','    no
+_NRB2_62_n	num_lid.csv ;	Subcat_Name	63	2	','    no
+_NRB1_63_n	num_lid.csv ;	Subcat_Name	64	1	','    no
+_NRB2_63_n	num_lid.csv ;	Subcat_Name	64	2	','    no
+_NRB1_64_n	num_lid.csv ;	Subcat_Name	65	1	','    no
+_NRB2_64_n	num_lid.csv ;	Subcat_Name	65	2	','    no
+_NRB1_65_n	num_lid.csv ;	Subcat_Name	66	1	','    no
+_NRB2_65_n	num_lid.csv ;	Subcat_Name	66	2	','    no
+_NRB1_66_n	num_lid.csv ;	Subcat_Name	67	1	','    no
+_NRB2_66_n	num_lid.csv ;	Subcat_Name	67	2	','    no
+_NRB1_67_n	num_lid.csv ;	Subcat_Name	68	1	','    no
+_NRB2_67_n	num_lid.csv ;	Subcat_Name	68	2	','    no
+_NRB1_68_n	num_lid.csv ;	Subcat_Name	69	1	','    no
+_NRB2_68_n	num_lid.csv ;	Subcat_Name	69	2	','    no
+_NRB1_69_n	num_lid.csv ;	Subcat_Name	70	1	','    no
+_NRB2_69_n	num_lid.csv ;	Subcat_Name	70	2	','    no
+_NRB1_70_n	num_lid.csv ;	Subcat_Name	71	1	','    no
+_NRB2_70_n	num_lid.csv ;	Subcat_Name	71	2	','    no
+_NRB1_71_n	num_lid.csv ;	Subcat_Name	72	1	','    no
+_NRB2_71_n	num_lid.csv ;	Subcat_Name	72	2	','    no
+_NRB1_72_n	num_lid.csv ;	Subcat_Name	73	1	','    no
+_NRB2_72_n	num_lid.csv ;	Subcat_Name	73	2	','    no
+_NRB1_73_n	num_lid.csv ;	Subcat_Name	74	1	','    no
+_NRB2_73_n	num_lid.csv ;	Subcat_Name	74	2	','    no
+_NRB1_74_n	num_lid.csv ;	Subcat_Name	75	1	','    no
+_NRB2_74_n	num_lid.csv ;	Subcat_Name	75	2	','    no
+_NRB1_75_n	num_lid.csv ;	Subcat_Name	76	1	','    no
+_NRB2_75_n	num_lid.csv ;	Subcat_Name	76	2	','    no
+_NRB1_76_n	num_lid.csv ;	Subcat_Name	77	1	','    no
+_NRB2_76_n	num_lid.csv ;	Subcat_Name	77	2	','    no
+_NRB1_77_n	num_lid.csv ;	Subcat_Name	78	1	','    no
+_NRB2_77_n	num_lid.csv ;	Subcat_Name	78	2	','    no
+_NRB1_78_n	num_lid.csv ;	Subcat_Name	79	1	','    no
+_NRB2_78_n	num_lid.csv ;	Subcat_Name	79	2	','    no
+_NRB1_79_n	num_lid.csv ;	Subcat_Name	80	1	','    no
+_NRB2_79_n	num_lid.csv ;	Subcat_Name	80	2	','    no
+_NRB1_80_n	num_lid.csv ;	Subcat_Name	81	1	','    no
+_NRB2_80_n	num_lid.csv ;	Subcat_Name	81	2	','    no
+_NRB1_81_n	num_lid.csv ;	Subcat_Name	82	1	','    no
+_NRB2_81_n	num_lid.csv ;	Subcat_Name	82	2	','    no
+_NRB1_82_n	num_lid.csv ;	Subcat_Name	83	1	','    no
+_NRB2_82_n	num_lid.csv ;	Subcat_Name	83	2	','    no
+_NRB1_83_n	num_lid.csv ;	Subcat_Name	84	1	','    no
+_NRB2_83_n	num_lid.csv ;	Subcat_Name	84	2	','    no
+_NRB1_84_n	num_lid.csv ;	Subcat_Name	85	1	','    no
+_NRB2_84_n	num_lid.csv ;	Subcat_Name	85	2	','    no
+_NRB1_85_n	num_lid.csv ;	Subcat_Name	86	1	','    no
+_NRB2_85_n	num_lid.csv ;	Subcat_Name	86	2	','    no
+_NRB1_86_n	num_lid.csv ;	Subcat_Name	87	1	','    no
+_NRB2_86_n	num_lid.csv ;	Subcat_Name	87	2	','    no
+_NRB1_87_n	num_lid.csv ;	Subcat_Name	88	1	','    no
+_NRB2_87_n	num_lid.csv ;	Subcat_Name	88	2	','    no
+_NRB1_88_n	num_lid.csv ;	Subcat_Name	89	1	','    no
+_NRB2_88_n	num_lid.csv ;	Subcat_Name	89	2	','    no
+_NRB1_89_n	num_lid.csv ;	Subcat_Name	90	1	','    no
+_NRB2_89_n	num_lid.csv ;	Subcat_Name	90	2	','    no
+_NRB1_90_n	num_lid.csv ;	Subcat_Name	91	1	','    no
+_NRB2_90_n	num_lid.csv ;	Subcat_Name	91	2	','    no
+_NRB1_91_n	num_lid.csv ;	Subcat_Name	92	1	','    no
+_NRB2_91_n	num_lid.csv ;	Subcat_Name	92	2	','    no
+_NRB1_92_n	num_lid.csv ;	Subcat_Name	93	1	','    no
+_NRB2_92_n	num_lid.csv ;	Subcat_Name	93	2	','    no
+_NRB1_93_n	num_lid.csv ;	Subcat_Name	94	1	','    no
+_NRB2_93_n	num_lid.csv ;	Subcat_Name	94	2	','    no
+_NRB1_94_n	num_lid.csv ;	Subcat_Name	95	1	','    no
+_NRB2_94_n	num_lid.csv ;	Subcat_Name	95	2	','    no
+_NRB1_95_n	num_lid.csv ;	Subcat_Name	96	1	','    no
+_NRB2_95_n	num_lid.csv ;	Subcat_Name	96	2	','    no
+_NRB1_96_n	num_lid.csv ;	Subcat_Name	97	1	','    no
+_NRB2_96_n	num_lid.csv ;	Subcat_Name	97	2	','    no
+_NRB1_97_n	num_lid.csv ;	Subcat_Name	98	1	','    no
+_NRB2_97_n	num_lid.csv ;	Subcat_Name	98	2	','    no
+_NRB1_98_n	num_lid.csv ;	Subcat_Name	99	1	','    no
+_NRB2_98_n	num_lid.csv ;	Subcat_Name	99	2	','    no
+_NRB1_99_n	num_lid.csv ;	Subcat_Name	100	1	','    no
+_NRB2_99_n	num_lid.csv ;	Subcat_Name	100	2	','    no
+_NRB1_100_n	num_lid.csv ;	Subcat_Name	101	1	','    no
+_NRB2_100_n	num_lid.csv ;	Subcat_Name	101	2	','    no
+_NRB1_101_n	num_lid.csv ;	Subcat_Name	102	1	','    no
+_NRB2_101_n	num_lid.csv ;	Subcat_Name	102	2	','    no
+_NRB1_102_n	num_lid.csv ;	Subcat_Name	103	1	','    no
+_NRB2_102_n	num_lid.csv ;	Subcat_Name	103	2	','    no
+_NRB1_103_n	num_lid.csv ;	Subcat_Name	104	1	','    no
+_NRB2_103_n	num_lid.csv ;	Subcat_Name	104	2	','    no
+_NRB1_104_n	num_lid.csv ;	Subcat_Name	105	1	','    no
+_NRB2_104_n	num_lid.csv ;	Subcat_Name	105	2	','    no
+_NRB1_105_n	num_lid.csv ;	Subcat_Name	106	1	','    no
+_NRB2_105_n	num_lid.csv ;	Subcat_Name	106	2	','    no
+_NRB1_106_n	num_lid.csv ;	Subcat_Name	107	1	','    no
+_NRB2_106_n	num_lid.csv ;	Subcat_Name	107	2	','    no
+_NRB1_107_n	num_lid.csv ;	Subcat_Name	108	1	','    no
+_NRB2_107_n	num_lid.csv ;	Subcat_Name	108	2	','    no
+_NRB1_108_n	num_lid.csv ;	Subcat_Name	109	1	','    no
+_NRB2_108_n	num_lid.csv ;	Subcat_Name	109	2	','    no
+_NRB1_109_n	num_lid.csv ;	Subcat_Name	110	1	','    no
+_NRB2_109_n	num_lid.csv ;	Subcat_Name	110	2	','    no
+_NRB1_110_n	num_lid.csv ;	Subcat_Name	111	1	','    no
+_NRB2_110_n	num_lid.csv ;	Subcat_Name	111	2	','    no
+_NRB1_111_n	num_lid.csv ;	Subcat_Name	112	1	','    no
+_NRB2_111_n	num_lid.csv ;	Subcat_Name	112	2	','    no
+_NRB1_112_n	num_lid.csv ;	Subcat_Name	113	1	','    no
+_NRB2_112_n	num_lid.csv ;	Subcat_Name	113	2	','    no
+_NRB1_113_n	num_lid.csv ;	Subcat_Name	114	1	','    no
+_NRB2_113_n	num_lid.csv ;	Subcat_Name	114	2	','    no
+_NRB1_114_n	num_lid.csv ;	Subcat_Name	115	1	','    no
+_NRB2_114_n	num_lid.csv ;	Subcat_Name	115	2	','    no
+_NRB1_115_n	num_lid.csv ;	Subcat_Name	116	1	','    no
+_NRB2_115_n	num_lid.csv ;	Subcat_Name	116	2	','    no
+_NRB1_116_n	num_lid.csv ;	Subcat_Name	117	1	','    no
+_NRB2_116_n	num_lid.csv ;	Subcat_Name	117	2	','    no
+_NRB1_117_n	num_lid.csv ;	Subcat_Name	118	1	','    no
+_NRB2_117_n	num_lid.csv ;	Subcat_Name	118	2	','    no
+_NRB1_118_n	num_lid.csv ;	Subcat_Name	119	1	','    no
+_NRB2_118_n	num_lid.csv ;	Subcat_Name	119	2	','    no
+_NRB1_119_n	num_lid.csv ;	Subcat_Name	120	1	','    no
+_NRB2_119_n	num_lid.csv ;	Subcat_Name	120	2	','    no
+_NRB1_120_n	num_lid.csv ;	Subcat_Name	121	1	','    no
+_NRB2_120_n	num_lid.csv ;	Subcat_Name	121	2	','    no
+_NRB1_121_n	num_lid.csv ;	Subcat_Name	122	1	','    no
+_NRB2_121_n	num_lid.csv ;	Subcat_Name	122	2	','    no
+_NRB1_122_n	num_lid.csv ;	Subcat_Name	123	1	','    no
+_NRB2_122_n	num_lid.csv ;	Subcat_Name	123	2	','    no
+_NRB1_123_n	num_lid.csv ;	Subcat_Name	124	1	','    no
+_NRB2_123_n	num_lid.csv ;	Subcat_Name	124	2	','    no
+_NRB1_124_n	num_lid.csv ;	Subcat_Name	125	1	','    no
+_NRB2_124_n	num_lid.csv ;	Subcat_Name	125	2	','    no
+_NRB1_125_n	num_lid.csv ;	Subcat_Name	126	1	','    no
+_NRB2_125_n	num_lid.csv ;	Subcat_Name	126	2	','    no
+_NRB1_126_n	num_lid.csv ;	Subcat_Name	127	1	','    no
+_NRB2_126_n	num_lid.csv ;	Subcat_Name	127	2	','    no
+_NRB1_127_n	num_lid.csv ;	Subcat_Name	128	1	','    no
+_NRB2_127_n	num_lid.csv ;	Subcat_Name	128	2	','    no
+_NRB1_128_n	num_lid.csv ;	Subcat_Name	129	1	','    no
+_NRB2_128_n	num_lid.csv ;	Subcat_Name	129	2	','    no
+_NRB1_129_n	num_lid.csv ;	Subcat_Name	130	1	','    no
+_NRB2_129_n	num_lid.csv ;	Subcat_Name	130	2	','    no
+_NRB1_130_n	num_lid.csv ;	Subcat_Name	131	1	','    no
+_NRB2_130_n	num_lid.csv ;	Subcat_Name	131	2	','    no
+_NRB1_131_n	num_lid.csv ;	Subcat_Name	132	1	','    no
+_NRB2_131_n	num_lid.csv ;	Subcat_Name	132	2	','    no
+_NRB1_132_n	num_lid.csv ;	Subcat_Name	133	1	','    no
+_NRB2_132_n	num_lid.csv ;	Subcat_Name	133	2	','    no
+_NRB1_133_n	num_lid.csv ;	Subcat_Name	134	1	','    no
+_NRB2_133_n	num_lid.csv ;	Subcat_Name	134	2	','    no
+_NRB1_134_n	num_lid.csv ;	Subcat_Name	135	1	','    no
+_NRB2_134_n	num_lid.csv ;	Subcat_Name	135	2	','    no
+_NRB1_135_n	num_lid.csv ;	Subcat_Name	136	1	','    no
+_NRB2_135_n	num_lid.csv ;	Subcat_Name	136	2	','    no
+_NRB1_136_n	num_lid.csv ;	Subcat_Name	137	1	','    no
+_NRB2_136_n	num_lid.csv ;	Subcat_Name	137	2	','    no
+_NRB1_137_n	num_lid.csv ;	Subcat_Name	138	1	','    no
+_NRB2_137_n	num_lid.csv ;	Subcat_Name	138	2	','    no
+_NRB1_138_n	num_lid.csv ;	Subcat_Name	139	1	','    no
+_NRB2_138_n	num_lid.csv ;	Subcat_Name	139	2	','    no
+_NRB1_139_n	num_lid.csv ;	Subcat_Name	140	1	','    no
+_NRB2_139_n	num_lid.csv ;	Subcat_Name	140	2	','    no
+_NRB1_140_n	num_lid.csv ;	Subcat_Name	141	1	','    no
+_NRB2_140_n	num_lid.csv ;	Subcat_Name	141	2	','    no
+_NRB1_141_n	num_lid.csv ;	Subcat_Name	142	1	','    no
+_NRB2_141_n	num_lid.csv ;	Subcat_Name	142	2	','    no
+_NRB1_142_n	num_lid.csv ;	Subcat_Name	143	1	','    no
+_NRB2_142_n	num_lid.csv ;	Subcat_Name	143	2	','    no
+_NRB1_143_n	num_lid.csv ;	Subcat_Name	144	1	','    no
+_NRB2_143_n	num_lid.csv ;	Subcat_Name	144	2	','    no
+_NRB1_144_n	num_lid.csv ;	Subcat_Name	145	1	','    no
+_NRB2_144_n	num_lid.csv ;	Subcat_Name	145	2	','    no
+_NRB1_145_n	num_lid.csv ;	Subcat_Name	146	1	','    no
+_NRB2_145_n	num_lid.csv ;	Subcat_Name	146	2	','    no
+_NRB1_146_n	num_lid.csv ;	Subcat_Name	147	1	','    no
+_NRB2_146_n	num_lid.csv ;	Subcat_Name	147	2	','    no
+_NRB1_147_n	num_lid.csv ;	Subcat_Name	148	1	','    no
+_NRB2_147_n	num_lid.csv ;	Subcat_Name	148	2	','    no
+_NRB1_148_n	num_lid.csv ;	Subcat_Name	149	1	','    no
+_NRB2_148_n	num_lid.csv ;	Subcat_Name	149	2	','    no
+_NRB1_149_n	num_lid.csv ;	Subcat_Name	150	1	','    no
+_NRB2_149_n	num_lid.csv ;	Subcat_Name	150	2	','    no
+_NRB1_150_n	num_lid.csv ;	Subcat_Name	151	1	','    no
+_NRB2_150_n	num_lid.csv ;	Subcat_Name	151	2	','    no
+_NRB1_151_n	num_lid.csv ;	Subcat_Name	152	1	','    no
+_NRB2_151_n	num_lid.csv ;	Subcat_Name	152	2	','    no
+_NRB1_152_n	num_lid.csv ;	Subcat_Name	153	1	','    no
+_NRB2_152_n	num_lid.csv ;	Subcat_Name	153	2	','    no
+_NRB1_153_n	num_lid.csv ;	Subcat_Name	154	1	','    no
+_NRB2_153_n	num_lid.csv ;	Subcat_Name	154	2	','    no
+_NRB1_154_n	num_lid.csv ;	Subcat_Name	155	1	','    no
+_NRB2_154_n	num_lid.csv ;	Subcat_Name	155	2	','    no
+_NRB1_155_n	num_lid.csv ;	Subcat_Name	156	1	','    no
+_NRB2_155_n	num_lid.csv ;	Subcat_Name	156	2	','    no
+_NRB1_156_n	num_lid.csv ;	Subcat_Name	157	1	','    no
+_NRB2_156_n	num_lid.csv ;	Subcat_Name	157	2	','    no
+_NRB1_157_n	num_lid.csv ;	Subcat_Name	158	1	','    no
+_NRB2_157_n	num_lid.csv ;	Subcat_Name	158	2	','    no
+_NRB1_158_n	num_lid.csv ;	Subcat_Name	159	1	','    no
+_NRB2_158_n	num_lid.csv ;	Subcat_Name	159	2	','    no
+_NRB1_159_n	num_lid.csv ;	Subcat_Name	160	1	','    no
+_NRB2_159_n	num_lid.csv ;	Subcat_Name	160	2	','    no
+_NRB1_160_n	num_lid.csv ;	Subcat_Name	161	1	','    no
+_NRB2_160_n	num_lid.csv ;	Subcat_Name	161	2	','    no
+_NRB1_161_n	num_lid.csv ;	Subcat_Name	162	1	','    no
+_NRB2_161_n	num_lid.csv ;	Subcat_Name	162	2	','    no
+_NRB1_162_n	num_lid.csv ;	Subcat_Name	163	1	','    no
+_NRB2_162_n	num_lid.csv ;	Subcat_Name	163	2	','    no
+EndResponseVars
+ 
+BeginGCOP
+CostFunction NCSO
+PenaltyFunction APM
+EndGCOP
+ 
+BeginConstraints
+Con0	general	150	0.00	0.00	_NRB1_0_n
+Con1	general	400	0.00	0.00	_NRB2_0_n
+Con2	general	150	0.00	0.00	_NRB1_1_n
+Con3	general	400	0.00	0.00	_NRB2_1_n
+Con4	general	150	0.00	0.00	_NRB1_2_n
+Con5	general	400	0.00	0.00	_NRB2_2_n
+Con6	general	150	0.00	0.00	_NRB1_3_n
+Con7	general	400	0.00	0.00	_NRB2_3_n
+Con8	general	150	0.00	0.00	_NRB1_4_n
+Con9	general	400	0.00	0.00	_NRB2_4_n
+Con10	general	150	0.00	0.00	_NRB1_5_n
+Con11	general	400	0.00	0.00	_NRB2_5_n
+Con12	general	150	0.00	0.00	_NRB1_6_n
+Con13	general	400	0.00	0.00	_NRB2_6_n
+Con14	general	150	0.00	0.00	_NRB1_7_n
+Con15	general	400	0.00	0.00	_NRB2_7_n
+Con16	general	150	0.00	0.00	_NRB1_8_n
+Con17	general	400	0.00	0.00	_NRB2_8_n
+Con18	general	150	0.00	0.00	_NRB1_9_n
+Con19	general	400	0.00	0.00	_NRB2_9_n
+Con20	general	150	0.00	0.00	_NRB1_10_n
+Con21	general	400	0.00	0.00	_NRB2_10_n
+Con22	general	150	0.00	0.00	_NRB1_11_n
+Con23	general	400	0.00	0.00	_NRB2_11_n
+Con24	general	150	0.00	0.00	_NRB1_12_n
+Con25	general	400	0.00	0.00	_NRB2_12_n
+Con26	general	150	0.00	0.00	_NRB1_13_n
+Con27	general	400	0.00	0.00	_NRB2_13_n
+Con28	general	150	0.00	0.00	_NRB1_14_n
+Con29	general	400	0.00	0.00	_NRB2_14_n
+Con30	general	150	0.00	0.00	_NRB1_15_n
+Con31	general	400	0.00	0.00	_NRB2_15_n
+Con32	general	150	0.00	0.00	_NRB1_16_n
+Con33	general	400	0.00	0.00	_NRB2_16_n
+Con34	general	150	0.00	0.00	_NRB1_17_n
+Con35	general	400	0.00	0.00	_NRB2_17_n
+Con36	general	150	0.00	0.00	_NRB1_18_n
+Con37	general	400	0.00	0.00	_NRB2_18_n
+Con38	general	150	0.00	0.00	_NRB1_19_n
+Con39	general	400	0.00	0.00	_NRB2_19_n
+Con40	general	150	0.00	0.00	_NRB1_20_n
+Con41	general	400	0.00	0.00	_NRB2_20_n
+Con42	general	150	0.00	0.00	_NRB1_21_n
+Con43	general	400	0.00	0.00	_NRB2_21_n
+Con44	general	150	0.00	0.00	_NRB1_22_n
+Con45	general	400	0.00	0.00	_NRB2_22_n
+Con46	general	150	0.00	0.00	_NRB1_23_n
+Con47	general	400	0.00	0.00	_NRB2_23_n
+Con48	general	150	0.00	0.00	_NRB1_24_n
+Con49	general	400	0.00	0.00	_NRB2_24_n
+Con50	general	150	0.00	0.00	_NRB1_25_n
+Con51	general	400	0.00	0.00	_NRB2_25_n
+Con52	general	150	0.00	0.00	_NRB1_26_n
+Con53	general	400	0.00	0.00	_NRB2_26_n
+Con54	general	150	0.00	0.00	_NRB1_27_n
+Con55	general	400	0.00	0.00	_NRB2_27_n
+Con56	general	150	0.00	0.00	_NRB1_28_n
+Con57	general	400	0.00	0.00	_NRB2_28_n
+Con58	general	150	0.00	0.00	_NRB1_29_n
+Con59	general	400	0.00	0.00	_NRB2_29_n
+Con60	general	150	0.00	0.00	_NRB1_30_n
+Con61	general	400	0.00	0.00	_NRB2_30_n
+Con62	general	150	0.00	0.00	_NRB1_31_n
+Con63	general	400	0.00	0.00	_NRB2_31_n
+Con64	general	150	0.00	0.00	_NRB1_32_n
+Con65	general	400	0.00	0.00	_NRB2_32_n
+Con66	general	150	0.00	0.00	_NRB1_33_n
+Con67	general	400	0.00	0.00	_NRB2_33_n
+Con68	general	150	0.00	0.00	_NRB1_34_n
+Con69	general	400	0.00	0.00	_NRB2_34_n
+Con70	general	150	0.00	0.00	_NRB1_35_n
+Con71	general	400	0.00	0.00	_NRB2_35_n
+Con72	general	150	0.00	0.00	_NRB1_36_n
+Con73	general	400	0.00	0.00	_NRB2_36_n
+Con74	general	150	0.00	0.00	_NRB1_37_n
+Con75	general	400	0.00	0.00	_NRB2_37_n
+Con76	general	150	0.00	0.00	_NRB1_38_n
+Con77	general	400	0.00	0.00	_NRB2_38_n
+Con78	general	150	0.00	0.00	_NRB1_39_n
+Con79	general	400	0.00	0.00	_NRB2_39_n
+Con80	general	150	0.00	0.00	_NRB1_40_n
+Con81	general	400	0.00	0.00	_NRB2_40_n
+Con82	general	150	0.00	0.00	_NRB1_41_n
+Con83	general	400	0.00	0.00	_NRB2_41_n
+Con84	general	150	0.00	0.00	_NRB1_42_n
+Con85	general	400	0.00	0.00	_NRB2_42_n
+Con86	general	150	0.00	0.00	_NRB1_43_n
+Con87	general	400	0.00	0.00	_NRB2_43_n
+Con88	general	150	0.00	0.00	_NRB1_44_n
+Con89	general	400	0.00	0.00	_NRB2_44_n
+Con90	general	150	0.00	0.00	_NRB1_45_n
+Con91	general	400	0.00	0.00	_NRB2_45_n
+Con92	general	150	0.00	0.00	_NRB1_46_n
+Con93	general	400	0.00	0.00	_NRB2_46_n
+Con94	general	150	0.00	0.00	_NRB1_47_n
+Con95	general	400	0.00	0.00	_NRB2_47_n
+Con96	general	150	0.00	0.00	_NRB1_48_n
+Con97	general	400	0.00	0.00	_NRB2_48_n
+Con98	general	150	0.00	0.00	_NRB1_49_n
+Con99	general	400	0.00	0.00	_NRB2_49_n
+Con100	general	150	0.00	0.00	_NRB1_50_n
+Con101	general	400	0.00	0.00	_NRB2_50_n
+Con102	general	150	0.00	0.00	_NRB1_51_n
+Con103	general	400	0.00	0.00	_NRB2_51_n
+Con104	general	150	0.00	0.00	_NRB1_52_n
+Con105	general	400	0.00	0.00	_NRB2_52_n
+Con106	general	150	0.00	0.00	_NRB1_53_n
+Con107	general	400	0.00	0.00	_NRB2_53_n
+Con108	general	150	0.00	0.00	_NRB1_54_n
+Con109	general	400	0.00	0.00	_NRB2_54_n
+Con110	general	150	0.00	0.00	_NRB1_55_n
+Con111	general	400	0.00	0.00	_NRB2_55_n
+Con112	general	150	0.00	0.00	_NRB1_56_n
+Con113	general	400	0.00	0.00	_NRB2_56_n
+Con114	general	150	0.00	0.00	_NRB1_57_n
+Con115	general	400	0.00	0.00	_NRB2_57_n
+Con116	general	150	0.00	0.00	_NRB1_58_n
+Con117	general	400	0.00	0.00	_NRB2_58_n
+Con118	general	150	0.00	0.00	_NRB1_59_n
+Con119	general	400	0.00	0.00	_NRB2_59_n
+Con120	general	150	0.00	0.00	_NRB1_60_n
+Con121	general	400	0.00	0.00	_NRB2_60_n
+Con122	general	150	0.00	0.00	_NRB1_61_n
+Con123	general	400	0.00	0.00	_NRB2_61_n
+Con124	general	150	0.00	0.00	_NRB1_62_n
+Con125	general	400	0.00	0.00	_NRB2_62_n
+Con126	general	150	0.00	0.00	_NRB1_63_n
+Con127	general	400	0.00	0.00	_NRB2_63_n
+Con128	general	150	0.00	0.00	_NRB1_64_n
+Con129	general	400	0.00	0.00	_NRB2_64_n
+Con130	general	150	0.00	0.00	_NRB1_65_n
+Con131	general	400	0.00	0.00	_NRB2_65_n
+Con132	general	150	0.00	0.00	_NRB1_66_n
+Con133	general	400	0.00	0.00	_NRB2_66_n
+Con134	general	150	0.00	0.00	_NRB1_67_n
+Con135	general	400	0.00	0.00	_NRB2_67_n
+Con136	general	150	0.00	0.00	_NRB1_68_n
+Con137	general	400	0.00	0.00	_NRB2_68_n
+Con138	general	150	0.00	0.00	_NRB1_69_n
+Con139	general	400	0.00	0.00	_NRB2_69_n
+Con140	general	150	0.00	0.00	_NRB1_70_n
+Con141	general	400	0.00	0.00	_NRB2_70_n
+Con142	general	150	0.00	0.00	_NRB1_71_n
+Con143	general	400	0.00	0.00	_NRB2_71_n
+Con144	general	150	0.00	0.00	_NRB1_72_n
+Con145	general	400	0.00	0.00	_NRB2_72_n
+Con146	general	150	0.00	0.00	_NRB1_73_n
+Con147	general	400	0.00	0.00	_NRB2_73_n
+Con148	general	150	0.00	0.00	_NRB1_74_n
+Con149	general	400	0.00	0.00	_NRB2_74_n
+Con150	general	150	0.00	0.00	_NRB1_75_n
+Con151	general	400	0.00	0.00	_NRB2_75_n
+Con152	general	150	0.00	0.00	_NRB1_76_n
+Con153	general	400	0.00	0.00	_NRB2_76_n
+Con154	general	150	0.00	0.00	_NRB1_77_n
+Con155	general	400	0.00	0.00	_NRB2_77_n
+Con156	general	150	0.00	0.00	_NRB1_78_n
+Con157	general	400	0.00	0.00	_NRB2_78_n
+Con158	general	150	0.00	0.00	_NRB1_79_n
+Con159	general	400	0.00	0.00	_NRB2_79_n
+Con160	general	150	0.00	0.00	_NRB1_80_n
+Con161	general	400	0.00	0.00	_NRB2_80_n
+Con162	general	150	0.00	0.00	_NRB1_81_n
+Con163	general	400	0.00	0.00	_NRB2_81_n
+Con164	general	150	0.00	0.00	_NRB1_82_n
+Con165	general	400	0.00	0.00	_NRB2_82_n
+Con166	general	150	0.00	0.00	_NRB1_83_n
+Con167	general	400	0.00	0.00	_NRB2_83_n
+Con168	general	150	0.00	0.00	_NRB1_84_n
+Con169	general	400	0.00	0.00	_NRB2_84_n
+Con170	general	150	0.00	0.00	_NRB1_85_n
+Con171	general	400	0.00	0.00	_NRB2_85_n
+Con172	general	150	0.00	0.00	_NRB1_86_n
+Con173	general	400	0.00	0.00	_NRB2_86_n
+Con174	general	150	0.00	0.00	_NRB1_87_n
+Con175	general	400	0.00	0.00	_NRB2_87_n
+Con176	general	150	0.00	0.00	_NRB1_88_n
+Con177	general	400	0.00	0.00	_NRB2_88_n
+Con178	general	150	0.00	0.00	_NRB1_89_n
+Con179	general	400	0.00	0.00	_NRB2_89_n
+Con180	general	150	0.00	0.00	_NRB1_90_n
+Con181	general	400	0.00	0.00	_NRB2_90_n
+Con182	general	150	0.00	0.00	_NRB1_91_n
+Con183	general	400	0.00	0.00	_NRB2_91_n
+Con184	general	150	0.00	0.00	_NRB1_92_n
+Con185	general	400	0.00	0.00	_NRB2_92_n
+Con186	general	150	0.00	0.00	_NRB1_93_n
+Con187	general	400	0.00	0.00	_NRB2_93_n
+Con188	general	150	0.00	0.00	_NRB1_94_n
+Con189	general	400	0.00	0.00	_NRB2_94_n
+Con190	general	150	0.00	0.00	_NRB1_95_n
+Con191	general	400	0.00	0.00	_NRB2_95_n
+Con192	general	150	0.00	0.00	_NRB1_96_n
+Con193	general	400	0.00	0.00	_NRB2_96_n
+Con194	general	150	0.00	0.00	_NRB1_97_n
+Con195	general	400	0.00	0.00	_NRB2_97_n
+Con196	general	150	0.00	0.00	_NRB1_98_n
+Con197	general	400	0.00	0.00	_NRB2_98_n
+Con198	general	150	0.00	0.00	_NRB1_99_n
+Con199	general	400	0.00	0.00	_NRB2_99_n
+Con200	general	150	0.00	0.00	_NRB1_100_n
+Con201	general	400	0.00	0.00	_NRB2_100_n
+Con202	general	150	0.00	0.00	_NRB1_101_n
+Con203	general	400	0.00	0.00	_NRB2_101_n
+Con204	general	150	0.00	0.00	_NRB1_102_n
+Con205	general	400	0.00	0.00	_NRB2_102_n
+Con206	general	150	0.00	0.00	_NRB1_103_n
+Con207	general	400	0.00	0.00	_NRB2_103_n
+Con208	general	150	0.00	0.00	_NRB1_104_n
+Con209	general	400	0.00	0.00	_NRB2_104_n
+Con210	general	150	0.00	0.00	_NRB1_105_n
+Con211	general	400	0.00	0.00	_NRB2_105_n
+Con212	general	150	0.00	0.00	_NRB1_106_n
+Con213	general	400	0.00	0.00	_NRB2_106_n
+Con214	general	150	0.00	0.00	_NRB1_107_n
+Con215	general	400	0.00	0.00	_NRB2_107_n
+Con216	general	150	0.00	0.00	_NRB1_108_n
+Con217	general	400	0.00	0.00	_NRB2_108_n
+Con218	general	150	0.00	0.00	_NRB1_109_n
+Con219	general	400	0.00	0.00	_NRB2_109_n
+Con220	general	150	0.00	0.00	_NRB1_110_n
+Con221	general	400	0.00	0.00	_NRB2_110_n
+Con222	general	150	0.00	0.00	_NRB1_111_n
+Con223	general	400	0.00	0.00	_NRB2_111_n
+Con224	general	150	0.00	0.00	_NRB1_112_n
+Con225	general	400	0.00	0.00	_NRB2_112_n
+Con226	general	150	0.00	0.00	_NRB1_113_n
+Con227	general	400	0.00	0.00	_NRB2_113_n
+Con228	general	150	0.00	0.00	_NRB1_114_n
+Con229	general	400	0.00	0.00	_NRB2_114_n
+Con230	general	150	0.00	0.00	_NRB1_115_n
+Con231	general	400	0.00	0.00	_NRB2_115_n
+Con232	general	150	0.00	0.00	_NRB1_116_n
+Con233	general	400	0.00	0.00	_NRB2_116_n
+Con234	general	150	0.00	0.00	_NRB1_117_n
+Con235	general	400	0.00	0.00	_NRB2_117_n
+Con236	general	150	0.00	0.00	_NRB1_118_n
+Con237	general	400	0.00	0.00	_NRB2_118_n
+Con238	general	150	0.00	0.00	_NRB1_119_n
+Con239	general	400	0.00	0.00	_NRB2_119_n
+Con240	general	150	0.00	0.00	_NRB1_120_n
+Con241	general	400	0.00	0.00	_NRB2_120_n
+Con242	general	150	0.00	0.00	_NRB1_121_n
+Con243	general	400	0.00	0.00	_NRB2_121_n
+Con244	general	150	0.00	0.00	_NRB1_122_n
+Con245	general	400	0.00	0.00	_NRB2_122_n
+Con246	general	150	0.00	0.00	_NRB1_123_n
+Con247	general	400	0.00	0.00	_NRB2_123_n
+Con248	general	150	0.00	0.00	_NRB1_124_n
+Con249	general	400	0.00	0.00	_NRB2_124_n
+Con250	general	150	0.00	0.00	_NRB1_125_n
+Con251	general	400	0.00	0.00	_NRB2_125_n
+Con252	general	150	0.00	0.00	_NRB1_126_n
+Con253	general	400	0.00	0.00	_NRB2_126_n
+Con254	general	150	0.00	0.00	_NRB1_127_n
+Con255	general	400	0.00	0.00	_NRB2_127_n
+Con256	general	150	0.00	0.00	_NRB1_128_n
+Con257	general	400	0.00	0.00	_NRB2_128_n
+Con258	general	150	0.00	0.00	_NRB1_129_n
+Con259	general	400	0.00	0.00	_NRB2_129_n
+Con260	general	150	0.00	0.00	_NRB1_130_n
+Con261	general	400	0.00	0.00	_NRB2_130_n
+Con262	general	150	0.00	0.00	_NRB1_131_n
+Con263	general	400	0.00	0.00	_NRB2_131_n
+Con264	general	150	0.00	0.00	_NRB1_132_n
+Con265	general	400	0.00	0.00	_NRB2_132_n
+Con266	general	150	0.00	0.00	_NRB1_133_n
+Con267	general	400	0.00	0.00	_NRB2_133_n
+Con268	general	150	0.00	0.00	_NRB1_134_n
+Con269	general	400	0.00	0.00	_NRB2_134_n
+Con270	general	150	0.00	0.00	_NRB1_135_n
+Con271	general	400	0.00	0.00	_NRB2_135_n
+Con272	general	150	0.00	0.00	_NRB1_136_n
+Con273	general	400	0.00	0.00	_NRB2_136_n
+Con274	general	150	0.00	0.00	_NRB1_137_n
+Con275	general	400	0.00	0.00	_NRB2_137_n
+Con276	general	150	0.00	0.00	_NRB1_138_n
+Con277	general	400	0.00	0.00	_NRB2_138_n
+Con278	general	150	0.00	0.00	_NRB1_139_n
+Con279	general	400	0.00	0.00	_NRB2_139_n
+Con280	general	150	0.00	0.00	_NRB1_140_n
+Con281	general	400	0.00	0.00	_NRB2_140_n
+Con282	general	150	0.00	0.00	_NRB1_141_n
+Con283	general	400	0.00	0.00	_NRB2_141_n
+Con284	general	150	0.00	0.00	_NRB1_142_n
+Con285	general	400	0.00	0.00	_NRB2_142_n
+Con286	general	150	0.00	0.00	_NRB1_143_n
+Con287	general	400	0.00	0.00	_NRB2_143_n
+Con288	general	150	0.00	0.00	_NRB1_144_n
+Con289	general	400	0.00	0.00	_NRB2_144_n
+Con290	general	150	0.00	0.00	_NRB1_145_n
+Con291	general	400	0.00	0.00	_NRB2_145_n
+Con292	general	150	0.00	0.00	_NRB1_146_n
+Con293	general	400	0.00	0.00	_NRB2_146_n
+Con294	general	150	0.00	0.00	_NRB1_147_n
+Con295	general	400	0.00	0.00	_NRB2_147_n
+Con296	general	150	0.00	0.00	_NRB1_148_n
+Con297	general	400	0.00	0.00	_NRB2_148_n
+Con298	general	150	0.00	0.00	_NRB1_149_n
+Con299	general	400	0.00	0.00	_NRB2_149_n
+Con300	general	150	0.00	0.00	_NRB1_150_n
+Con301	general	400	0.00	0.00	_NRB2_150_n
+Con302	general	150	0.00	0.00	_NRB1_151_n
+Con303	general	400	0.00	0.00	_NRB2_151_n
+Con304	general	150	0.00	0.00	_NRB1_152_n
+Con305	general	400	0.00	0.00	_NRB2_152_n
+Con306	general	150	0.00	0.00	_NRB1_153_n
+Con307	general	400	0.00	0.00	_NRB2_153_n
+Con308	general	150	0.00	0.00	_NRB1_154_n
+Con309	general	400	0.00	0.00	_NRB2_154_n
+Con310	general	150	0.00	0.00	_NRB1_155_n
+Con311	general	400	0.00	0.00	_NRB2_155_n
+Con312	general	150	0.00	0.00	_NRB1_156_n
+Con313	general	400	0.00	0.00	_NRB2_156_n
+Con314	general	150	0.00	0.00	_NRB1_157_n
+Con315	general	400	0.00	0.00	_NRB2_157_n
+Con316	general	150	0.00	0.00	_NRB1_158_n
+Con317	general	400	0.00	0.00	_NRB2_158_n
+Con318	general	150	0.00	0.00	_NRB1_159_n
+Con319	general	400	0.00	0.00	_NRB2_159_n
+Con320	general	150	0.00	0.00	_NRB1_160_n
+Con321	general	400	0.00	0.00	_NRB2_160_n
+Con322	general	150	0.00	0.00	_NRB1_161_n
+Con323	general	400	0.00	0.00	_NRB2_161_n
+Con324	general	150	0.00	0.00	_NRB1_162_n
+Con325	general	400	0.00	0.00	_NRB2_162_n
+EndConstraints
+ 
+BeginInitParams
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+EndInitParams
