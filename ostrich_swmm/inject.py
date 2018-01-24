@@ -11,9 +11,15 @@ from math import floor
 
 from . import config as cfg
 from . import units
+
 from .swmm import input as si
 from .swmm import input_reader as sir
 from .swmm import input_writer as siw
+
+#import LID addition codes
+from . import LID
+from . import RB
+from . import PP
 
 input_parameters_schema_path = None
 """The path to the JSON Schema used to validate input parameters."""
@@ -113,6 +119,8 @@ def inject_parameters_into_input(input_parameters, input_template):
 
     Raises:
         ConfigException: The configuration is invalid.
+    Returns:
+        excess_rb for input into extract csv
     """
     global input_parameters_schema_path
     if input_parameters_schema_path is None:
@@ -138,15 +146,14 @@ def inject_parameters_into_input(input_parameters, input_template):
     lid_counter = Counter()
     #add in rooftop connections
     roofs = input_parameters.get("roofs", [])
-    roof_counter = Counter()
     count = -1
+    rbcount = -1
 
-    excess_rb =[]
-    excess_colnames = []
+    excess_lid =[]
     nlid = []
     sc_names_list = []
     all_lid_types = []
-  
+
     for lid in lids:
         count = count + 1
         # If the location is given in map coordinates, convert to subcatchment.
@@ -201,171 +208,34 @@ def inject_parameters_into_input(input_parameters, input_template):
         
         # If the LID is a rain barrel...
         if lid_type_type == 'RB':
-            # Get the base subcatchment the barrel is located in.
-            lid_base_sc_name = lid['location']['subcatchment']
-            lid_base_sc = get_subcatchment_definition(
-                input_template,
-                lid_base_sc_name,
-            )
-            if not lid_base_sc:
-                raise cfg.ConfigException(
-                    'Subcatchment "{0}" not found.'.format(lid_base_sc_name)
-                )
-            # Generate a unique name for the LID's child subcatchment by
-            # checking against the names of existing subcatchments.
-            lid_sc_name_index = 0
-            lid_sc_name = '{0}##{1}'.format(lid_base_sc_name, lid_id)
-            existing_lid_sc = get_subcatchment_definition(
-                input_template,
-                lid_sc_name,
-            )
-            while existing_lid_sc:
-                lid_sc_name_index += 1
-                lid_sc_name = '{0}##{1}###{2}'.format(
-                    lid_base_sc_name,
-                    lid_id,
-                    lid_sc_name_index,
-                )
-                existing_lid_sc = get_subcatchment_definition(
-                    input_template,
-                    lid_sc_name,
-                )
-            #make rooftop connection for the rain barrel
-            if 'map' in roofs[count]['location']:
-                if sc_polygons is None:
-                    sc_polygons = extract_subcatchment_polygons(input_template)
-                roofs[count]['location']['subcatchment'] = get_subcatchment_from_map_coords(
-                    roofs[count]['location']['map'],
-                    sc_polygons,)
-            roof_type = roofs[count]['type']
-            # Count this instance of this roof type and give it an ID.
-            roof_counter[roof_type] += 1
-            roof_id = '{0}_{1}'.format(roof_type, roof_counter[roof_type])
-            roof_base_sc_name = roofs[count]['location']['subcatchment']
-            roof_base_sc = get_subcatchment_definition(
-                input_template,
-                roof_base_sc_name,
-            )
-            if not roof_base_sc:
-                raise cfg.ConfigException(
-                    'Subcatchment "{0}" not found.'.format(roof_base_sc_name)
-                )
-            roof_sc_name_index = 0
-            roof_sc_name = '{0}##{1}'.format(roof_base_sc_name, roof_id)
-            existing_roof_sc = get_subcatchment_definition(
-                input_template,
-                roof_sc_name,
-            )
-            while existing_roof_sc:
-                roof_sc_name_index += 1
-                roof_sc_name = '{0}##{1}###{2}'.format(
-                    roof_base_sc_name,
-                    roof_id,
-                    roof_sc_name_index,
-                )
-                existing_roof_sc = get_subcatchment_definition(
-                    input_template,
-                    roof_sc_name,
-                )
-            roof_sc = list(roof_base_sc)
-            roof_sc[si.data_indices['SUBCATCHMENTS']['Name']] = roof_sc_name
-            r_area = roofs[count]['area']
-            r_num_units = roofs[count]['number']
-            roof_values = [
-                roofs[count]['location']['subcatchment'],
-                roofs[count]['NImp'],
-                roofs[count]['NPerv'],
-                0,
-                0,
-                roofs[count]['PctZero'],
-                "OUTLET",
-            ]
-            input_template['SUBAREAS']['lines'].append({
-                'values': roof_values,
-                'comment': None,
-            })
-            # Generate the child subcatchment for the LID and adjust the
-            # base subcatchment's properties to compensate.
-            lid_sc = list(lid_base_sc)
-            lid_sc[si.data_indices['SUBCATCHMENTS']['Name']] = lid_sc_name
-            lid_sc[si.data_indices['SUBCATCHMENTS']['OutID']] = lid_base_sc_name
+            rbcount = rbcount + 1
+            roof_sc = RB.add_roofs(input_template,roofs, rbcount)
+            rb_values = RB.add_rb(input_template, input_unit_system, lid, lid_id, roofs, roof_sc, rbcount)
+            lid = rb_values[0]
+            excess = rb_values[1]
+            lid_base_sc = rb_values[2]
+            excess_lid.append(excess)
+            lid_num_units=lid['number']
+        #permeable pavement
+        elif lid_type_type == 'PP':
+            pp_values = PP.add_pp(input_template, input_unit_system, lid, lid_id, count)
+            lid = pp_values[0]
+            excess = pp_values[1]
+            lid_base_sc = pp_values[2]
+            excess_lid.append(excess)
+            lid_num_units=lid['number']
+##        #rain garden
+##        elif lid_type_type == 'RG':
+##        #vegetative swale
+##        elif lid_type_type == 'VS':
+##        #rooftop disconnection
+##        elif lid_type_type == 'RD':
+##        #green roof
+##        elif lid_type_type == 'GR':
+##        #infiltration trench
+##        elif lid_type_type == 'IT':
+##        #trees?
 
-            if input_unit_system == 'US':
-                lid_area_unit = units.registry.ft ** 2
-                sc_area_unit = units.registry.acre
-            elif input_unit_system == 'SI':
-                lid_area_unit = units.registry.m ** 2
-                sc_area_unit = units.registry.hectare
-            else:
-                raise cfg.ConfigException(
-                    'Unknown unit system "{0}".'.format(input_unit_system),
-                )
-
-            lid_num_units = lid['number']
-            ind_roof = r_area*lid_area_unit
-            
-            sc_area_index = si.data_indices['SUBCATCHMENTS']['Area']
-            sc_imperv_index = si.data_indices['SUBCATCHMENTS']['%Imperv']
-
-            lid_base_sc_area = float(lid_base_sc[sc_area_index]) * sc_area_unit
-            lid_base_sc_imperv = (float(lid_base_sc[sc_imperv_index])* units.registry.percent)
-            lid_base_sc_imperv_area = lid_base_sc_imperv * lid_base_sc_area
-            
-            #figure out if there are too many lids
-            upper_bound = floor(float((lid_base_sc_imperv_area.to(lid_area_unit))/(ind_roof+lid['area']*lid_area_unit)))
-
-            if upper_bound < 0:
-                upper_bound = 0 
-            excess = int(lid_num_units - upper_bound)
-            if excess <= 0:
-                excess = 0 
-            else:  
-                lid_num_units = lid_num_units - excess
-                print "OSTRICH input for subcat {0} had too many lid units, changing to max number {1}".format(lid_sc_name, lid_num_units)
-            
-            excess_rb.append(excess)
-            excess_colnames.append("Excess{0}".format(lid_id))
-            
-            lid['number']= lid_num_units
-            r_num_units = lid_num_units
-            lid_total_area = lid_num_units * lid['area'] * lid_area_unit
-            roof_total_area = r_num_units*r_area*lid_area_unit
-            
-            lid_sc_area = lid_total_area.to(sc_area_unit)
-            roof_sc_area = roof_total_area.to(sc_area_unit)
-            new_lid_base_sc_area = lid_base_sc_area - lid_sc_area - roof_sc_area
-           
-            lid_base_sc[sc_area_index] = new_lid_base_sc_area.magnitude
-
-            lid_sc[sc_area_index] = lid_sc_area.magnitude
-            roof_sc[sc_area_index]= roof_sc_area.magnitude
-        
-            new_lid_base_sc_imperv_area = lid_base_sc_imperv_area - lid_sc_area - roof_sc_area
-            new_lid_base_sc_imperv = (new_lid_base_sc_imperv_area / new_lid_base_sc_area)
-
-            lid_sc[sc_imperv_index] = 0
-            roof_sc[sc_imperv_index] = 100
-           
-            sc_out_index = si.data_indices['SUBCATCHMENTS']['OutID']
-            roof_sc[sc_out_index] = lid_sc_name
-            
-            lid_base_sc[sc_imperv_index] = (new_lid_base_sc_imperv.to('percent').magnitude)
-
-            input_template['SUBCATCHMENTS']['lines'].append({
-                'values': lid_sc,
-                'comment': '{0} LID units. (Added by OSTRICH-SWMM.)'.format(
-                    lid_num_units,
-                ),
-            })
-            input_template['SUBCATCHMENTS']['lines'].append({
-                'values': roof_sc,
-                'comment': '{0} roof units. (Added by OSTRICH-SWMM.)'.format(
-                    r_num_units,
-                ),
-            })
-
-            # Set the LID subcatchment to the child subcatchment.
-            lid['location']['subcatchment'] = lid_sc_name
         else:
             logging.warning(
                 (
@@ -385,9 +255,7 @@ def inject_parameters_into_input(input_parameters, input_template):
                 lid_drain_to = lid_drain_to_obj['node']
         
         nlid.append(lid_num_units)
-        #adjust fromImp parameter according to subcat area and number of roofs/lids
-    
-        lid['fromImp']=float(lid['number']*ind_roof.to(sc_area_unit)/lid_base_sc_imperv_area*100)
+        
         lid_values = [
             lid['location']['subcatchment'],
             lid['type'],
@@ -414,11 +282,12 @@ def inject_parameters_into_input(input_parameters, input_template):
     with open('num_lid.csv', 'wb') as outcsv:
         writer = csv.writer(outcsv)
         header = ["Subcat_Name"]
-        
         nlid_col = []
+        nexcess =[]
         for i in range(0, len(all_lid_types)):
             header.append(str(all_lid_types[i]))
             nlid_col.append(nlid[i:len(nlid):len(all_lid_types)])
+            nexcess.append(excess_lid[i:len(excess_lid):len(all_lid_types)])
         writer.writerow(header) 
         line = []
         for i in range(0, len(sc_names_list)):
@@ -428,9 +297,12 @@ def inject_parameters_into_input(input_parameters, input_template):
             writer.writerow(line)
             line =[]
         sum_line = ["Lid Sum"]
+        excess_line =["Excess Lids"]
         for i in range(0, len(nlid_col)):
             sum_line.append(str(sum(nlid_col[i])))
-        writer.writerow(sum_line)        
+            excess_line.append(str(sum(nexcess[i])))
+        writer.writerow(sum_line) 
+        writer.writerow(excess_line)
         
 
 
