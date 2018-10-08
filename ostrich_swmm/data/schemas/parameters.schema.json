@@ -9,6 +9,12 @@
             "items": {
                 "$ref": "#/definitions/lid"
             }
+        },
+	"roofs": {
+	    "type": "array",
+            "items": {
+                "$ref": "#/definitions/roof"
+            }
         }
     },
     "definitions": {
@@ -123,6 +129,82 @@
                 "toPerv"
             ]
         },
+	"roof": {
+            "type": "object",
+            "properties": {
+                "location": {
+                    "oneOf": [
+                        {
+                            "type": "object",
+                            "properties": {
+                                "map": {
+                                    "$ref": "#/definitions/mapCoordinates"
+                                }
+                            },
+                            "required": [
+                                "map"
+			    ]
+			},
+                        {
+                            "type": "object",
+                            "properties": {
+                                "subcatchment": {
+                                    "$ref": "#/definitions/subcatchment"
+                                }
+                            },
+                            "required": [
+                                "subcatchment"
+                            ]
+                        }
+                    ]
+                },
+                "type": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "number": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+		"OutID": {
+                    "type": "string",
+                    "minLength": 1
+                },
+                "area": {
+                    "type": "number",
+                    "minimum": 0
+                },
+		"PctImperv": {
+                    "type": "number",
+                    "minimum":0
+                },
+                "width": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "slope": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                },
+                "Nimp": {
+                    "type": "number"
+                },
+                "Nperv": {
+                    "type": "number"
+                },
+                "PctZero": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "location",
+		"OutID",
+                "area",
+		"slope",
+                "width"
+            ]
+	},
         "mapCoordinates": {
             "type": "object",
             "properties": {

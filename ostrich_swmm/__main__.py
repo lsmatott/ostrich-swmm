@@ -7,8 +7,8 @@ import os
 import sys
 
 from . import config as cfg
-from . import extract
 from . import inject
+from . import extract
 from . import run
 from .version import __version__
 

@@ -10,7 +10,6 @@ import swmmtoolbox.swmmtoolbox as swmmtoolbox
 from . import SWMM_EPOCH_DATETIME
 from . import config as cfg
 
-
 def convert_swmm_ts_to_datetime(swmm_ts):
     """Convert a SWMM timestamp to a Python datetime.
 
@@ -244,7 +243,6 @@ def perform_node_extraction(
         'num_flow_events': nodes_total_flow_events,
         'total_flow_volume': nodes_total_flow_volumes,
         'total_flow_duration': nodes_total_flow_durations,
-
         'first_flow_start': nodes_notable_events_start_strings['first'],
         'first_flow_end': nodes_notable_events_end_strings['first'],
         'first_flow_duration': nodes_notable_events_durations['first'],
