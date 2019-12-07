@@ -31,6 +31,5 @@ snowballstemmer==1.2.1
 Sphinx==1.5.5
 subprocess32==3.2.7
 swmmtoolbox==1.0.5.8
-tstoolbox==3.18.14.11
 typing==3.6.1
 tzlocal==1.4
