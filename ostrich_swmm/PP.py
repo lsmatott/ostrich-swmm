@@ -87,7 +87,16 @@ def add_pp(input_template, input_unit_system, lid, lid_id, count):
     lid_sc[sc_area_index] = lid_sc_area.magnitude
 
     new_lid_base_sc_imperv_area = lid_base_sc_imperv_area - lid_sc_area
-    new_lid_base_sc_imperv = (new_lid_base_sc_imperv_area / new_lid_base_sc_area)
+	
+    try:
+	new_lid_base_sc_imperv = (new_lid_base_sc_imperv_area / new_lid_base_sc_area)
+        
+    except ZeroDivisionError:
+        print "OSTRICH found that subcat {0} had has an original area of {1}; Please verify the max number of LID for this subcatchment".format(lid_base_sc_name, lid_base_sc_area)
+        print "Number of LIDs placed ={0} ".format(lid_num_units)
+        print "Total LIDs area={0}" .format(lid_total_area)
+        print "LIDs subcatchment area ={0} ".format(lid_sc_area)
+        print "new original subcatchment area ={0} ".format(new_lid_base_sc_area)
 
     lid_sc[sc_imperv_index] = 0
     lid_base_sc[sc_imperv_index] = (new_lid_base_sc_imperv.to('percent').magnitude)
