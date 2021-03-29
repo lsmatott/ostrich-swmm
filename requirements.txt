@@ -15,7 +15,7 @@ numpy==1.12.1
 packaging==16.8
 pandas==0.19.2
 Pint==0.8
-Pygments==2.2.0
+Pygments==2.7.4
 pyparsing==2.2.0
 python-dateutil==2.6.0
 pytz==2017.2
