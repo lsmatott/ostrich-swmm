@@ -16,10 +16,8 @@ from .swmm import input as si
 from .swmm import input_reader as sir
 from .swmm import input_writer as siw
 
-#import LID addition codes
-from . import LID
-from . import RB
-from . import PP
+# import LID addition codes
+from . import LIDS
 
 input_parameters_schema_path = None
 """The path to the JSON Schema used to validate input parameters."""
@@ -209,8 +207,8 @@ def inject_parameters_into_input(input_parameters, input_template):
         # If the LID is a rain barrel...
         if lid_type_type == 'RB':
             rbcount = rbcount + 1
-            roof_sc = RB.add_roofs(input_template,roofs, rbcount)
-            rb_values = RB.add_rb(input_template, input_unit_system, lid, lid_id, roofs, roof_sc, rbcount)
+            roof_sc = LIDS.add_roofs(input_template,roofs, rbcount)
+            rb_values = LIDS.add_rb(input_template, input_unit_system, lid, lid_id, roofs, roof_sc, rbcount)
             lid = rb_values[0]
             excess = rb_values[1]
             lid_base_sc = rb_values[2]
@@ -218,7 +216,7 @@ def inject_parameters_into_input(input_parameters, input_template):
             lid_num_units=lid['number']
         #permeable pavement
         elif lid_type_type == 'PP':
-            pp_values = PP.add_pp(input_template, input_unit_system, lid, lid_id, count)
+            pp_values = LIDS.add_pp(input_template, input_unit_system, lid, lid_id, count)
             lid = pp_values[0]
             excess = pp_values[1]
             lid_base_sc = pp_values[2]
