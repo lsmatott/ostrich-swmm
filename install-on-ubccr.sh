@@ -1,11 +1,19 @@
 #!/bin/bash
+
+if [ "$1" == "" ]; then
+  echo "You must specify the installation prefix,"
+  exit
+fi
+
+PREFIX=$1
+
 module load anaconda-python/3.8.3
 
-conda create --prefix ../pyswmm python=2.7 || exit
+conda create --prefix $PREFIX python=2.7 || exit
 
 conda config --set env_prompt '({name})' || exit
 
-source activate ../pyswmm || exit
+source activate $PREFIX || exit
 
 pip install jsonschema==2.6.0 || exit
 pip install numpy==1.12 || exit
@@ -14,12 +22,11 @@ pip install Shapely==1.5 || exit
 
 python setup.py install || exit
 
-# --------------------------------------------------
-# To use:
-# module load anaconda-python/3.8.3
-# module load geos/3.9.0
-# conda config --set env_prompt '({name})'
-# source activate /path/to/pyswmm
-# ostrich-swmm
-# --------------------------------------------------
+echo ""
+echo "# --------------------------------------------------"
+echo "To use:"
+echo "  module use /projects/academic/rabideau/modulefiles"
+echo "  module load ostrich-swmm"
+echo "  ostrich-swmm"
+echo "# --------------------------------------------------"
 
