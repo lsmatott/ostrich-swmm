@@ -173,6 +173,17 @@ def inject_parameters_into_input(input_parameters, input_template):
             )
 
         # Get the LID's type.
+        #
+        # From SWMM5 User Manual:
+        #   BC for bio-retention cell; 
+        #   RG for rain garden; 
+        #   GR for green roof; 
+        #   IT for infiltration trench; 
+        #   PP for permeable pavement; 
+        #   RB for rain barrel; 
+        #   RD for rooftop disconnection; 
+        #   VS for vegetative swale.
+        #
         lid_type = lid['type']
         if lid_type not in all_lid_types:
             all_lid_types.append(lid_type)
@@ -222,18 +233,55 @@ def inject_parameters_into_input(input_parameters, input_template):
             lid_base_sc = pp_values[2]
             excess_lid.append(excess)
             lid_num_units=lid['number']
-##        #rain garden
-##        elif lid_type_type == 'RG':
-##        #vegetative swale
-##        elif lid_type_type == 'VS':
-##        #rooftop disconnection
-##        elif lid_type_type == 'RD':
-##        #green roof
-##        elif lid_type_type == 'GR':
-##        #infiltration trench
-##        elif lid_type_type == 'IT':
+        #bio-retention cell
+        elif lid_type_type == 'BC':
+            bc_values = LIDS.add_bc(input_template, input_unit_system, lid, lid_id, count)
+            lid = bc_values[0]
+            excess = bc_values[1]
+            lid_base_sc = bc_values[2]
+            excess_lid.append(excess)
+            lid_num_units=lid['number']
+        #rain garden
+        elif lid_type_type == 'RG':
+             rg_values = LIDS.add_rg(input_template, input_unit_system, lid, lid_id, count)
+             lid = rg_values[0]
+             excess = rg_values[1]
+             lid_base_sc = rg_values[2]
+             excess_lid.append(excess)
+             lid_num_units=lid['number']
+        #vegetative swale
+        elif lid_type_type == 'VS':
+             vs_values = LIDS.add_vs(input_template, input_unit_system, lid, lid_id, count)
+             lid = vs_values[0]
+             excess = vs_values[1]
+             lid_base_sc = vs_values[2]
+             excess_lid.append(excess)
+             lid_num_units=lid['number']
+        #rooftop disconnection
+        elif lid_type_type == 'RD':
+             rd_values = LIDS.add_rd(input_template, input_unit_system, lid, lid_id, count)
+             lid = rd_values[0]
+             excess = rd_values[1]
+             lid_base_sc = rd_values[2]
+             excess_lid.append(excess)
+             lid_num_units=lid['number']
+        #green roof
+        elif lid_type_type == 'GR':
+             gr_values = LIDS.add_gr(input_template, input_unit_system, lid, lid_id, count)
+             lid = gr_values[0]
+             excess = gr_values[1]
+             lid_base_sc = gr_values[2]
+             excess_lid.append(excess)
+             lid_num_units=lid['number']
+        #infiltration trench
+        elif lid_type_type == 'IT':
+             it_values = LIDS.add_it(input_template, input_unit_system, lid, lid_id, count)
+             lid = it_values[0]
+             excess = it_values[1]
+             lid_base_sc = it_values[2]
+             excess_lid.append(excess)
+             lid_num_units=lid['number']
 ##        #trees?
-
         else:
             logging.warning(
                 (
