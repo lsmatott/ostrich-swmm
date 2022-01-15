@@ -198,7 +198,7 @@ def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 
         excess = 0
     else: 
         lid_num_units = int(upper_bound)
-        print "OSTRICH input for subcat {0} had too many lid units, changing to max number {1}".format(lid_sc_name, lid_num_units)
+        print("OSTRICH input for subcat {0} had too many lid units, changing to max number {1}".format(lid_sc_name, lid_num_units))
     
     # record the actual number of LIDs that will be added into the sub-catchment
     lid['number']= lid_num_units
@@ -217,7 +217,7 @@ def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 
         roof_values = [0,0,0,0,0,0,"",]
     else:
         r_num_units = lid_num_units
-	roof_total_area = r_num_units*r_area*lid_area_unit
+        roof_total_area = r_num_units*r_area*lid_area_unit
         roof_sc_area = roof_total_area.to(sc_area_unit)
         roof_sc[sc_area_index]= roof_sc_area.magnitude
         roof_sc[sc_imperv_index] = 100
