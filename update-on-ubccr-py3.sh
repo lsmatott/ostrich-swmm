@@ -1,6 +1,10 @@
 #!/bin/bash
 
-PREFIX=/projects/academic/rabideau/lsmatott/py3swmm
+if [ "$1" == "" ]; then
+  PREFIX=/projects/academic/rabideau/lsmatott/py3swmm
+else
+  PREFIX=$1
+fi
 
 module load anaconda-python/3.8.3
 
