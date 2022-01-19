@@ -20,6 +20,10 @@ pip install numpy==1.12 || exit
 pip install swmmtoolbox==1.0.5.8 || exit
 pip install Shapely==1.5 || exit
 
+cp requirements-py2.txt requirements.txt || exit
+cp requirements-dev-py2.txt requirements-dev.txt || exit
+cp setup-py2.py setup.py || exit
+
 python setup.py install || exit
 
 echo ""

@@ -9,7 +9,7 @@ PREFIX=$1
 
 module load anaconda-python/3.8.3
 
-# conda create --prefix $PREFIX python=3.8.3 || exit
+conda create --prefix $PREFIX python=3.8.3 || exit
 
 conda config --set env_prompt '({name})' || exit
 
