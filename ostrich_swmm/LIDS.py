@@ -17,7 +17,7 @@ from math import floor, sqrt
 
 from . import config as cfg
 from . import units
-import inject as inj
+from . import inject as inj
 from .swmm import input as si
 
 # ------------------------------------------------------------------------------       

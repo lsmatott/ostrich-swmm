@@ -5,6 +5,7 @@ import datetime as dt
 
 import numpy as np
 import os
+import sys
 import swmmtoolbox.swmmtoolbox as swmmtoolbox
 
 from . import SWMM_EPOCH_DATETIME
@@ -188,50 +189,96 @@ def perform_node_extraction(
             in nodes_flow_events
         ],
     }
-    nodes_notable_events_start_strings = {
-        event_type: [
-            event['start'].isoformat()
-            if event is not None
-            else ''
-            for event
-            in events
-        ]
-        for event_type, events
-        in nodes_notable_events.iteritems()
-    }
-    nodes_notable_events_end_strings = {
-        event_type: [
-            event['end'].isoformat()
-            if event is not None
-            else ''
-            for event
-            in events
-        ]
-        for event_type, events
-        in nodes_notable_events.iteritems()
-    }
-    nodes_notable_events_volumes = {
-        event_type: [
-            event['volume']
-            if event is not None
-            else 0
-            for event
-            in events
-        ]
-        for event_type, events
-        in nodes_notable_events.iteritems()
-    }
-    nodes_notable_events_durations = {
-        event_type: [
-            event['duration']
-            if event is not None
-            else 0
-            for event
-            in events
-        ]
-        for event_type, events
-        in nodes_notable_events.iteritems()
-    }
+    if sys.version_info[0] == 3:
+        nodes_notable_events_start_strings = {
+            event_type: [
+                event['start'].isoformat()
+                if event is not None
+                else ''
+                for event
+                in events
+            ]
+            for event_type, events
+            in nodes_notable_events.items()
+        }
+        nodes_notable_events_end_strings = {
+            event_type: [
+                event['end'].isoformat()
+                if event is not None
+                else ''
+                for event
+                in events
+            ]
+            for event_type, events
+            in nodes_notable_events.items()
+        }
+        nodes_notable_events_volumes = {
+            event_type: [
+                event['volume']
+                if event is not None
+                else 0
+                for event
+                in events
+            ]
+            for event_type, events
+            in nodes_notable_events.items()
+        } 
+        nodes_notable_events_durations = {
+            event_type: [
+                event['duration']
+                if event is not None
+                else 0
+                for event
+                in events
+            ]
+            for event_type, events
+            in nodes_notable_events.items()
+        }
+    else:
+        nodes_notable_events_start_strings = {
+            event_type: [
+                event['start'].isoformat()
+                if event is not None
+                else ''
+                for event
+                in events
+            ]
+            for event_type, events
+            in nodes_notable_events.iteritems()
+        }
+        nodes_notable_events_end_strings = {
+            event_type: [
+                event['end'].isoformat()
+                if event is not None
+                else ''
+                for event
+                in events
+            ]
+            for event_type, events
+            in nodes_notable_events.iteritems()
+        }
+        nodes_notable_events_volumes = {
+            event_type: [
+                event['volume']
+                if event is not None
+                else 0
+                for event
+                in events
+            ]
+            for event_type, events
+            in nodes_notable_events.iteritems()
+        } 
+        nodes_notable_events_durations = {
+            event_type: [
+                event['duration']
+                if event is not None
+                else 0
+                for event
+                in events
+            ]
+            for event_type, events
+            in nodes_notable_events.iteritems()
+        }
 
     # Write the requested statistics out to the given file as CSV.
     csv_writer = csv.writer(node_output_file)
@@ -315,7 +362,7 @@ def perform_extraction_steps(config, validate=True):
                 config['summary_dir'],
                 step['output_path'],
             )
-            node_output_file = open(node_output_path, 'wb')
+            node_output_file = open(node_output_path, 'w')
 
             node_extraction_args = {
                 'binary_output': binary_output,

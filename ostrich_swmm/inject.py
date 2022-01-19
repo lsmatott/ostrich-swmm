@@ -52,10 +52,15 @@ def extract_subcatchment_polygons(swmm_input):
             ),
         )
 
+    if sys.version_info[0] == 3:
+        my_iter_items = subcatchment_polygon_coordinates.items()
+    else:
+        my_iter_items = subcatchment_polygon_coordinates.iteritems()
+
     return {
         subcatchment: shapely.geometry.Polygon(coordinates)
         for subcatchment, coordinates
-        in subcatchment_polygon_coordinates.iteritems()
+        in my_iter_items
     }
 
 
@@ -96,7 +101,13 @@ def get_subcatchment_from_map_coords(coordinates, subcatchments):
         ValueError: The point did not fall within any given subcatchments.
     """
     point = shapely.geometry.Point(coordinates['x'], coordinates['y'])
-    for subcatchment, polygon in subcatchments.iteritems():
+
+    if sys.version_info[0] == 3:
+        my_iter_items = subcatchments.items()
+    else:
+        my_iter_items = subcatchments.iteritems()
+
+    for subcatchment, polygon in my_iter_items:
         if polygon.contains(point):
             return subcatchment
 
@@ -325,7 +336,7 @@ def inject_parameters_into_input(input_parameters, input_template):
             'comment': None,
         })
         
-    with open('num_lid.csv', 'wb') as outcsv:
+    with open('num_lid.csv', 'w') as outcsv:
         writer = csv.writer(outcsv)
         header = ["Subcat_Name"]
         nlid_col = []
