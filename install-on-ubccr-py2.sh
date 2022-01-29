@@ -15,8 +15,10 @@ conda config --set env_prompt '({name})' || exit
 
 source activate $PREFIX || exit
 
+pip install docutils==0.13.1 || exit
 pip install jsonschema==2.6.0 || exit
 pip install numpy==1.12 || exit
+conda install regex || exit
 pip install swmmtoolbox==1.0.5.8 || exit
 pip install Shapely==1.5 || exit
 
