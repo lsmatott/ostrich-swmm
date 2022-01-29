@@ -10,6 +10,7 @@
 #   RD for rooftop disconnection --> add_rd()
 #   VS for vegetative swale --> add_vs()
 #
+import sys
 import shapely.geometry
 from collections import Counter
 
@@ -17,7 +18,11 @@ from math import floor, sqrt
 
 from . import config as cfg
 from . import units
-from . import inject as inj
+if sys.version_info[0] == 3 :
+    from . import inject as inj
+else :
+    import inject as inj
+
 from .swmm import input as si
 
 # ------------------------------------------------------------------------------       
