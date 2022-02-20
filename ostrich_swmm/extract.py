@@ -332,53 +332,99 @@ def perform_node_extraction(
 
     csv_writer.writerows(zip(*csv_columns))
 
-
 def perform_extraction_steps(config, validate=True):
     """Perform the extraction steps specified in a configuration.
-
     Args:
         config: The config to get extraction steps from.
         validate (boolean): Validate the configuration before attempting
             to use it. Defaults to True.
-
     Raises:
         ConfigException: The configuration is invalid.
     """
     if validate:
         validate_config(config)
 
-    binary_output = swmmtoolbox.SwmmExtract(
-        config['binary_output_path']
-    )
-
-    for step in config['extract']['steps']:
-        # If step has been explicitly disabled, skip it.
-        step_enabled = step.get('enabled', True)
-        if not step_enabled:
-            continue
-
-        if step['type'] == 'node':
-            node_output_path = os.path.join(
-                config['summary_dir'],
-                step['output_path'],
-            )
-            node_output_file = open(node_output_path, 'w')
-
-            node_extraction_args = {
-                'binary_output': binary_output,
-                'node_output_file': node_output_file,
-                'node_names': step['nodes'],
-                'statistics': step['statistics'],
-            }
-
-            if 'event_threshold_flow_rate' in step:
-                node_extraction_args['event_threshold_flow_rate'] = (
-                    step['event_threshold_flow_rate']
+    try:
+         binary_output = swmmtoolbox.SwmmExtract(
+            config['binary_output_path'])
+         for step in config['extract']['steps']:
+            # If step has been explicitly disabled, skip it.
+            step_enabled = step.get('enabled', True)
+            if not step_enabled:
+                continue
+    
+            if step['type'] == 'node':
+                node_output_path = os.path.join(
+                    config['summary_dir'],
+                    step['output_path'],
                 )
-
-            perform_node_extraction(**node_extraction_args)
-
-            node_output_file.close()
+                node_output_file = open(node_output_path, 'wb')
+    
+                node_extraction_args = {
+                    'binary_output': binary_output,
+                    'node_output_file': node_output_file,
+                    'node_names': step['nodes'],
+                    'statistics': step['statistics'],
+                }
+                outname_stats=step['output_path']
+                outname_lids=config['lid_selection']
+    
+                if 'event_threshold_flow_rate' in step:
+                    node_extraction_args['event_threshold_flow_rate'] = (
+                        step['event_threshold_flow_rate']
+                    )
+    
+                perform_node_extraction(**node_extraction_args)
+                node_output_file.close()
+                perform_append(config,outname_stats,outname_lids)
+    
+    except: # catch *all* exceptions
+        print("I am trapped")
+        #create the output that OSTRICH is expecting to make a new iteration.
+        # We will place arbitrairly large numbers on its fields.
+        
+        #build the path to copy the output used for infeasible solutions
+        inf_out_path=cfg.get_package_json_schema_path('infeasible_config_out')
+        
+        for step in config['extract']['steps']:
+            # If step has been explicitly disabled, skip it.
+            step_enabled = step.get('enabled', True)
+            if not step_enabled:
+                continue
+    
+            if step['type'] == 'node':
+                node_output_path = os.path.join(
+                    config['summary_dir'],
+                    step['output_path'],
+                )
+        
+         
+         #copy the infeasible solutions output
+        with open(node_output_path,'a') as outfile:
+            with open(inf_out_path) as infile:
+                for line in infile:
+                    outfile.write(line)
+            
+def perform_append(config, outname_stats, outname_lids, validate=True):
+    #read model results from swmm and number of lids
+    to_copy_res = os.path.join(
+                config['summary_dir'],
+                outname_stats,
+            )
+    to_copy_lid = os.path.join(
+                config['summary_dir'],
+                outname_lids,
+            )
+    #open file to append
+    to_append = os.path.join(config['results_path'],
+            )
+    
+    filenames = [outname_stats, outname_lids]
+    with open(to_append,'a') as outfile:
+        for fname in filenames:
+            with open(fname) as infile:
+                for line in infile:
+                    outfile.write(line)
 
 
 def validate_config(config, perform_file_checks=True):
