@@ -353,8 +353,8 @@ def inject_parameters_into_input(input_parameters, input_template):
                 line.append(str(nlid_col[j][i]))
             writer.writerow(line)
             line =[]
-        sum_line = ["Lid Sum"]
-        excess_line =["Excess Lids"]
+        sum_line = ["Lid_Sum"]
+        excess_line =["Excess_Lids"]
         for i in range(0, len(nlid_col)):
             sum_line.append(str(sum(nlid_col[i])))
             excess_line.append(str(sum(nexcess[i])))
