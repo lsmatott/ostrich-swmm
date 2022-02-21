@@ -6,7 +6,8 @@ else
   PREFIX=$1
 fi
 
-module load anaconda-python/3.8.3
+module use /projects/academic/rabideau/modulefiles
+module load anaconda-python
 
 conda config --set env_prompt '({name})' || exit
 
