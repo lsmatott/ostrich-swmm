@@ -4,8 +4,8 @@ A toolset for connecting the OSTRICH optimization software toolkit with the SWMM
 
 References:
 
-[OSTRICH-SWMM: A new multi-objective optimization tool for green infrastructure planning with SWMM] (https://www.sciencedirect.com/science/article/abs/pii/S1364815218307515)
+[OSTRICH-SWMM: A new multi-objective optimization tool for green infrastructure planning with SWMM](https://www.sciencedirect.com/science/article/abs/pii/S1364815218307515)
 
-[A new tool for automatic calibration of the Storm Water Management Model (SWMM)] (https://www.sciencedirect.com/science/article/abs/pii/S0022169419311710)
+[A new tool for automatic calibration of the Storm Water Management Model (SWMM)](https://www.sciencedirect.com/science/article/abs/pii/S0022169419311710)
 
 
