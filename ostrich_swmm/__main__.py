@@ -80,9 +80,21 @@ def extract_cmd(config):
         ConfigException: The configuration was invalid.
     """
     extract.perform_extraction_steps(config)
-
+    extract.perform_append(config)
     return 0
 
+def append_cmd(config):
+    #"""Run SWMM with pre- and post-processing steps.
+    #Args:
+    #    config (dict): The configuration to use.
+    #Returns:
+    #    int: An exit code for the script.
+    #Raises:
+    #    ConfigException: The configuration was invalid.
+    #"""
+    extract.perform_append(config)
+
+    return 0
 
 def inject_cmd(config):
     """Inject OSTRICH parameters into SWMM input before a run.
