@@ -2,10 +2,15 @@
 
 import subprocess
 
-from . import config as cfg
-from . import extract
-from . import inject
+# these imports don't work when debugging using vs code
+# from . import config as cfg
+# from . import extract
+# from . import inject
 
+# use these imports when debugging using vs code
+import config as cfg
+import extract
+import inject
 
 def perform_run(config, validate=True):
     """Perform a run as specified by a configuration.

@@ -6,12 +6,19 @@ import argparse
 import os
 import sys
 
-from . import config as cfg
-from . import inject
-from . import extract
-from . import run
-from .version import __version__
+# these imports don't work when debugging using VS Code
+# from . import config as cfg
+# from . import inject
+# from . import extract
+# from . import run
+# from .version import __version__
 
+# use these imports when debugging using vs code
+import config as cfg
+import inject
+import extract
+import run
+from version import __version__
 
 class UsageException(Exception):
     """Raised if script is invoked incorrectly."""

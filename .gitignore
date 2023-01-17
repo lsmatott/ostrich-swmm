@@ -9,6 +9,9 @@ __pycache__/
 # C extensions
 *.so
 
+# build and ide products
+.vscode
+
 # Distribution / packaging
 .Python
 env/

@@ -16,14 +16,23 @@ from collections import Counter
 
 from math import floor, sqrt
 
-from . import config as cfg
-from . import units
+# these imports don't work when debugging using vs code
+# from . import config as cfg
+# from . import units
+# if sys.version_info[0] == 3 :
+#     from . import inject as inj
+# else :
+#     import inject as inj
+# from .swmm import input as si
+
+# use these imports when debugging using vs code
+import config as cfg
+import units
 if sys.version_info[0] == 3 :
-    from . import inject as inj
+    import inject as inj
 else :
     import inject as inj
-
-from .swmm import input as si
+from swmm import input as si
 
 # ------------------------------------------------------------------------------       
 # General LID Functions
@@ -34,16 +43,16 @@ from .swmm import input as si
 
 def area_units(input_unit_system):
     """Takes in input unit system and determines area units for
-            lid and sc, returns A_units, 
-            list of lid area unit and sc area unit"""
+            lid and sc, returns A_units - a  
+            list of lid area unit, width unit, and sc area unit"""
     if input_unit_system == 'US':
-        lid_area_unit = units.registry.ft ** 2
-        width_unit = units.registry.ft
-        sc_area_unit = units.registry.acre
+        lid_area_unit = 'square_feet'
+        width_unit = 'feet'
+        sc_area_unit = 'acres'
     elif input_unit_system == 'SI':
-        lid_area_unit = units.registry.m ** 2
-        width_unit = units.registry.m
-        sc_area_unit = units.registry.hectare
+        lid_area_unit = 'square_meters'
+        width_unit = 'meters'
+        sc_area_unit = 'hectares'
     else:
         raise cfg.ConfigException(
             'Unknown unit system "{0}".'.format(input_unit_system),)
@@ -86,7 +95,8 @@ def add_roofs(input_template, roofs, count):
 
     return roof_sc
 
-def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 0, roofs = None, roof_sc = None):
+def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 0, 
+               roofs = None, roof_sc = None):
     """Inject parameters into a SWMM input template.
     Args:
         input_template (dict): The input to inject parameters into.
@@ -159,30 +169,29 @@ def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 
     # --------------------------------------------------------------------------
     # optional roof information
     # --------------------------------------------------------------------------
-    if roofs == None:
+    if (( roofs == None ) or ( len(roofs) == 0 )) :
         r_area = 0
         r_num_units = 0
-        ind_roof = 0*lid_area_unit
+        ind_roof = 0
     else:
         r_area = roofs[count]['area']
         r_num_units = roofs[count]['number']
-        ind_roof = r_area*lid_area_unit
-	
-	# --------------------------------------------------------------------------
-	# fetch list indices for the LID area, imperv, and width properties - this 
-	# information is sotred in the si.data_indices dictionary.
-	# --------------------------------------------------------------------------
+        ind_roof = r_area
+    
+    # --------------------------------------------------------------------------
+    # fetch list indices for the LID area, imperv, and width properties - this 
+    # information is sotred in the si.data_indices dictionary.
+    # --------------------------------------------------------------------------
     sc_area_index = si.data_indices['SUBCATCHMENTS']['Area']
     sc_imperv_index = si.data_indices['SUBCATCHMENTS']['%Imperv']
     sc_width_index = si.data_indices['SUBCATCHMENTS']['Width']
 
     # --------------------------------------------------------------------------
-    # associate base subcatchment parameters with their units and then compute
-    # impervious area
+    # compute impervious area of the base subcatchment
     # --------------------------------------------------------------------------
-    lid_base_sc_area = float(lid_base_sc[sc_area_index]) * sc_area_unit
-    lid_base_sc_imperv = (float(lid_base_sc[sc_imperv_index])*units.registry.percent)
-    lid_base_sc_imperv_area = lid_base_sc_imperv * lid_base_sc_area
+    lid_base_sc_area = float(lid_base_sc[sc_area_index])
+    lid_base_sc_imperv_pct = float(lid_base_sc[sc_imperv_index]) / 100.0
+    lid_base_sc_imperv_area = lid_base_sc_imperv_pct * lid_base_sc_area
     
     # --------------------------------------------------------------------------
     # Figure out if there are too many LIDs being added - this is dependent on 
@@ -193,42 +202,47 @@ def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 
     # any area occupied by roofs that have also been extracted from the sub-
     # catchment.
     # --------------------------------------------------------------------------
-    upper_bound = floor(float((lid_base_sc_imperv_area.to(lid_area_unit))/(ind_roof + lid['area']*lid_area_unit)))
-    if upper_bound < 0:
-	    upper_bound = 0 
-	    
-	# compare max number of LIDs to the actual number and compute the excess
-    excess = int(lid_num_units - upper_bound)
+    sc_lid_area = units.convert_from_sc_area_to_lid_area(lid_base_sc_imperv_area, sc_area_unit, lid_area_unit)
+    upper_bound = floor(float(sc_lid_area/(ind_roof + lid['area'])))
+    if upper_bound < 0 :
+        upper_bound = 0 
+
+    # compare max number of LIDs to the actual number and compute the excess
+    excess = int(lid_num_units) - int(upper_bound)
     if excess <= 0:
         excess = 0
     else: 
         lid_num_units = int(upper_bound)
         print("OSTRICH input for subcat {0} had too many lid units, changing to max number {1}".format(lid_sc_name, lid_num_units))
+        lid_area =  ind_roof + lid['area']
+        print("OSTRICH input for subcat {0} - impervious area {1}".format(lid_sc_name, sc_lid_area))
+        print("OSTRICH input for subcat {0} - lid area {1}".format(lid_sc_name, lid_area))
     
     # record the actual number of LIDs that will be added into the sub-catchment
     lid['number']= lid_num_units
-	
-	# compute the total area of all LID units that will be added
-    lid_total_area = lid_num_units * lid['area'] * lid_area_unit
+    
+    # compute the total area of all LID units that will be added
+    lid_total_area = lid_num_units * lid['area']
     
     # --------------------------------------------------------------------------
     # handle optional inclusion of roofs in the LID sub-catchment 
     # --------------------------------------------------------------------------
     sc_out_index = si.data_indices['SUBCATCHMENTS']['OutID']
-    if roofs == None:
+    if ( roofs == None ) or ( len( roofs ) == 0 ):
         r_num_units = 0
         roof_total_area = 0
         roof_sc_area = 0
         roof_values = [0,0,0,0,0,0,"",]
     else:
         r_num_units = lid_num_units
-        roof_total_area = r_num_units*r_area*lid_area_unit
-        roof_sc_area = roof_total_area.to(sc_area_unit)
-        roof_sc[sc_area_index]= roof_sc_area.magnitude
+        roof_total_area = r_num_units * r_area
+        roof_sc_area = units.convert_from_lid_area_to_sc_area(roof_total_area, lid_area_unit, sc_area_unit)
+        roof_sc[sc_area_index]= roof_sc_area
         roof_sc[sc_imperv_index] = 100
         roof_sc[sc_out_index] = lid_sc_name
-        roof_sc[sc_width_index] = (sqrt(roof_total_area/lid_area_unit))
-        fromImp = float(lid['number']*ind_roof.to(sc_area_unit)/lid_base_sc_imperv_area*100)
+        roof_sc[sc_width_index] = sqrt(roof_total_area)
+        ind_roof_sc_area = units.convert_from_lid_area_to_sc_area(ind_roof, lid_area_unit, sc_area_unit)
+        fromImp = ( 100 * lid['number'] * ind_roof_sc_area ) / lid_base_sc_imperv_area
         #need to update roof values once excess has been taken out  
         roof_values = [roofs[count]['location']['subcatchment'],roofs[count]['NImp'],roofs[count]['NPerv'],0,0,roofs[count]['PctZero'],"OUTLET",]
         input_template['SUBAREAS']['lines'].append({
@@ -243,20 +257,25 @@ def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 
     # --------------------------------------------------------------------------
     # adjust subcatchment area to compensate for LID additions
     # --------------------------------------------------------------------------
-    lid_sc_area = lid_total_area.to(sc_area_unit)
+    lid_sc_area = units.convert_from_lid_area_to_sc_area(lid_total_area, lid_area_unit, sc_area_unit) 
     new_lid_base_sc_area = lid_base_sc_area - lid_sc_area - roof_sc_area
-    lid_base_sc[sc_area_index] = new_lid_base_sc_area.magnitude
-    lid_sc[sc_area_index] = lid_sc_area.magnitude
+    lid_base_sc[sc_area_index] = new_lid_base_sc_area
+    lid_sc[sc_area_index] = lid_sc_area
 
     # --------------------------------------------------------------------------
     # because LIDs are only installed on impervious areas it is necessary to 
     # adjust the %imperv value in the parent sub-catchment
     # --------------------------------------------------------------------------
     new_lid_base_sc_imperv_area = lid_base_sc_imperv_area - lid_sc_area - roof_sc_area
-    new_lid_base_sc_imperv = (new_lid_base_sc_imperv_area / new_lid_base_sc_area)
+    
+    # Guard against divide by zero, which can occur if entire subcatchment is allocated to the LID control
+    if new_lid_base_sc_imperv_area > 0 :
+        new_lid_base_sc_imperv = (new_lid_base_sc_imperv_area / new_lid_base_sc_area)
+    else :
+        new_lid_base_sc_imperv = 0.00
 
     lid_sc[sc_imperv_index] = 0
-    lid_base_sc[sc_imperv_index] = (new_lid_base_sc_imperv.to('percent').magnitude)
+    lid_base_sc[sc_imperv_index] = 100 * new_lid_base_sc_imperv
 
     # --------------------------------------------------------------------------
     # Adjust LID and base subcatchment widths
@@ -269,11 +288,11 @@ def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 
     #      in the parent sub-cathcment. Then the new width of the parent sub-
     #      catchment would be: 10 * (100 - 30) / 100 = 10 * 0.7 = 7
     # --------------------------------------------------------------------------
-    lid_sc[sc_width_index]=(sqrt(lid_total_area/lid_area_unit))
+    lid_sc[sc_width_index]=sqrt(lid_total_area)
     #New Subcatchment Width = Old Width * Non-LID Area / Original Area
     old_width = float(lid_base_sc[sc_width_index])
-    new_width = old_width*(float(new_lid_base_sc_area/sc_area_unit)/float(lid_base_sc_area/sc_area_unit))
-    lid_base_sc[sc_width_index]=new_width
+    new_width = old_width * (new_lid_base_sc_area / lid_base_sc_area )
+    lid_base_sc[sc_width_index] = new_width
 
     # --------------------------------------------------------------------------
     # adjust fromImp parameter
@@ -298,7 +317,7 @@ def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 
     })
     lid_results = [lid, excess, lid_base_sc]
     return lid_results
-	                  
+                      
 # --------------------------------------------------------------------------------
 # Rain Barrel Functions
 #    add_rb()

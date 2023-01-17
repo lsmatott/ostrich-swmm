@@ -4,20 +4,26 @@ from collections import Counter, defaultdict
 import json
 import logging
 import csv
-
+import platform
 import shapely.geometry
 
 from math import floor
 
-from . import config as cfg
-from . import units
+# these imports don't work when debugging using VS Code
+# from . import config as cfg
+# from . import units
+# from .swmm import input as si
+# from .swmm import input_reader as sir
+# from .swmm import input_writer as siw
+# from . import LIDS
 
-from .swmm import input as si
-from .swmm import input_reader as sir
-from .swmm import input_writer as siw
-
-# import LID addition codes
-from . import LIDS
+# use these imports when debugging using vs code
+import config as cfg
+import units
+from swmm import input as si
+from swmm import input_reader as sir
+from swmm import input_writer as siw
+import LIDS
 
 input_parameters_schema_path = None
 """The path to the JSON Schema used to validate input parameters."""
@@ -158,10 +164,13 @@ def inject_parameters_into_input(input_parameters, input_template):
     count = -1
     rbcount = -1
 
+    # lid_sc_info maps newly created subcatchments to corresponding LID info
+    lid_sc_info = {}
+
     excess_lid =[]
     nlid = []
     sc_names_list = []
-    all_lid_types = []
+    all_lid_names = []
 
     for lid in lids:
         count = count + 1
@@ -183,53 +192,47 @@ def inject_parameters_into_input(input_parameters, input_template):
                 sc_polygons,
             )
 
-        # Get the LID's type.
-        #
-        # From SWMM5 User Manual:
-        #   BC for bio-retention cell; 
-        #   RG for rain garden; 
-        #   GR for green roof; 
-        #   IT for infiltration trench; 
-        #   PP for permeable pavement; 
-        #   RB for rain barrel; 
-        #   RD for rooftop disconnection; 
-        #   VS for vegetative swale.
-        #
-        lid_type = lid['type']
-        if lid_type not in all_lid_types:
-            all_lid_types.append(lid_type)
+        # Get the name of the LID control
+        lid_name = lid['name']
+        if lid_name not in all_lid_names:
+            all_lid_names.append(lid_name)
         if 'LID_CONTROLS' not in input_template:
             raise cfg.ConfigException(
                 'There are no LID controls defined in the SWMM input file.',
             )
         lid_controls = input_template['LID_CONTROLS']
-        lid_type_name_index = si.data_indices['LID_CONTROLS']['Common']['Name']
-        lid_type_definition = [
+        lid_name_index = si.data_indices['LID_CONTROLS']['Common']['Name']
+        lid_definition = [
             line
             for line
             in lid_controls['lines']
             if line['values']
-            and line['values'][lid_type_name_index] == lid_type
+            and line['values'][lid_name_index] == lid_name
         ]
-        if not lid_type_definition:
+        if not lid_definition:
             raise cfg.ConfigException(
-                'LID type "{0}" not found in SWMM input file.'.format(lid_type)
+                'No LID control named "{0}" was found in the SWMM input file.'.format(lid_name)
             )
 
-        # Count this instance of this LID type and give it an ID.
-        lid_counter[lid_type] += 1
-        lid_id = '{0}_{1}'.format(lid_type, lid_counter[lid_type])
+        # Count the instance of this LID and give it an ID.
+        lid_counter[lid_name] += 1
+        lid_id = '{0}_{1}'.format(lid_name, lid_counter[lid_name])
 
-        # Adjust the LID's subcatchment as necessary.
-        lid_type_type_index = si.data_indices['LID_CONTROLS']['Type']['Type']
-        lid_type_type = lid_type_definition[0]['values'][lid_type_type_index]
+        # Adjust the LID subcatchment as necessary.
+        lid_type_index = si.data_indices['LID_CONTROLS']['Type']['Type']
+        lid_type = lid_definition[0]['values'][lid_type_index]
         if lid['location']['subcatchment'] not in sc_names_list:
             sc_names_list.append(lid['location']['subcatchment'])
-        
+
         # If the LID is a rain barrel...
-        if lid_type_type == 'RB':
+        if lid_type == 'RB':
             rbcount = rbcount + 1
-            roof_sc = LIDS.add_roofs(input_template,roofs, rbcount)
+            if len( roofs ) == 0 :
+                print("Warning - rain barrels are included in the configuration file")
+                print("without a corresponding roof specification.")
+                roof_sc = []
+            else :
+                roof_sc = LIDS.add_roofs(input_template, roofs, rbcount)
             rb_values = LIDS.add_rb(input_template, input_unit_system, lid, lid_id, roofs, roof_sc, rbcount)
             lid = rb_values[0]
             excess = rb_values[1]
@@ -237,7 +240,7 @@ def inject_parameters_into_input(input_parameters, input_template):
             excess_lid.append(excess)
             lid_num_units=lid['number']
         #permeable pavement
-        elif lid_type_type == 'PP':
+        elif lid_type == 'PP':
             pp_values = LIDS.add_pp(input_template, input_unit_system, lid, lid_id, count)
             lid = pp_values[0]
             excess = pp_values[1]
@@ -245,7 +248,7 @@ def inject_parameters_into_input(input_parameters, input_template):
             excess_lid.append(excess)
             lid_num_units=lid['number']
         #bio-retention cell
-        elif lid_type_type == 'BC':
+        elif lid_type == 'BC':
             bc_values = LIDS.add_bc(input_template, input_unit_system, lid, lid_id, count)
             lid = bc_values[0]
             excess = bc_values[1]
@@ -253,7 +256,7 @@ def inject_parameters_into_input(input_parameters, input_template):
             excess_lid.append(excess)
             lid_num_units=lid['number']
         #rain garden
-        elif lid_type_type == 'RG':
+        elif lid_type == 'RG':
              rg_values = LIDS.add_rg(input_template, input_unit_system, lid, lid_id, count)
              lid = rg_values[0]
              excess = rg_values[1]
@@ -261,7 +264,7 @@ def inject_parameters_into_input(input_parameters, input_template):
              excess_lid.append(excess)
              lid_num_units=lid['number']
         #vegetative swale
-        elif lid_type_type == 'VS':
+        elif lid_type == 'VS':
              vs_values = LIDS.add_vs(input_template, input_unit_system, lid, lid_id, count)
              lid = vs_values[0]
              excess = vs_values[1]
@@ -269,7 +272,7 @@ def inject_parameters_into_input(input_parameters, input_template):
              excess_lid.append(excess)
              lid_num_units=lid['number']
         #rooftop disconnection
-        elif lid_type_type == 'RD':
+        elif lid_type == 'RD':
              rd_values = LIDS.add_rd(input_template, input_unit_system, lid, lid_id, count)
              lid = rd_values[0]
              excess = rd_values[1]
@@ -277,7 +280,7 @@ def inject_parameters_into_input(input_parameters, input_template):
              excess_lid.append(excess)
              lid_num_units=lid['number']
         #green roof
-        elif lid_type_type == 'GR':
+        elif lid_type == 'GR':
              gr_values = LIDS.add_gr(input_template, input_unit_system, lid, lid_id, count)
              lid = gr_values[0]
              excess = gr_values[1]
@@ -285,7 +288,7 @@ def inject_parameters_into_input(input_parameters, input_template):
              excess_lid.append(excess)
              lid_num_units=lid['number']
         #infiltration trench
-        elif lid_type_type == 'IT':
+        elif lid_type == 'IT':
              it_values = LIDS.add_it(input_template, input_unit_system, lid, lid_id, count)
              lid = it_values[0]
              excess = it_values[1]
@@ -296,11 +299,34 @@ def inject_parameters_into_input(input_parameters, input_template):
         else:
             logging.warning(
                 (
-                    'LID type "{0}" is not directly supported by this module. '
+                    'The LID control named {} is assigned a LID type of {} but that type '
+                    'is not currently supported by ostrich-swmm.'
                     'Manual adjustments to other objects, such as '
                     'subcatchments, may be necessary.'
-                ).format(lid_type_type)
+                ).format(lid_name, lid_type)
             )
+
+        # Update the LID dictionary
+        lid_info = {}
+        lid_info['LidControlName'] = lid_name
+        lid_info['NumInstances'] = 1
+        lid_info['LidType'] = lid_type
+        lid_info['NumUnits'] = lid_num_units
+        lid_info['Excess'] = excess
+        sc_name = lid['location']['subcatchment'] 
+        if sc_name not in lid_sc_info :
+            lid_sc_info[sc_name] = [ lid_info ]
+        else :
+            names = [ j[ 'LidControlName' ] for j in lid_sc_info[ sc_name ] ]
+            if lid_name not in names :
+                lid_sc_info[sc_name].append(lid_info)
+            else :
+                # This situation probably shoudn't occur because each LID is assigned
+                # to it's own sub-catchment.
+                lid_index = lid_sc_info[sc_name].index(lid_name)
+                lid_sc_info[sc_name][lid_index]['NumInstances'] += 1
+                lid_sc_info[sc_name][lid_index]['NumUnits'] += lid_info['NumUnits']
+                lid_sc_info[sc_name][lid_index]['Excess'] += lid_info['Excess']
 
         # Add the LID to the input.
         lid_drain_to = ''
@@ -315,7 +341,7 @@ def inject_parameters_into_input(input_parameters, input_template):
         
         lid_values = [
             lid['location']['subcatchment'],
-            lid['type'],
+            lid['name'],
             lid['number'],
             lid['area'],
             lid['width'],
@@ -335,34 +361,48 @@ def inject_parameters_into_input(input_parameters, input_template):
             'values': lid_values,
             'comment': None,
         })
-        
-    with open('num_lid.csv', 'w') as outcsv:
+
+    # see https://stackoverflow.com/questions/30929363/csv-writerows-puts-newline-after-each-row    
+    if platform.system == "Windows" :
+        new_line = ''
+    else :
+        new_line = '\n'
+    
+    with open('num_lid.csv', 'w', newline=new_line) as outcsv:
         writer = csv.writer(outcsv)
-        header = ["Subcat_Name"]
-        nlid_col = []
-        nexcess =[]
-        for i in range(0, len(all_lid_types)):
-            header.append(str(all_lid_types[i]))
-            nlid_col.append(nlid[i:len(nlid):len(all_lid_types)])
-            nexcess.append(excess_lid[i:len(excess_lid):len(all_lid_types)])
+        writer.writerow(["# Number of LID controls in each subcatchment"])
+        header = ["Subcatchment_Name"]
+        for i in all_lid_names:
+            header.append(str(i))
         writer.writerow(header) 
-        line = []
-        for i in range(0, len(sc_names_list)):
-            line.append(sc_names_list[i])   #need to figure out how to grab subcat coordinates
-            for j in range(0, len(nlid_col)):
-                line.append(str(nlid_col[j][i]))
-            writer.writerow(line)
-            line =[]
         sum_line = ["Lid_Sum"]
         excess_line =["Excess_Lids"]
-        for i in range(0, len(nlid_col)):
-            sum_line.append(str(sum(nlid_col[i])))
-            excess_line.append(str(sum(nexcess[i])))
+        for i in all_lid_names:
+            sum_line.append(0)
+            excess_line.append(0)
+        for sc_name in lid_sc_info:
+            line = []
+            line.append(sc_name)   #need to figure out how to grab subcat coordinates
+            sum_idx = 1
+            for i in all_lid_names:
+                num_units = 0
+                num_excess = 0
+                for j in lid_sc_info[sc_name] :
+                    if j[ 'LidControlName' ] == i :
+                        num_units = j[ 'NumUnits']
+                        num_excess = j[ 'Excess']
+                        break
+                line.append(str(num_units))
+                sum_line[sum_idx] += num_units
+                excess_line[sum_idx] += num_excess
+                sum_idx += 1
+            writer.writerow(line)
+        # convert sum and excess to string for writerow()
+        sum_line = [ str(i) for i in sum_line ]
+        excess_line = [ str(i) for i in excess_line ]
         writer.writerow(sum_line) 
         writer.writerow(excess_line)
         
-
-
 def perform_injection(config, validate=True):
     """Perform the injection as specified in a configuration.
 
@@ -388,7 +428,6 @@ def perform_injection(config, validate=True):
 
     with open(config['input_path'], 'w') as input_file:
         siw.write(input_template, input_file)
-
 
 def validate_config(config):
     """Validate a configuration for use with this functionality.
