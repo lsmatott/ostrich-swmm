@@ -6,19 +6,25 @@ import argparse
 import os
 import sys
 
-# these imports don't work when debugging using VS Code
-# from . import config as cfg
-# from . import inject
-# from . import extract
-# from . import run
-# from .version import __version__
+if sys.argv[1] == "run_debug" :
+    debug_mode = True
+else :
+    debug_mode = False
 
-# use these imports when debugging using vs code
-import config as cfg
-import inject
-import extract
-import run
-from version import __version__
+if debug_mode == True :
+    # use these imports when debugging using vs code
+    import config as cfg
+    import inject
+    import extract
+    import run
+    from version import __version__
+else :
+    # these imports don't work when debugging using VS Code
+    from . import config as cfg
+    from . import inject
+    from . import extract
+    from . import run
+    from .version import __version__
 
 class UsageException(Exception):
     """Raised if script is invoked incorrectly."""
@@ -253,6 +259,15 @@ def main(argv=None):
             ],
         )
 
+        # Set up parsing for the run_debug sub-command.
+        subparsers.add_parser(
+            'run_debug',
+            help='Run SWMM in debug mode with pre- and post-processing steps.',
+            parents=[
+                config_parser,
+            ],
+        )
+
         # Parse arguments.
         args = vars(parser.parse_args(argv[1:]))
         config = load_config_with_args(args)
@@ -262,6 +277,7 @@ def main(argv=None):
             'extract': extract_cmd,
             'inject': inject_cmd,
             'run': run_cmd,
+            'run_debug': run_cmd,
         }
         return subcommands[args['subcommand']](config)
     except (UsageException, cfg.ConfigException) as e:

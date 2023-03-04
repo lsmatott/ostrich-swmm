@@ -9,13 +9,19 @@ import sys
 import platform
 import swmmtoolbox.swmmtoolbox as swmmtoolbox
 
-# these imports don't work when debugging using vs code
-# from . import SWMM_EPOCH_DATETIME
-# from . import config as cfg
+if sys.argv[1] == "run_debug" :
+    debug_mode = True
+else :
+    debug_mode = False
 
-# use these imports when debugging using vc code
-SWMM_EPOCH_DATETIME = dt.datetime(1899, 12, 30)
-import config as cfg
+if debug_mode == True :
+    # use these imports when debugging using vc code
+    SWMM_EPOCH_DATETIME = dt.datetime(1899, 12, 30)
+    import config as cfg
+else :
+    # these imports don't work when debugging using vs code
+    from . import SWMM_EPOCH_DATETIME
+    from . import config as cfg
 
 def convert_swmm_ts_to_datetime(swmm_ts):
     """Convert a SWMM timestamp to a Python datetime.

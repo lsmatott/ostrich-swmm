@@ -2,15 +2,23 @@
 
 import subprocess
 
-# these imports don't work when debugging using vs code
-# from . import config as cfg
-# from . import extract
-# from . import inject
+import sys
 
-# use these imports when debugging using vs code
-import config as cfg
-import extract
-import inject
+if sys.argv[1] == "run_debug" :
+    debug_mode = True
+else :
+    debug_mode = False
+
+if debug_mode == True :
+    # use these imports when debugging using vs code
+    import config as cfg
+    import extract
+    import inject
+else :
+    # these imports don't work when debugging using vs code
+    from . import config as cfg
+    from . import extract
+    from . import inject
 
 def perform_run(config, validate=True):
     """Perform a run as specified by a configuration.

@@ -9,21 +9,29 @@ import shapely.geometry
 
 from math import floor
 
-# these imports don't work when debugging using VS Code
-# from . import config as cfg
-# from . import units
-# from .swmm import input as si
-# from .swmm import input_reader as sir
-# from .swmm import input_writer as siw
-# from . import LIDS
+import sys
 
-# use these imports when debugging using vs code
-import config as cfg
-import units
-from swmm import input as si
-from swmm import input_reader as sir
-from swmm import input_writer as siw
-import LIDS
+if sys.argv[1] == "run_debug" :
+    debug_mode = True
+else :
+    debug_mode = False
+
+if debug_mode == True :
+    # use these imports when debugging using vs code
+    import config as cfg
+    import units
+    from swmm import input as si
+    from swmm import input_reader as sir
+    from swmm import input_writer as siw
+    import LIDS
+else:
+    # these imports don't work when debugging using VS Code
+    from . import config as cfg
+    from . import units
+    from .swmm import input as si
+    from .swmm import input_reader as sir
+    from .swmm import input_writer as siw
+    from . import LIDS
 
 input_parameters_schema_path = None
 """The path to the JSON Schema used to validate input parameters."""

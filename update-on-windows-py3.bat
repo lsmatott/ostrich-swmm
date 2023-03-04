@@ -13,6 +13,9 @@ copy setup-py3.py setup.py
 rmdir /S /Q build
 python setup.py build
 
+REM delete the egg to ensure installation
+DEL C:\Matott\Work\ostrich-swmm\ost-swmm-code\pyswmm3\Lib\site-packages\ostrich_swmm*.egg
+
 python setup.py install
 
 echo ""
@@ -22,3 +25,4 @@ echo "  conda activate %PREFIX%"
 echo "  ostrich-swmm"
 echo "# --------------------------------------------------"
 
+pause

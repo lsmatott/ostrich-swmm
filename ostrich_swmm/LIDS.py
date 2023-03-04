@@ -16,23 +16,29 @@ from collections import Counter
 
 from math import floor, sqrt
 
-# these imports don't work when debugging using vs code
-# from . import config as cfg
-# from . import units
-# if sys.version_info[0] == 3 :
-#     from . import inject as inj
-# else :
-#     import inject as inj
-# from .swmm import input as si
-
-# use these imports when debugging using vs code
-import config as cfg
-import units
-if sys.version_info[0] == 3 :
-    import inject as inj
+if sys.argv[1] == "run_debug" :
+    debug_mode = True
 else :
-    import inject as inj
-from swmm import input as si
+    debug_mode = False
+
+if debug_mode == True :
+    # use these imports when debugging using vs code
+    import config as cfg
+    import units
+    if sys.version_info[0] == 3 :
+        import inject as inj
+    else :
+        import inject as inj
+    from swmm import input as si
+else :
+    # these imports don't work when debugging using vs code
+    from . import config as cfg
+    from . import units
+    if sys.version_info[0] == 3 :
+        from . import inject as inj
+    else :
+        import inject as inj
+    from .swmm import input as si
 
 # ------------------------------------------------------------------------------       
 # General LID Functions
