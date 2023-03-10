@@ -1,0 +1,43 @@
+{
+    "binary_output_path": "lid_model.out",
+    "input_template_path": "lid_model.tpl",
+    "input_parameters_path": "lid_model_input_parameters.json",
+    "input_path": "lid_model.inp",
+    "report_output_path": "lid_model.rpt",
+    "summary_dir": ".",
+    "swmm_path": "C:\\Program Files\\EPA SWMM 5.2.0 (64-bit)\\runswmm.exe",
+    "extract": {
+        "steps": [
+            {
+                "type": "node",
+                "enabled": true,
+                "output_path": "lid_model_nodes.csv",
+                "statistics": [
+                    "node_name",
+                    "num_flow_events",
+                    "total_flow_volume",
+                    "total_flow_duration",
+                    "first_flow_start",
+                    "first_flow_end",
+                    "first_flow_duration",
+                    "first_flow_volume",
+                    "last_flow_start",
+                    "last_flow_end",
+                    "last_flow_duration",
+                    "last_flow_volume",
+                    "max_volume_flow_start",
+                    "max_volume_flow_end",
+                    "max_volume_flow_duration",
+                    "max_volume_flow_volume",
+                    "max_duration_flow_start",
+                    "max_duration_flow_end",
+                    "max_duration_flow_duration",
+                    "max_duration_flow_volume"
+                ],
+                "nodes": [ "O1", "O2"
+                ],
+                "event_threshold_flow_rate": 0
+            }
+        ]
+    }
+}
