@@ -209,7 +209,16 @@ def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 
     # catchment.
     # --------------------------------------------------------------------------
     sc_lid_area = units.convert_from_sc_area_to_lid_area(lid_base_sc_imperv_area, sc_area_unit, lid_area_unit)
-    upper_bound = floor(float(sc_lid_area/(ind_roof + lid['area'])))
+    
+    denom = (ind_roof + lid['area'])
+    epsilon = 1e-10
+    
+    # guard against divide by zero
+    if denom <= epsilon :    
+        upper_bound = 0 
+    else:
+        upper_bound = floor(float(sc_lid_area/denom))
+    
     if upper_bound < 0 :
         upper_bound = 0 
 
