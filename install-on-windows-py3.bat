@@ -27,7 +27,7 @@ REM Patch the swmmtoolbox (no tsutils import)
 set PATCH_SRC=c:\Matott\Work\ostrich-swmm\ost-swmm-code\ostrich-swmm\swmmtoolbox.py.patch
 set PATCH_DST=c:\Matott\Work\ostrich-swmm\ost-swmm-code\pyswmm3\Lib\site-packages\swmmtoolbox\swmmtoolbox.py
 echo "copy %PATCH_SRC% %PATH_DST%"
-copy %PATCH_SRC% %PATH_DRC%
+copy %PATCH_SRC% %PATH_DST%
 
 echo ""
 echo "# --------------------------------------------------"
