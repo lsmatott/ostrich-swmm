@@ -6,9 +6,11 @@ import argparse
 import os
 import sys
 
-if sys.argv[1] == "run_debug" :
+if len(sys.argv) > 1 and sys.argv[1] == "run_debug" :
+    print( "OSTRICH-SWMM: Debug is enabled" )
     debug_mode = True
 else :
+    print( "OSTRICH-SWMM: Debug is disabled" )
     debug_mode = False
 
 if debug_mode == True :
@@ -155,134 +157,139 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv
 
-    try:
-        # Set up parsing for main command arguments.
-        parser = argparse.ArgumentParser(
-            description='A script for connecting OSTRICH with SWMM.',
-        )
-        parser.add_argument(
-            '-v',
-            '--version',
-            action='version',
-            version=__version__,
-        )
+    if len(argv) < 2 :
+        print( "OSTRICH-SWMM requires command line arguments" )
+        print( "Use ostrich-swmm --help for usage information." )
+    else :
+        try:
+            # Set up parsing for main command arguments.
+            parser = argparse.ArgumentParser(
+                description='A script for connecting OSTRICH with SWMM.',
+            )
+            parser.add_argument(
+                '-v',
+                '--version',
+                action='version',
+                version=__version__,
+            )
+    
+            # Set up parsing of sub-commands.
+            subparsers = parser.add_subparsers(
+                title='sub-commands',
+                dest='subcommand'
+            )
 
-        # Set up parsing of sub-commands.
-        subparsers = parser.add_subparsers(
-            title='sub-commands',
-            dest='subcommand'
-        )
+            # Create a parent parser for sub-commands using a config file.
+            config_parser = argparse.ArgumentParser(add_help=False)
+            config_parser.add_argument(
+                '-c',
+                '--config',
+                default='ostrich-swmm-config.json',
+                help='A config file to use.',
+            )
 
-        # Create a parent parser for sub-commands using a config file.
-        config_parser = argparse.ArgumentParser(add_help=False)
-        config_parser.add_argument(
-            '-c',
-            '--config',
-            default='ostrich-swmm-config.json',
-            help='A config file to use.',
-        )
+            # Create a parent parser for subcommands using SWMM binary output files
+            swmm_binary_output_parser = argparse.ArgumentParser(add_help=False)
+            swmm_binary_output_parser.add_argument(
+                'binary_output_path',
+                nargs='?',
+                default=None,
+                help='The SWMM binary output file to extract data from.',
+            )
 
-        # Create a parent parser for subcommands using SWMM binary output files
-        swmm_binary_output_parser = argparse.ArgumentParser(add_help=False)
-        swmm_binary_output_parser.add_argument(
-            'binary_output_path',
-            nargs='?',
-            default=None,
-            help='The SWMM binary output file to extract data from.',
-        )
+            # Create a parent parser for subcommands using SWMM summary files
+            swmm_summary_parser = argparse.ArgumentParser(add_help=False)
+            swmm_summary_parser.add_argument(
+                'summary_dir',
+                nargs='?',
+                default=None,
+                help='The directory for SWMM summary data.',
+            )
 
-        # Create a parent parser for subcommands using SWMM summary files
-        swmm_summary_parser = argparse.ArgumentParser(add_help=False)
-        swmm_summary_parser.add_argument(
-            'summary_dir',
-            nargs='?',
-            default=None,
-            help='The directory for SWMM summary data.',
-        )
+            # Create a parent parser for subcommands using SWMM input templates.
+            swmm_input_template_parser = argparse.ArgumentParser(add_help=False)
+            swmm_input_template_parser.add_argument(
+                '-i',
+                '--input-template',
+                default=None,
+                help='The input file template to use for a SWMM run.',
+            )
 
-        # Create a parent parser for subcommands using SWMM input templates.
-        swmm_input_template_parser = argparse.ArgumentParser(add_help=False)
-        swmm_input_template_parser.add_argument(
-            '-i',
-            '--input-template',
-            default=None,
-            help='The input file template to use for a SWMM run.',
-        )
+            # Create a parent parser for subcommands using OSTRICH parameter files.
+            ostrich_parameters_parser = argparse.ArgumentParser(add_help=False)
+            ostrich_parameters_parser.add_argument(
+                '-p',
+                '--parameters-file',
+                default=None,
+                help='The file containing parameters set by OSTRICH.',
+            )
 
-        # Create a parent parser for subcommands using OSTRICH parameter files.
-        ostrich_parameters_parser = argparse.ArgumentParser(add_help=False)
-        ostrich_parameters_parser.add_argument(
-            '-p',
-            '--parameters-file',
-            default=None,
-            help='The file containing parameters set by OSTRICH.',
-        )
+            # Create a parent parser for subcommands creating new SWMM input files.
+            new_swmm_input_parser = argparse.ArgumentParser(add_help=False)
+            new_swmm_input_parser.add_argument(
+                '-o',
+                '--output',
+                default=None,
+                help='The path to store a new SWMM input file.',
+            )
 
-        # Create a parent parser for subcommands creating new SWMM input files.
-        new_swmm_input_parser = argparse.ArgumentParser(add_help=False)
-        new_swmm_input_parser.add_argument(
-            '-o',
-            '--output',
-            default=None,
-            help='The path to store a new SWMM input file.',
-        )
+            # Set up parsing for the extraction sub-command.
+            subparsers.add_parser(
+                'extract',
+                help='Extract data from a SWMM binary output file.',
+                parents=[
+                    config_parser,
+                    swmm_binary_output_parser,
+                    swmm_summary_parser,
+                ],
+            )
 
-        # Set up parsing for the extraction sub-command.
-        subparsers.add_parser(
-            'extract',
-            help='Extract data from a SWMM binary output file.',
-            parents=[
-                config_parser,
-                swmm_binary_output_parser,
-                swmm_summary_parser,
-            ],
-        )
+            # Set up parsing for the injection sub-command.
+            subparsers.add_parser(
+                'inject',
+                help='Inject OSTRICH parameters into SWMM input before a run.',
+                parents=[
+                    config_parser,
+                    ostrich_parameters_parser,
+                    swmm_input_template_parser,
+                    new_swmm_input_parser,
+                ],
+            )
 
-        # Set up parsing for the injection sub-command.
-        subparsers.add_parser(
-            'inject',
-            help='Inject OSTRICH parameters into SWMM input before a run.',
-            parents=[
-                config_parser,
-                ostrich_parameters_parser,
-                swmm_input_template_parser,
-                new_swmm_input_parser,
-            ],
-        )
+            # Set up parsing for the run sub-command.
+            subparsers.add_parser(
+                'run',
+                help='Run SWMM with pre- and post-processing steps.',
+                parents=[
+                    config_parser,
+                ],
+            )
 
-        # Set up parsing for the run sub-command.
-        subparsers.add_parser(
-            'run',
-            help='Run SWMM with pre- and post-processing steps.',
-            parents=[
-                config_parser,
-            ],
-        )
+            # Set up parsing for the run_debug sub-command.
+            subparsers.add_parser(
+                'run_debug',
+                help='Run SWMM in debug mode with pre- and post-processing steps.',
+                parents=[
+                    config_parser,
+                ],
+            )
 
-        # Set up parsing for the run_debug sub-command.
-        subparsers.add_parser(
-            'run_debug',
-            help='Run SWMM in debug mode with pre- and post-processing steps.',
-            parents=[
-                config_parser,
-            ],
-        )
+            # Parse arguments.
+            args = vars(parser.parse_args(argv[1:]))
+            config = load_config_with_args(args)
 
-        # Parse arguments.
-        args = vars(parser.parse_args(argv[1:]))
-        config = load_config_with_args(args)
-
-        # Call selected subcommand.
-        subcommands = {
-            'extract': extract_cmd,
-            'inject': inject_cmd,
-            'run': run_cmd,
-            'run_debug': run_cmd,
-        }
-        return subcommands[args['subcommand']](config)
-    except (UsageException, cfg.ConfigException) as e:
-        print(e.msg, file=sys.stderr)
-        print('For help, use --help or [sub-command] --help.', file=sys.stderr)
+            # Call selected subcommand.
+            subcommands = {
+                'extract': extract_cmd,
+                'inject': inject_cmd,
+                'run': run_cmd,
+                'run_debug': run_cmd,
+            }
+            return subcommands[args['subcommand']](config)
+        except (UsageException, cfg.ConfigException) as e:
+            print(e.msg, file=sys.stderr)
+            print('For help, use --help or [sub-command] --help.', file=sys.stderr)
+            return 2
         return 2
 
 

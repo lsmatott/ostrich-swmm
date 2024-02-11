@@ -11,7 +11,7 @@ from math import floor
 
 import sys
 
-if sys.argv[1] == "run_debug" :
+if len(sys.argv) > 1 and sys.argv[1] == "run_debug" :
     debug_mode = True
 else :
     debug_mode = False

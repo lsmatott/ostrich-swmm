@@ -16,7 +16,7 @@ from collections import Counter
 
 from math import floor, sqrt
 
-if sys.argv[1] == "run_debug" :
+if len(sys.argv) > 1 and sys.argv[1] == "run_debug" :
     debug_mode = True
 else :
     debug_mode = False
