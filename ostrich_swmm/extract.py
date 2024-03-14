@@ -64,17 +64,21 @@ def perform_node_extraction(
     previous_time = binary_output.startdate
     report_interval_seconds = binary_output.reportinterval.total_seconds()
     nodes_current_values = np.zeros(num_nodes, np.float64)
+    
     for period in range(binary_output.nperiods):
         # Get this period's values for each node.
-        for node_index, node_name in enumerate(node_names):
-            swmm_timestamp, value = binary_output.GetSwmmResults(
-                node_type,
-                node_name,
-                node_total_inflow_variable_index,
-                period,
-            )
-            nodes_current_values[node_index] = value
-
+        try:
+            for node_index, node_name in enumerate(node_names):
+                swmm_timestamp, value = binary_output.GetSwmmResults(
+                    node_type,
+                    node_name,
+                    node_total_inflow_variable_index,
+                    period,
+                )
+                nodes_current_values[node_index] = value
+                print 'Node name= {0}'.format(node_names[node_index])
+         except:
+            print "Node {0} is not in the outputfile. Please add the node to the [REPORT] section of the input file".format(node_index)
         # Convert this period's SWMM timestamp to a Python datetime.
         current_time = convert_swmm_ts_to_datetime(swmm_timestamp)
 
