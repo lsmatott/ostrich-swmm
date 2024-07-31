@@ -9,7 +9,7 @@ __pycache__/
 # C extensions
 *.so
 
-# VS Code ide
+# build and ide products
 .vscode
 
 # Distribution / packaging
@@ -98,3 +98,8 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+requirements.txt
+requirements-dev.txt
+setup.py
+

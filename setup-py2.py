@@ -37,6 +37,7 @@ setup(
         'numpy>=1.12,<2',
         'jsonschema>=2.6.0,<3',
         'shapely>=1.5,<2',
+        
     ],
     package_data={
         '': [
@@ -50,3 +51,4 @@ setup(
         ],
     },
 )
+
