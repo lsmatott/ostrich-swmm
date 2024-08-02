@@ -5,10 +5,14 @@ cd ..
 rmdir /S /Q pyswmm3
 SET PREFIX=%CD%\pyswmm3
 cd %SRCDIR%
-IF exist conda.bat (
-CALL conda.bat create --prefix %PREFIX% python=3.8.3
+IF exist C:\Users\alikheir\AppData\Local\anaconda3\condabin\conda.bat (
 
+SET PATH=%PATH%;C:\Users\alikheir\AppData\Local\anaconda3\condabin
+
+CALL conda.bat create --prefix %PREFIX% python=3.8.3
 CALL conda.bat activate %PREFIX%
+
+pause
 ) ELSE (
 echo "anaconda python is missing"
 pause
