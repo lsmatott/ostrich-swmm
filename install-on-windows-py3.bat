@@ -5,11 +5,15 @@ cd ..
 rmdir /S /Q pyswmm3
 SET PREFIX=%CD%\pyswmm3
 cd %SRCDIR%
-
+IF exist conda.bat (
 CALL conda.bat create --prefix %PREFIX% python=3.8.3
 
 CALL conda.bat activate %PREFIX%
-
+) ELSE (
+echo "anaconda python is missing"
+pause
+exit
+)
 pip install jsonschema==2.6.0
 pip install numpy
 pip install swmmtoolbox==1.0.5.8
