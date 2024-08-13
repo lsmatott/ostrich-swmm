@@ -4,25 +4,17 @@ SET SRCDIR=%CD%
 cd ..
 rmdir /S /Q pyswmm3
 SET PREFIX=%CD%\pyswmm3
-cd %SRCDIR%
-IF exist C:\Users\alikheir\AppData\Local\anaconda3\condabin\conda.bat (
+cd %SRCDIR%\pyswmm3
 
-SET PATH=%PATH%;C:\Users\alikheir\AppData\Local\anaconda3\condabin
+CALL conda create --name pyswmm python=3.8.3
+CALL conda activate pyswmm
 
-CALL conda.bat create --prefix %PREFIX% python=3.8.3
-CALL conda.bat activate %PREFIX%
-
-pause
-) ELSE (
-echo "anaconda python is missing"
-pause
-exit
-)
 pip install jsonschema==2.6.0
 pip install numpy
 pip install swmmtoolbox==1.0.5.8
-pip install Shapely==1.5
+pip install shapely==1.8.5
 
+cd %SRCDIR%
 copy requirements-py3.txt requirements.txt
 copy requirements-dev-py3.txt requirements-dev.txt
 copy setup-py3.py setup.py
