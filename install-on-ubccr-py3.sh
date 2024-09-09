@@ -17,7 +17,7 @@ source activate $PREFIX || exit
 
 pip install jsonschema==2.6.0 || exit
 pip install numpy || exit
-pip install swmmtoolbox==1.0.5.8 || exit
+pip install swmmtoolbox==4.0.14 || exit
 pip install Shapely==1.5 || exit
 
 cp requirements-py3.txt requirements.txt || exit

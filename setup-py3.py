@@ -33,7 +33,7 @@ setup(
     ),
     packages=find_packages(),
     install_requires=[
-        'swmmtoolbox>=1.0.5.8,<2',
+        'swmmtoolbox>=1.0.5.8,<5',
         'numpy>=1.12,<2',
         'jsonschema>=2.6.0,<3',
         'shapely>=1.5,<2',
