@@ -1,0 +1,13 @@
+1. edit inject.py - add lid processing to the inject_parameters_into_input() routine
+   a. The 2-letter abbreviation in the if..elif..else series must match with the 
+      "Type/Layer" setting in the "[LID_CONTROLS]" section of the SWMM input (.inp) 
+      file.  
+
+2. edit LIDS.py - add appropriate add_[lid]() subroutine.
+   a. each add_[lid]() subroutine must: 
+      i. reduce the given "parent" subcatchment area in the "[SUBCATCHMENTS]" section of the
+         SWMM inout (.inp) file by an appropriate amount.
+      ii. append a new LID subcatchment to the "[SUBCATCHMENTS]" section of the .inp file and
+         route the new subcatchment so that it drains to the parent subcatchment.
+      iii. add the new LID subcatchment to the "[LID_USAGE]" section of the .inp file.
+

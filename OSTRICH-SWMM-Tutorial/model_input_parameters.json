@@ -1,0 +1,28 @@
+{
+    "lids": [
+        {
+            "location": {
+                "subcatchment": "S1"
+            },
+            "type": "RB1",
+            "number": 1,
+            "area": 48,
+            "width": 0,
+            "initSat": 0,
+            "fromImp": 0,
+            "toPerv": 1
+        },
+        {
+            "location": {
+                "subcatchment": "S2"
+            },
+            "type": "RB2",
+            "number": 1,
+            "area": 36,
+            "width": 0,
+            "initSat": 0,
+            "fromImp": 0,
+            "toPerv": 1       
+        }
+    ]
+}
