@@ -1,0 +1,18 @@
+{
+	"lids": [
+		{"width": 1.330000E+02,  "fromImp": 4.000000E+01,  "location": {"subcatchment": "S1"},  "area": 9.000000E+02,  "toPerv": 0,  "name": "PorousPavement",  "number": 60,  "initSat": 0},
+		{"width": 1.330000E+02,  "fromImp": 4.000000E+01,  "location": {"subcatchment": "S2"},  "area": 9.000000E+02,  "toPerv": 0,  "name": "PorousPavement",  "number": 69,  "initSat": 0},
+		{"width": 1.330000E+02,  "fromImp": 4.000000E+01,  "location": {"subcatchment": "S3"},  "area": 9.000000E+02,  "toPerv": 0,  "name": "PorousPavement",  "number": 33,  "initSat": 0},
+		{"width": 1.330000E+02,  "fromImp": 4.000000E+01,  "location": {"subcatchment": "S4"},  "area": 9.000000E+02,  "toPerv": 0,  "name": "PorousPavement",  "number": 79,  "initSat": 0},
+		{"width": 1.330000E+02,  "fromImp": 4.000000E+01,  "location": {"subcatchment": "S5"},  "area": 9.000000E+02,  "toPerv": 0,  "name": "PorousPavement",  "number": 134,  "initSat": 0},
+		{"width": 1.330000E+02,  "fromImp": 4.000000E+01,  "location": {"subcatchment": "S6"},  "area": 9.000000E+02,  "toPerv": 0,  "name": "PorousPavement",  "number": 5,  "initSat": 0}
+	],
+	"roofs": [
+		{"slope": 2.000000E+00,  "NPerv": 0.24,  "number": 1,  "PctImperv": 100,  "PctZero": 25,  "area": 0.000000E+00,  "width": 0.000000E+00,  "location": {"subcatchment": "S1"},  "OutID": "PorousPavement",  "NImp": 0.015,  "type": "Roof"},
+		{"slope": 2.000000E+00,  "NPerv": 0.24,  "number": 1,  "PctImperv": 100,  "PctZero": 25,  "area": 0.000000E+00,  "width": 0.000000E+00,  "location": {"subcatchment": "S2"},  "OutID": "PorousPavement",  "NImp": 0.015,  "type": "Roof"},
+		{"slope": 3.100000E+00,  "NPerv": 0.24,  "number": 1,  "PctImperv": 100,  "PctZero": 25,  "area": 0.000000E+00,  "width": 0.000000E+00,  "location": {"subcatchment": "S3"},  "OutID": "PorousPavement",  "NImp": 0.015,  "type": "Roof"},
+		{"slope": 3.100000E+00,  "NPerv": 0.24,  "number": 1,  "PctImperv": 100,  "PctZero": 25,  "area": 0.000000E+00,  "width": 0.000000E+00,  "location": {"subcatchment": "S4"},  "OutID": "PorousPavement",  "NImp": 0.015,  "type": "Roof"},
+		{"slope": 2.000000E+00,  "NPerv": 0.24,  "number": 1,  "PctImperv": 100,  "PctZero": 25,  "area": 0.000000E+00,  "width": 0.000000E+00,  "location": {"subcatchment": "S5"},  "OutID": "PorousPavement",  "NImp": 0.015,  "type": "Roof"},
+		{"slope": 3.100000E+00,  "NPerv": 0.24,  "number": 1,  "PctImperv": 100,  "PctZero": 25,  "area": 0.000000E+00,  "width": 0.000000E+00,  "location": {"subcatchment": "S6"},  "OutID": "PorousPavement",  "NImp": 0.015,  "type": "Roof"}
+	]
+}
