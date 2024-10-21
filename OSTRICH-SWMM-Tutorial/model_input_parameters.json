@@ -1,0 +1,18 @@
+{
+	"lids": [
+		{"width": 0,  "fromImp": 1,  "location": {"subcatchment": "S1"},  "area": 3.34,  "toPerv": 1,  "name": "RB1",  "number": 1,  "initSat": 0},
+		{"width": 0,  "fromImp": 1,  "location": {"subcatchment": "S1"},  "area": 7.07,  "toPerv": 1,  "name": "RB2",  "number": 70,  "initSat": 0},
+		{"width": 0,  "fromImp": 1,  "location": {"subcatchment": "S2"},  "area": 3.34,  "toPerv": 1,  "name": "RB1",  "number": 6,  "initSat": 0},
+		{"width": 0,  "fromImp": 1,  "location": {"subcatchment": "S2"},  "area": 7.07,  "toPerv": 1,  "name": "RB2",  "number": 84,  "initSat": 0},
+		{"width": 0,  "fromImp": 1,  "location": {"subcatchment": "S3"},  "area": 3.34,  "toPerv": 1,  "name": "RB1",  "number": 52,  "initSat": 0},
+		{"width": 0,  "fromImp": 1,  "location": {"subcatchment": "S3"},  "area": 7.07,  "toPerv": 1,  "name": "RB2",  "number": 27,  "initSat": 0}
+	],
+	"roofs": [
+		{"slope": 40,  "NPerv": 0.1,  "number": 1,  "PctImperv": 100,  "PctZero": 100,  "area": 1655.23,  "width": 43,  "location": {"subcatchment": "S1"},  "OutID": "RB1",  "NImp": 0.0115,  "type": "RF1"},
+		{"slope": 40,  "NPerv": 0.1,  "number": 70,  "PctImperv": 100,  "PctZero": 100,  "area": 1655.23,  "width": 43,  "location": {"subcatchment": "S1"},  "OutID": "RB2",  "NImp": 0.0115,  "type": "RF2"},
+		{"slope": 40,  "NPerv": 0.1,  "number": 6,  "PctImperv": 100,  "PctZero": 100,  "area": 1655.23,  "width": 43,  "location": {"subcatchment": "S2"},  "OutID": "RB1",  "NImp": 0.0115,  "type": "RF1"},
+		{"slope": 40,  "NPerv": 0.1,  "number": 84,  "PctImperv": 100,  "PctZero": 100,  "area": 1655.23,  "width": 43,  "location": {"subcatchment": "S2"},  "OutID": "RB2",  "NImp": 0.0115,  "type": "RF2"},
+		{"slope": 40,  "NPerv": 0.1,  "number": 52,  "PctImperv": 100,  "PctZero": 100,  "area": 1655.23,  "width": 43,  "location": {"subcatchment": "S3"},  "OutID": "RB1",  "NImp": 0.0115,  "type": "RF1"},
+		{"slope": 40,  "NPerv": 0.1,  "number": 27,  "PctImperv": 100,  "PctZero": 100,  "area": 1655.23,  "width": 43,  "location": {"subcatchment": "S3"},  "OutID": "RB2",  "NImp": 0.0115,  "type": "RF2"}
+	]
+}

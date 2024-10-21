@@ -14,7 +14,7 @@ matplotlib==2.0.0
 numpy==1.12.1
 packaging==16.8
 pandas==0.19.2
-Pint==0.18
+Pint==0.8
 Pygments==2.2.0
 pyparsing==2.2.0
 python-dateutil==2.6.0
@@ -30,6 +30,6 @@ six==1.10.0
 snowballstemmer==1.2.1
 Sphinx==1.5.5
 subprocess32==3.2.7
-swmmtoolbox==4.0.14
+swmmtoolbox==1.0.5.8
 typing==3.6.1
 tzlocal==1.4

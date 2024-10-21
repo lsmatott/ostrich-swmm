@@ -5,10 +5,23 @@ import datetime as dt
 
 import numpy as np
 import os
+import sys
+import platform
 import swmmtoolbox.swmmtoolbox as swmmtoolbox
 
-from . import SWMM_EPOCH_DATETIME
-from . import config as cfg
+if len(sys.argv) > 1 and sys.argv[1] == "run_debug" :
+    debug_mode = True
+else :
+    debug_mode = False
+
+if debug_mode == True :
+    # use these imports when debugging using vc code
+    SWMM_EPOCH_DATETIME = dt.datetime(1899, 12, 30)
+    import config as cfg
+else :
+    # these imports don't work when debugging using vs code
+    from . import SWMM_EPOCH_DATETIME
+    from . import config as cfg
 
 def convert_swmm_ts_to_datetime(swmm_ts):
     """Convert a SWMM timestamp to a Python datetime.
@@ -33,7 +46,7 @@ def perform_node_extraction(
 
     Args:
         binary_output (swmmtoolbox.SwmmExtract): The output to extract from.
-        node_output_file (file): The file to output extracted data to.
+        node_output_file (filename): The file to output extracted data to.
         node_names (Iterable): A list of node names to extract data for.
         statistics (Iterable): A list of statistics to extract.
         event_threshold_flow_rate (Number): The flow rate above which a node
@@ -188,151 +201,269 @@ def perform_node_extraction(
             in nodes_flow_events
         ],
     }
-    nodes_notable_events_start_strings = {
-        event_type: [
-            event['start'].isoformat()
-            if event is not None
-            else ''
-            for event
-            in events
-        ]
-        for event_type, events
-        in nodes_notable_events.iteritems()
-    }
-    nodes_notable_events_end_strings = {
-        event_type: [
-            event['end'].isoformat()
-            if event is not None
-            else ''
-            for event
-            in events
-        ]
-        for event_type, events
-        in nodes_notable_events.iteritems()
-    }
-    nodes_notable_events_volumes = {
-        event_type: [
-            event['volume']
-            if event is not None
-            else 0
-            for event
-            in events
-        ]
-        for event_type, events
-        in nodes_notable_events.iteritems()
-    }
-    nodes_notable_events_durations = {
-        event_type: [
-            event['duration']
-            if event is not None
-            else 0
-            for event
-            in events
-        ]
-        for event_type, events
-        in nodes_notable_events.iteritems()
-    }
+    if sys.version_info[0] == 3:
+        nodes_notable_events_start_strings = {
+            event_type: [
+                event['start'].isoformat()
+                if event is not None
+                else ''
+                for event
+                in events
+            ]
+            for event_type, events
+            in nodes_notable_events.items()
+        }
+        nodes_notable_events_end_strings = {
+            event_type: [
+                event['end'].isoformat()
+                if event is not None
+                else ''
+                for event
+                in events
+            ]
+            for event_type, events
+            in nodes_notable_events.items()
+        }
+        nodes_notable_events_volumes = {
+            event_type: [
+                event['volume']
+                if event is not None
+                else 0
+                for event
+                in events
+            ]
+            for event_type, events
+            in nodes_notable_events.items()
+        } 
+        nodes_notable_events_durations = {
+            event_type: [
+                event['duration']
+                if event is not None
+                else 0
+                for event
+                in events
+            ]
+            for event_type, events
+            in nodes_notable_events.items()
+        }
+    else:
+        nodes_notable_events_start_strings = {
+            event_type: [
+                event['start'].isoformat()
+                if event is not None
+                else ''
+                for event
+                in events
+            ]
+            for event_type, events
+            in nodes_notable_events.iteritems()
+        }
+        nodes_notable_events_end_strings = {
+            event_type: [
+                event['end'].isoformat()
+                if event is not None
+                else ''
+                for event
+                in events
+            ]
+            for event_type, events
+            in nodes_notable_events.iteritems()
+        }
+        nodes_notable_events_volumes = {
+            event_type: [
+                event['volume']
+                if event is not None
+                else 0
+                for event
+                in events
+            ]
+            for event_type, events
+            in nodes_notable_events.iteritems()
+        } 
+        nodes_notable_events_durations = {
+            event_type: [
+                event['duration']
+                if event is not None
+                else 0
+                for event
+                in events
+            ]
+            for event_type, events
+            in nodes_notable_events.iteritems()
+        }
 
-    # Write the requested statistics out to the given file as CSV.
-    csv_writer = csv.writer(node_output_file)
-    csv_writer.writerow(statistics)
+    # see https://stackoverflow.com/questions/30929363/csv-writerows-puts-newline-after-each-row    
+    if platform.system == "Windows" :
+        new_line = ''
+    else :
+        new_line = '\n'
+    
+    # write out a human readable version of the .csv.
+    node_summary_file = node_output_file.replace('.csv', '_summary.txt')
+    node_sum = open(node_summary_file, 'w', newline=new_line)
 
-    csv_columns = []
-    node_stat_names_to_columns = {
-        'node_name': node_names,
-        'num_flow_events': nodes_total_flow_events,
-        'total_flow_volume': nodes_total_flow_volumes,
-        'total_flow_duration': nodes_total_flow_durations,
-        'first_flow_start': nodes_notable_events_start_strings['first'],
-        'first_flow_end': nodes_notable_events_end_strings['first'],
-        'first_flow_duration': nodes_notable_events_durations['first'],
-        'first_flow_volume': nodes_notable_events_volumes['first'],
+    with open(node_output_file, 'w', newline=new_line) as node_out:
+        # Write the requested statistics out to the given file as CSV.
+        csv_writer = csv.writer(node_out)
+        csv_writer.writerow(statistics)
 
-        'last_flow_start': nodes_notable_events_start_strings['last'],
-        'last_flow_end': nodes_notable_events_end_strings['last'],
-        'last_flow_duration': nodes_notable_events_durations['last'],
-        'last_flow_volume': nodes_notable_events_volumes['last'],
+        csv_columns = []
+        node_stat_names_to_columns = {
+            'node_name': node_names,
+            'num_flow_events': nodes_total_flow_events,
+            'total_flow_volume': nodes_total_flow_volumes,
+            'total_flow_duration': nodes_total_flow_durations,
+            'first_flow_start': nodes_notable_events_start_strings['first'],
+            'first_flow_end': nodes_notable_events_end_strings['first'],
+            'first_flow_duration': nodes_notable_events_durations['first'],
+            'first_flow_volume': nodes_notable_events_volumes['first'],
 
-        'max_volume_flow_start': nodes_notable_events_start_strings[
-            'max_volume'
-        ],
-        'max_volume_flow_end': nodes_notable_events_end_strings[
-            'max_volume'
-        ],
-        'max_volume_flow_duration': nodes_notable_events_durations[
-            'max_volume'
-        ],
-        'max_volume_flow_volume': nodes_notable_events_volumes[
-            'max_volume'
-        ],
+            'last_flow_start': nodes_notable_events_start_strings['last'],
+            'last_flow_end': nodes_notable_events_end_strings['last'],
+            'last_flow_duration': nodes_notable_events_durations['last'],
+            'last_flow_volume': nodes_notable_events_volumes['last'],
 
-        'max_duration_flow_start': nodes_notable_events_start_strings[
-            'max_duration'
-        ],
-        'max_duration_flow_end': nodes_notable_events_end_strings[
-            'max_duration'
-        ],
-        'max_duration_flow_duration': nodes_notable_events_durations[
-            'max_duration'
-        ],
-        'max_duration_flow_volume': nodes_notable_events_volumes[
-            'max_duration'
-        ],
-    }
+            'max_volume_flow_start': nodes_notable_events_start_strings[
+                'max_volume'
+            ],
+            'max_volume_flow_end': nodes_notable_events_end_strings[
+                'max_volume'
+            ],
+            'max_volume_flow_duration': nodes_notable_events_durations[
+                'max_volume'
+            ],
+            'max_volume_flow_volume': nodes_notable_events_volumes[
+                'max_volume'
+            ],
 
-    for statistic in statistics:
-        csv_columns.append(node_stat_names_to_columns[statistic])
+            'max_duration_flow_start': nodes_notable_events_start_strings[
+                'max_duration'
+            ],
+            'max_duration_flow_end': nodes_notable_events_end_strings[
+                'max_duration'
+            ],
+            'max_duration_flow_duration': nodes_notable_events_durations[
+                'max_duration'
+            ],
+            'max_duration_flow_volume': nodes_notable_events_volumes[
+                'max_duration'
+            ],
+        }
 
-    csv_writer.writerows(zip(*csv_columns))
-
+        stat_names = [];
+        for statistic in statistics:
+            val = node_stat_names_to_columns[statistic]
+            csv_columns.append(val)
+            stat_names.append(statistic)
+        
+        for sc_index in range(0,len(csv_columns[0])):
+            for stat_index in range(0, len(csv_columns)):
+                stat_name = stat_names[stat_index]
+                stat_value = csv_columns[stat_index][sc_index]
+                if stat_name == 'node_name' :
+                    ident = ''
+                else :
+                    ident = '   '
+                node_sum.write(ident + stat_name + ' : ' + str(stat_value) + '\n')
+            node_sum.write('='*40 + '\n')
+        csv_writer.writerows(zip(*csv_columns))
+    node_sum.close()
 
 def perform_extraction_steps(config, validate=True):
     """Perform the extraction steps specified in a configuration.
-
     Args:
         config: The config to get extraction steps from.
         validate (boolean): Validate the configuration before attempting
             to use it. Defaults to True.
-
     Raises:
         ConfigException: The configuration is invalid.
     """
     if validate:
         validate_config(config)
 
-    binary_output = swmmtoolbox.SwmmExtract(
-        config['binary_output_path']
-    )
-
-    for step in config['extract']['steps']:
-        # If step has been explicitly disabled, skip it.
-        step_enabled = step.get('enabled', True)
-        if not step_enabled:
-            continue
-
-        if step['type'] == 'node':
-            node_output_path = os.path.join(
-                config['summary_dir'],
-                step['output_path'],
-            )
-            node_output_file = open(node_output_path, 'wb')
-
-            node_extraction_args = {
-                'binary_output': binary_output,
-                'node_output_file': node_output_file,
-                'node_names': step['nodes'],
-                'statistics': step['statistics'],
-            }
-
-            if 'event_threshold_flow_rate' in step:
-                node_extraction_args['event_threshold_flow_rate'] = (
-                    step['event_threshold_flow_rate']
+    try:
+         binary_output = swmmtoolbox.SwmmExtract(
+            config['binary_output_path'])
+         for step in config['extract']['steps']:
+            # If step has been explicitly disabled, skip it.
+            step_enabled = step.get('enabled', True)
+            if not step_enabled:
+                continue
+    
+            if step['type'] == 'node':
+                node_output_path = os.path.join(
+                    config['summary_dir'],
+                    step['output_path'],
                 )
+    
+                node_extraction_args = {
+                    'binary_output': binary_output,
+                    'node_output_file': node_output_path,
+                    'node_names': step['nodes'],
+                    'statistics': step['statistics'],
+                }
+                outname_stats=step['output_path']
+                if 'lid_selection' in config :
+                   outname_lids=config['lid_selection']
+                else :
+                    outname_lids = ''
+    
+                if 'event_threshold_flow_rate' in step:
+                    node_extraction_args['event_threshold_flow_rate'] = (
+                        step['event_threshold_flow_rate']
+                    )
+    
+                perform_node_extraction(**node_extraction_args)
+                if 'results_path' not in config:
+                    config[ 'results_path' ] = node_output_path
+                perform_append(config, outname_stats, outname_lids)
+    
+    except Exception as error: # catch *all* exceptions
+        print(error)
 
-            perform_node_extraction(**node_extraction_args)
+        print("Creating expected output using arbitrairly large numbers.")
+        
+        #build the path to copy the output used for infeasible solutions
+        inf_out_path = cfg.get_package_json_schema_path('infeasible_config_out')
+        
+        for step in config['extract']['steps']:
+            # If step has been explicitly disabled, skip it.
+            step_enabled = step.get('enabled', True)
+            if not step_enabled:
+                continue
+    
+            if step['type'] == 'node':
+                node_output_path = os.path.join(
+                    config['summary_dir'],
+                    step['output_path'],
+                )
+        
+         
+         #copy the infeasible solutions output
+        with open(node_output_path,'a') as outfile:
+            with open(inf_out_path) as infile:
+                for line in infile:
+                    outfile.write(line)
+            
+def perform_append(config, outname_stats, outname_lids, validate=True):
+    #read model results from swmm and number of lids
+    outname_stats = os.path.join( config['summary_dir'], outname_stats )
+    filenames = [outname_stats ]
 
-            node_output_file.close()
+    # guard against no lid_selection
+    if outname_lids != '' :
+        outname_lids = os.path.join( config['summary_dir'], outname_lids )
+        filenames.append(outname_lids)
 
+    # file to append
+    to_append = os.path.join( config['results_path'] )
+
+    with open(to_append,'a') as outfile:
+        for fname in filenames:
+            if fname != to_append :
+                with open(fname) as infile:
+                    for line in infile:
+                        outfile.write(line)
 
 def validate_config(config, perform_file_checks=True):
     """Validate a configuration for use with this functionality.
