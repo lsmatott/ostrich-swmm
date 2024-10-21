@@ -1,7 +1,7 @@
 @echo on
 
 REM Activate the python environment
-set PREFIX=C:\Matott\Work\ostrich-swmm\ost-swmm-code\pyswmm3
+set PREFIX=pyswmm
 CALL conda.bat activate %PREFIX%
 
 REM Delete report file 
