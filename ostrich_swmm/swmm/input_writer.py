@@ -4,6 +4,8 @@ from __future__ import print_function
 
 from . import input as si
 
+import sys
+
 
 def format_line_for_write(data, comment):
     """Format a line's contents for writing to a SWMM input file.
@@ -52,7 +54,13 @@ def write(content, f):
         content (dict): The SWMM input file contents.
         f (file): The file to write to.
     """
-    for section, section_content in content.iteritems():
+    # python version 2/3 compatibility
+    if sys.version_info[0] == 3:
+        my_iter_items = content.items()
+    else:
+        my_iter_items = content.iteritems()
+
+    for section, section_content in my_iter_items:
         # Print the section header if it exists.
         is_empty_section = section == ''
         if not is_empty_section:

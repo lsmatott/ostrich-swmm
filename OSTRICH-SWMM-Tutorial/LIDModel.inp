@@ -1,0 +1,221 @@
+[TITLE]
+;;Project Title/Notes
+OSTRICH-SWMM Tutorial
+
+
+[OPTIONS]
+;;Option             Value
+FLOW_UNITS          CFS
+INFILTRATION        GREEN_AMPT
+FLOW_ROUTING        KINWAVE
+LINK_OFFSETS        DEPTH
+MIN_SLOPE           0
+ALLOW_PONDING       NO
+SKIP_STEADY_STATE   NO
+
+START_DATE          04/18/2016
+START_TIME          00:00:00
+REPORT_START_DATE   04/18/2016
+REPORT_START_TIME   00:00:00
+END_DATE            04/18/2016
+END_TIME            06:00:00
+SWEEP_START         1/1
+SWEEP_END           12/31
+DRY_DAYS            0
+REPORT_STEP         00:15:00
+WET_STEP            00:05:00
+DRY_STEP            01:00:00
+ROUTING_STEP        0:00:30
+
+INERTIAL_DAMPING    PARTIAL
+NORMAL_FLOW_LIMITED BOTH
+FORCE_MAIN_EQUATION H-W
+VARIABLE_STEP       0.75
+LENGTHENING_STEP    0
+MIN_SURFAREA        0
+MAX_TRIALS          0
+HEAD_TOLERANCE      0
+SYS_FLOW_TOL        5
+LAT_FLOW_TOL        5
+MINIMUM_STEP        0.5
+THREADS             1
+
+
+[EVAPORATION]
+;;Data Source    Parameters
+;;-------------- ----------------
+CONSTANT    0.0
+DRY_ONLY    NO
+
+
+[RAINGAGES]
+;;Name           Format    Interval SCF      Source    
+;;-------------- --------- ------ ------ ----------
+Gage1   INTENSITY   1:00    1.0 TIMESERIES  TS1
+
+
+[SUBCATCHMENTS]
+;;Name           Rain Gage        Outlet           Area     %Imperv  Width    %Slope   CurbLen  SnowPack        
+;;-------------- ---------------- ---------------- -------- -------- -------- -------- -------- ----------------
+S1          Gage1   J1          2.0157054637281915      0.7791546935206823  201.57054637281914  0.5 0
+S2          Gage1   J2          2.5200385674931134      0.7951690800131876  201.60308539944907  0.5 0
+S3          Gage1   J3          3.010036271808999       0.33342693916998317 301.00362718089985  0.5 0
+
+S1##RF1_1   Gage1   S1##RB1_1   0.03799885215794307     100                 40.684517939874866  0.5 0 ;1 roof units. (Added by OSTRICH-SWMM.)
+S1##RB1_1   Gage1   S1          7.667584940312213e-05   0                   1.8275666882497066  0.5 0 ;1 LID units. (Added by OSTRICH-SWMM.)
+S1##RF2_2   Gage1   S1##RB2_1   1.9379414600550964      100                 290.54557301738396  0.5 0 ;51 roof units. (Added by OSTRICH-SWMM.)
+S1##RB2_1   Gage1   S1          0.008277548209366391    0                   18.988680838857658  0.5 0 ;51 LID units. (Added by OSTRICH-SWMM.)
+S2##RF1_3   Gage1   S2##RB1_2   0.22799311294765842     100                 99.6563093838017    0.5 0 ;6 roof units. (Added by OSTRICH-SWMM.)
+S2##RB1_2   Gage1   S2          0.00046005509641873277  0                   4.476605857119878   0.5 0 ;6 LID units. (Added by OSTRICH-SWMM.)
+S2##RF2_4   Gage1   S2##RB2_2   2.241932277318641       100                 312.50371197795397  0.5 0 ;59 roof units. (Added by OSTRICH-SWMM.)
+S2##RB2_2   Gage1   S2          0.009575987144168963    0                   20.42376067231498   0.5 0 ;59 LID units. (Added by OSTRICH-SWMM.)
+S3##RF1_5   Gage1   S3##RB1_3   0.9879701561065198      100                 207.4511508765377   0.5 0 ;26 roof units. (Added by OSTRICH-SWMM.)
+S3##RB1_3   Gage1   S3          0.0019935720844811754   0                   9.318798205777396   0.5 0 ;26 LID units. (Added by OSTRICH-SWMM.)
+S3##RF2_6   Gage1   S3##RB2_3   0.0                     100                 0.0                 0.5 0 ;0 roof units. (Added by OSTRICH-SWMM.)
+S3##RB2_3   Gage1   S3          0.0                     0                   0.0                 0.5 0 ;0 LID units. (Added by OSTRICH-SWMM.)
+
+[SUBAREAS]
+;;Subcatchment   N-Imperv   N-Perv     S-Imperv   S-Perv     PctZero    RouteTo    PctRouted 
+;;-------------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
+S1  0.01    0.1 0.05    0.05    25  OUTLET
+S2  0.01    0.1 0.05    0.05    25  OUTLET
+S3  0.01    0.1 0.05    0.05    25  OUTLET
+
+S1  0.0115  0.1 0       0       100 OUTLET
+S1  0.0115  0.1 0       0       100 OUTLET
+S2  0.0115  0.1 0       0       100 OUTLET
+S2  0.0115  0.1 0       0       100 OUTLET
+S3  0.0115  0.1 0       0       100 OUTLET
+S3  0.0115  0.1 0       0       100 OUTLET
+
+[INFILTRATION]
+;;Subcatchment   Suction    Ksat       IMD       
+;;-------------- ---------- ---------- ----------
+S1  3.5 0.5 0.26
+S2  3.5 0.5 0.26
+S3  3.5 0.5 0.26
+
+
+[LID_CONTROLS]
+;;               Type/Layer Parameters
+;;-------------- ---------- ----------
+RB1 RB
+RB1 STORAGE 36      1.0 0   0
+RB1 DRAIN   58.5    0.5 0   6
+
+RB2 RB
+RB2 STORAGE 48      1.0 0   0
+RB2 DRAIN   26      0.5 0   6
+
+
+[LID_USAGE]
+;;Subcatchment   LID Process      Number  Area       Width      InitSatur  FromImprv  ToPerv     Report File              Drain to         
+;;-------------- ---------------- ------- ---------- ---------- ---------- ---------- ---------- --------------------------- ----------------
+
+S1##RB1_1   RB1 1   3.34    0   0   1.8999426078971533  1
+S1##RB2_1   RB2 51  7.07    0   0   98.77757720646612   1
+S2##RB1_2   RB1 6   3.34    0   0   9.119724517906336   1
+S2##RB2_2   RB2 59  7.07    0   0   98.696282452967     1
+S3##RB1_3   RB1 26  3.34    0   0   98.79701561065198   1
+S3##RB2_3   RB2 0   7.07    0   0   0.0                 1
+
+[JUNCTIONS]
+;;Name           Elevation  MaxDepth   InitDepth  SurDepth   Aponded   
+;;-------------- ---------- ---------- ---------- ---------- ----------
+J1  96  4   0   0   0
+J2  90  4   0   0   0
+J3  93  4   0   0   0
+J4  88  4   0   0   0
+
+
+[OUTFALLS]
+;;Name           Elevation  Type       Stage Data       Gated    Route To        
+;;-------------- ---------- ---------- ---------------- -------- ----------------
+Out1    85  FREE    NO
+
+
+[CONDUITS]
+;;Name           From Node        To Node          Length     Roughness  InOffset   OutOffset  InitFlow   MaxFlow   
+;;-------------- ---------------- ---------------- ---------- ---------- ---------- ---------- ---------- ----------
+C1  J1  J2      400 0.01    0   0   0   0
+C2  J2  J4      400 0.01    0   0   0   0
+C3  J3  J4      400 0.01    0   0   0   0
+C4  J4  Out1    400 0.01    0   0   0   0
+
+
+[XSECTIONS]
+;;Link           Shape        Geom1            Geom2      Geom3      Geom4      Barrels    Culvert   
+;;-------------- ------------ ---------------- ---------- ---------- ---------- ---------- ----------
+C1  CIRCULAR    1   0   0   0   1
+C2  CIRCULAR    1   0   0   0   1
+C3  CIRCULAR    1   0   0   0   1
+C4  CIRCULAR    1.5 0   0   0   1
+
+
+[TIMESERIES]
+;;Name           Date       Time       Value     
+;;-------------- ---------- ---------- ----------
+TS1 0   0
+TS1 1   0.5
+TS1 2   1
+TS1 3   0.75
+TS1 4   0.5
+TS1 5   0.25
+TS1 6   0
+
+
+[REPORT]
+;;Reporting Options
+INPUT           NO
+CONTROLS        NO
+SUBCATCHMENTS   ALL
+NODES           ALL
+LINKS           ALL
+
+
+[TAGS]
+
+
+[MAP]
+DIMENSIONS  0.000   0.000   10000.000   10000.000
+Units       None
+
+
+[COORDINATES]
+;;Node           X-Coord            Y-Coord           
+;;-------------- ------------------ ------------------
+J1      8197.674    7441.860
+J2      8275.194    4050.388
+J3      5116.279    7383.721
+J4      5174.419    3992.248
+Out1    2325.581    3934.109
+
+
+[VERTICES]
+;;Link           X-Coord            Y-Coord           
+;;-------------- ------------------ ------------------
+
+
+[POLYGONS]
+;;Subcatchment   X-Coord            Y-Coord           
+;;-------------- ------------------ ------------------
+S1  5891.473    6821.705
+S1  7112.403    6821.705
+S1  7112.403    7984.496
+S1  5891.473    7984.496
+S2  6124.031    4302.326
+S2  7306.202    4302.326
+S2  7306.202    5406.977
+S2  6124.031    5406.977
+S3  3391.473    6802.326
+S3  4534.884    6802.326
+S3  4534.884    7945.736
+S3  3391.473    7945.736
+
+
+[SYMBOLS]
+;;Gage           X-Coord            Y-Coord           
+;;-------------- ------------------ ------------------
+Gage1   5213.178    8313.953
+
+

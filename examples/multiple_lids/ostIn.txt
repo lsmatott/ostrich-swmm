@@ -1,0 +1,82 @@
+ProgramType DDS
+ModelExecutable run-ostrich-swmm.bat
+ModelSubdir .
+ObjectiveFunction GCOP
+PreserveModelOutput no
+
+BeginFilePairs
+lid_model_input_parameters.json.tpl; lid_model_input_parameters.json
+lid_costs.tpl ; lid_costs.txt
+EndFilePairs
+ 
+BeginExtraFiles
+ostrich-swmm-config.json
+lid_model.tpl
+lid_costs.tpl
+EndExtraFiles
+
+#BeginInitParams
+#EndInitParams
+ 
+BeginIntegerParams
+# name      initial lower  upper
+_NBARRELS_	16	    0	   32
+_NPLANTERS_	15	    0	   30
+EndIntegerParams
+
+BeginParams
+# name        initial   lower   upper      tx_in   tx_ost   tx_out  format   
+_ATRENCH_     250       0       532        none    none     none    free
+_APAVEMENT_   150000    0       232872     none    none     none    free
+_ASWALE3_     7000      0       14374.80   none    none     none    free
+_ASWALE4_     10000     0       21780.0    none    none     none    free
+_ASWALE6_     8500      0       17859.60   none    none     none    free
+_AGROOF_      9200      0       18400      none    none     none    free
+EndParams
+
+# Use tied parameters to calculate LID costs
+# source of cost terms - 
+#    Grey et al. 2013. The Costs of LID. Stormwater Solutions. https://www.stormh2o.com/print/content/13007772. 
+BeginTiedParams
+# NAME           NP  PNAMES ...                      TYPE   WEIGHT(S)  
+_TRENCH_COST_     1  _ATRENCH_                       wsum     120.0
+_PAVEMENT_COST_   1  _APAVEMENT_                     wsum      15.0
+_SWALE_COST_      3  _ASWALE3_ _ASWALE4_ _ASWALE6_   wsum      21.0 21.0 21.0
+_GROOF_COST_      1  _AGROOF_                        wsum     165.0
+_BARRELS_COST_	  1  _NBARRELS_                      wsum     600.0
+_PLANTERS_COST_	  1  _NPLANTERS_                     wsum   14960.0
+EndTiedParams
+
+BeginResponseVars
+#name                filename             keyword                 line    col     token  aug?
+_SURF_RUNOFF_        lid_model.rpt ;      Surface                 0       4       ' '    yes
+# Read tied parameters in as response variables
+_TRENCH_COSTS_RV_    lid_costs.txt ;      InfiltrationTrenches    0       2       ':'    no
+_PAVEMENT_COSTS_RV_  lid_costs.txt ;      PorousPavement         0       2       ':'    no
+_SWALE_COSTS_RV_     lid_costs.txt ;      VegetativeSwales        0       2       ':'    no
+_GROOF_COSTS_RV_     lid_costs.txt ;      GreenRoofs              0       2       ':'    no
+_BARRELS_COSTS_RV_	 lid_costs.txt ;      RainBarrels             0       2       ':'    no
+_PLANTERS_COSTS_RV_	 lid_costs.txt ;      StormwaterPlanters      0       2       ':'    no
+EndResponseVars
+
+# Use a tied response variable to aggregate total cost of system
+BeginTiedRespVars
+# NAME          NP   <pname1,1> <pname1,2> ... <pname1,np1> <type1> <type_data1>
+_TOT_LID_COST_   6   _TRENCH_COSTS_RV_  _PAVEMENT_COSTS_RV_  _SWALE_COSTS_RV_  _GROOF_COSTS_RV_  _BARRELS_COSTS_RV_  _PLANTERS_COSTS_RV_  wsum 1.0 1.0 1.0 1.0 1.0 1.0 
+EndTiedRespVars
+
+BeginGCOP
+CostFunction _TOT_LID_COST_ 
+PenaltyFunction APM
+EndGCOP
+
+# Constrain runoff to zero (none)
+BeginConstraints
+#name           type     cost.fact lower  upper  resp.var
+_MAX_RUNOFF_	general	 1.00e6	   0.00	  0.0	 _SURF_RUNOFF_
+EndConstraints
+
+BeginDDS
+PerturbationValue 0.2
+MaxIterations 50
+EndDDS
