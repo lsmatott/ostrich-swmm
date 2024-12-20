@@ -31,6 +31,11 @@ def perform_run(config, validate=True):
     Raises:
         ConfigException: The configuration is invalid.
     """
+
+    # Display a banner
+    print( 'OSTRICH-SWMM::perform_run()' )
+    sys.stdout.flush()
+
     if validate:
         validate_config(config)
 
