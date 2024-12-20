@@ -15,7 +15,13 @@
             "items": {
                 "$ref": "#/definitions/roof"
             }
-        }
+        },
+    "treatment_areas": {
+	    "type": "array",
+            "items": {
+                "$ref": "#/definitions/roof"
+            }
+        }        
     },
     "definitions": {
         "lid": {
