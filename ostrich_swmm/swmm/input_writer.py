@@ -22,6 +22,30 @@ def format_line_for_write(data, comment):
 
     return '{0};{1}'.format(data, comment)
 
+# Check if a value is a number
+def isNumber(value):
+    try:
+        float(value)
+        return True
+    except ValueError:
+        return False
+
+# Check if a value is a float
+def isFloat(value):
+    
+    # First check if value is numberical
+    if not isNumber(value):
+        return False
+       
+    # Check if value is a integer
+    try:
+        if int(value) == value :
+            return False
+    except ValueError:
+        return True
+    
+    # It must be a float!
+    return True
 
 def format_value_for_write(value, section_format):
     """Format a given value for outputting to a SWMM input file.
@@ -39,9 +63,15 @@ def format_value_for_write(value, section_format):
     if section_format == 'txt':
         return str(value)
     elif section_format == 'ssv':
-        value_str = str(value)
-        if not value_str.startswith('"') and ' ' in value_str:
-            value_str = '"{0}"'.format(value_str)
+        if isFloat(value):
+            if float(value) < 1:
+                value_str = "{:12.5e}".format(float(value))
+            else:
+                value_str = "{:12.5f}".format(float(value))
+        else:
+            value_str = str(value)
+            if not value_str.startswith('"') and ' ' in value_str:
+                value_str = '"{0}"'.format(value_str)
         return value_str
     else:
         raise ValueError("Unknown section format: {0}".format(section_format))
