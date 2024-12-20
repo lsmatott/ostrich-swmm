@@ -65,17 +65,29 @@ def area_units(input_unit_system):
     A_units = [lid_area_unit,width_unit,sc_area_unit]
     return A_units
 
-def add_roofs(input_template, roofs, count):
-    """Makes rooftop connection for rainbarrels and other GI types, 
-    returns roof_values"""
+# Note: add_roofs() originally served as a mothod for inserting roof
+# subcatchments and routing them to rain barrels. It has been expanded 
+# to include insertion and routing of treatment areas associated with 
+# any GI (BioCells, InfilTrenches, etc.).
+def add_roofs(input_template, roofs, count, lid_type):
+    """Makes a rooftop or treatment area connection for a rainbarrel 
+    or other GI type, returns the subcatchment that is inserted"""
     if 'map' in roofs[count]['location']:
         if sc_polygons is None:
             sc_polygons = inj.extract_subcatchment_polygons(input_template)
         roofs[count]['location']['subcatchment'] = inj.get_subcatchment_from_map_coords(
             roofs[count]['location']['map'],
             sc_polygons,)
+    
+    # Check if user has specified a Roof type even though the
+    # LID is not a rain barrel. If this is the case, replace the
+    # 'Roof' type with the 'Treat' type.
     roof_type = roofs[count]['type']
-    # Count this instance of this roof type and give it an ID.
+    if lid_type != 'RB' and roof_type == 'Roof':
+        roof_type = 'Treat'
+        roofs[count]['type'] = roof_type
+        
+    # Count this instance of this roof/treatment_area type and give it an ID.
     n= count+1
     roof_id = '{0}_{1}'.format(roof_type, n)
     roof_base_sc_name = roofs[count]['location']['subcatchment']
@@ -101,15 +113,20 @@ def add_roofs(input_template, roofs, count):
 
     return roof_sc
 
+# Note: The lid_outlet argument controls the outlet of the LID.
+#          1. subcat: route to the "parent" subcatchment
+#          2. outlet: route to the outlet of the "parent" subcatchment.
+# Note: The subcat_outlet argument controls the outlet of the subcatchment.
+#          1. lid: route to the LID subcatchment
+#          2. outlet: route to the original outlet subcatchment.
 def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 0, 
-               roofs = None, roof_sc = None):
+               roofs = None, roof_sc = None, lid_outlet = 'subcat', subcat_outlet = 'outlet'):
     """Inject parameters into a SWMM input template.
     Args:
         input_template (dict): The input to inject parameters into.
     Returns:
         lid_results, a list of lid properties and excess_lid information
     """
-
     # --------------------------------------------------------------------------
     # Get the base subcatchment the lid is located in.
     # --------------------------------------------------------------------------
@@ -121,7 +138,29 @@ def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 
     if not lid_base_sc:
         raise cfg.ConfigException(
             'Subcatchment "{0}" not found.'.format(lid_base_sc_name))
-    
+
+    # --------------------------------------------------------------------------
+    # Get the base subarea (needed for configuring LID and treatment subareas).
+    # --------------------------------------------------------------------------       
+    lid_base_sa = inj.get_subarea_definition(
+         input_template,
+         lid_base_sc_name,
+    )
+    if not lid_base_sa:
+        raise cfg.ConfigException(
+            'Subarea "{0}" not found.'.format(lid_base_sc_name))
+
+    # ----------------------------------------------------------------------------------
+    # Get the base infiltration (needed for configuring LID and treatment infiltration).
+    # ----------------------------------------------------------------------------------       
+    lid_base_infil = inj.get_infiltration_definition(
+         input_template,
+         lid_base_sc_name,
+    )
+    if not lid_base_infil:
+        raise cfg.ConfigException(
+            'Infiltration "{0}" not found.'.format(lid_base_sc_name))
+            
     # --------------------------------------------------------------------------
     # Generate a unique name for the LID's child subcatchment by checking 
     # against the names of existing subcatchments.
@@ -151,7 +190,7 @@ def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 
     #  1. Start with a copy of the base sub-catchment, coerced to a list
     #  2. Set the name of new sub-catchment (lid_sc_name)
     #  3. Route the outflow of the new LID sub-catchment (OutID) to the base sub-
-    #     catchment
+    #     catchment or the subcatchment outlet, depending on LID type.
     #  4. Determine the units of measure for area and width
     #  5. Associate sub-catchment parameters with their units
     #  6. Determine excess and actual number of LIDs to be added
@@ -164,7 +203,24 @@ def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 
     # --------------------------------------------------------------------------
     lid_sc = list(lid_base_sc) 
     lid_sc[si.data_indices['SUBCATCHMENTS']['Name']] = lid_sc_name
-    lid_sc[si.data_indices['SUBCATCHMENTS']['OutID']] = lid_base_sc_name
+    
+    #  Route the outflow of the new LID sub-catchment (OutID) to the base sub-
+    #  catchment or the subcatchment outlet, depending on LID type.
+    if lid_outlet == 'subcat':
+        lid_sc[si.data_indices['SUBCATCHMENTS']['OutID']] = lid_base_sc_name
+    elif lid_outlet == 'outlet':
+        lid_base_sc_outlet = lid_base_sc[si.data_indices['SUBCATCHMENTS']['OutID']]
+        lid_sc[si.data_indices['SUBCATCHMENTS']['OutID']] = lid_base_sc_outlet
+    else:
+        print( 'Unknown lid_outlet (' + lid_outlet +')')
+
+    #  Route the outflow of the original sub-catchment (OutID) to the LID
+    #  or leave as-is, depending on the LID type.
+    if subcat_outlet == 'lid':
+        lid_base_sc[si.data_indices['SUBCATCHMENTS']['OutID']] = lid_sc_name
+    elif subcat_outlet != 'outlet':
+        print( 'Unknown subcat_outlet (' + subcat_outlet +')')
+            
     #area units
     a_units=area_units(input_unit_system)
     lid_area_unit = a_units[0]
@@ -178,15 +234,50 @@ def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 
     if (( roofs == None ) or ( len(roofs) == 0 )) :
         r_area = 0
         r_num_units = 0
+        r_width = 0
+        r_type = ""
+        r_simp = 0   
+        r_sprv = 0
+        r_inf1 = 0
+        r_inf2 = 0
+        r_inf3 = 0
+        r_inf4 = 0
+        r_inf5 = 0
+        r_out_id = ""
+        r_name = ""        
         ind_roof = 0
     else:
         r_area = roofs[count]['area']
         r_num_units = roofs[count]['number']
+        r_width = roofs[count]['width']
+        r_out_id = roofs[count]['OutID']
+        r_type = roofs[count]['type']
+        r_name = roof_sc[si.data_indices['SUBCATCHMENTS']['Name']]
+        # Roofs have no depression storage and no infiltration
+        # This shouldn't matter because they are 100% impermeable
+        if r_type == 'Roof':
+            r_simp = 0.00
+            r_sprv = 0.00
+            r_inf1 = 1.0
+            r_inf2 = 0.01
+            r_inf3 = 0
+            r_inf4 = 0
+            r_inf5 = 0           
+        # Match the depression storage and infiltration of treatment 
+        # areas with the corresponding values of the parent subcatchment.
+        else :
+            r_simp = lid_base_sa[si.data_indices['SUBAREAS']['S-Imperv']]
+            r_sprv = lid_base_sa[si.data_indices['SUBAREAS']['S-Perv']]
+            r_inf1 = lid_base_infil[si.data_indices['INFILTRATION']['Param1']]
+            r_inf2 = lid_base_infil[si.data_indices['INFILTRATION']['Param2']]
+            r_inf3 = lid_base_infil[si.data_indices['INFILTRATION']['Param3']]
+            r_inf4 = lid_base_infil[si.data_indices['INFILTRATION']['Param4']]
+            r_inf5 = lid_base_infil[si.data_indices['INFILTRATION']['Param5']]            
         ind_roof = r_area
     
     # --------------------------------------------------------------------------
     # fetch list indices for the LID area, imperv, and width properties - this 
-    # information is sotred in the si.data_indices dictionary.
+    # information is stored in the si.data_indices dictionary.
     # --------------------------------------------------------------------------
     sc_area_index = si.data_indices['SUBCATCHMENTS']['Area']
     sc_imperv_index = si.data_indices['SUBCATCHMENTS']['%Imperv']
@@ -239,31 +330,61 @@ def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 
     # compute the total area of all LID units that will be added
     lid_total_area = lid_num_units * lid['area']
     
-    # --------------------------------------------------------------------------
-    # handle optional inclusion of roofs in the LID sub-catchment 
-    # --------------------------------------------------------------------------
+    # --------------------------------------------------------------------------------
+    # handle optional inclusion of roofs and treatment areas in the LID sub-catchment 
+    # ---------------------------------------------------------------------------------
     sc_out_index = si.data_indices['SUBCATCHMENTS']['OutID']
     if ( roofs == None ) or ( len( roofs ) == 0 ):
         r_num_units = 0
         roof_total_area = 0
         roof_sc_area = 0
-        roof_values = [0,0,0,0,0,0,"",]
+        roof_sa_values = ["",0,0,0,0,0,"",]
+        roof_infil_values = ["",0,0,0,0,0]
     else:
         r_num_units = lid_num_units
+        print('Number of treatment area units =' + str(r_num_units))
+        sys.stdout.flush()
         roof_total_area = r_num_units * r_area
         roof_sc_area = units.convert_from_lid_area_to_sc_area(roof_total_area, lid_area_unit, sc_area_unit)
         roof_sc[sc_area_index]= roof_sc_area
         roof_sc[sc_imperv_index] = 100
-        roof_sc[sc_out_index] = lid_sc_name
-        roof_sc[sc_width_index] = sqrt(roof_total_area)
+        
+        # Route to the LID subcatchment if the user specifies the 
+        # LID name as the roof/treatment OutID. Otherwise route to
+        # the exact text provided by the user.
+        if r_out_id == lid['name']:
+            roof_sc[sc_out_index] = lid_sc_name
+        else:
+            roof_sc[sc_out_index] = r_out_id
+        
+        # Use the width specified in the input_paramateres.json file unless
+        # it has been set to 0, in which case estimate using a simple square
+        # root calculation.
+        if r_width == 0:
+            roof_sc[sc_width_index] = sqrt(roof_total_area)
+        else:
+            roof_sc[sc_width_index] = r_width
+            
         ind_roof_sc_area = units.convert_from_lid_area_to_sc_area(ind_roof, lid_area_unit, sc_area_unit)
         fromImp = ( 100 * lid['number'] * ind_roof_sc_area ) / lid_base_sc_imperv_area
-        #need to update roof values once excess has been taken out  
-        roof_values = [roofs[count]['location']['subcatchment'],roofs[count]['NImp'],roofs[count]['NPerv'],0,0,roofs[count]['PctZero'],"OUTLET",]
+        # Need to update the SWMM input file to add roof (or treatment area)
+        # to the following sections: subcatchments, subareas, and infiltration.
+        roof_sa_values = [
+            r_name,
+            roofs[count]['NImp'],
+            roofs[count]['NPerv'],
+            r_simp,
+            r_sprv,
+            roofs[count]['PctZero'],
+            "OUTLET",]
         input_template['SUBAREAS']['lines'].append({
-            'values': roof_values,
-            'comment': None,
-        })
+            'values': roof_sa_values,
+            'comment': None, })
+        roof_infil_values = [
+            r_name, r_inf1, r_inf2, r_inf3, r_inf4, r_inf5,]
+        input_template['INFILTRATION']['lines'].append({
+            'values': roof_infil_values,
+            'comment': None, })        
         input_template['SUBCATCHMENTS']['lines'].append({
             'values': roof_sc,
             'comment': '{0} roof units. (Added by OSTRICH-SWMM.)'.format(r_num_units),
@@ -302,8 +423,12 @@ def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 
     #      30 units LID area are added, yielding a revised area of 100 - 30 = 70 
     #      in the parent sub-cathcment. Then the new width of the parent sub-
     #      catchment would be: 10 * (100 - 30) / 100 = 10 * 0.7 = 7
+    #    - Note: RainBarrels are assigned a width of 0
     # --------------------------------------------------------------------------
-    lid_sc[sc_width_index]=sqrt(lid_total_area)
+    if r_type == 'Roof' :
+        lid_sc[sc_width_index]=0.00
+    else:
+        lid_sc[sc_width_index]=sqrt(lid_total_area)
     #New Subcatchment Width = Old Width * Non-LID Area / Original Area
     old_width = float(lid_base_sc[sc_width_index])
     new_width = old_width * (new_lid_base_sc_area / lid_base_sc_area )
@@ -319,7 +444,7 @@ def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 
     #   with a green roof, then this value should be 0. If the LID takes up the 
     #   entire subcatchment then this field is ignored.
     # --------------------------------------------------------------------------
-    lid['fromImp'] = fromImp
+    # lid['fromImp'] = fromImp
     
     # Set the LID subcatchment to the child subcatchment.
     lid['location']['subcatchment'] = lid_sc_name
@@ -330,6 +455,31 @@ def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 
                     lid_num_units,
             ),
     })
+    
+    # Need to update the SWMM input file to add the LID
+    # to the subareas and infiltration sections.
+    lid_sa_values = [
+        lid_sc_name,
+        lid_base_sa[si.data_indices['SUBAREAS']['N-Imperv']],
+        lid_base_sa[si.data_indices['SUBAREAS']['N-Perv']],
+        lid_base_sa[si.data_indices['SUBAREAS']['S-Imperv']],
+        lid_base_sa[si.data_indices['SUBAREAS']['S-Perv']],
+        lid_base_sa[si.data_indices['SUBAREAS']['PctZero']],
+        lid_base_sa[si.data_indices['SUBAREAS']['RouteTo']],]
+    input_template['SUBAREAS']['lines'].append({
+        'values': lid_sa_values,
+        'comment': None, })
+    lid_infil_values = [
+        lid_sc_name, 
+        lid_base_infil[si.data_indices['INFILTRATION']['Param1']],
+        lid_base_infil[si.data_indices['INFILTRATION']['Param2']],
+        lid_base_infil[si.data_indices['INFILTRATION']['Param3']],
+        lid_base_infil[si.data_indices['INFILTRATION']['Param4']],
+        lid_base_infil[si.data_indices['INFILTRATION']['Param5']],]
+    input_template['INFILTRATION']['lines'].append({
+        'values': lid_infil_values,
+        'comment': None, })
+            
     lid_results = [lid, excess, lid_base_sc]
     return lid_results
                       
@@ -363,9 +513,9 @@ def add_pp(input_template, input_unit_system, lid, lid_id, count):
         pp_results, a list of lid (the pp properties) and excess_pp
     Note: Currently not impacted by the number of roofs
     """
-
-    # invoke helper function to add porous pavement
-    pp_results = add_lid_sc(input_template, input_unit_system, lid, lid_id, count)
+    
+    # invoke helper function to add porous pavement and route to outlet
+    pp_results = add_lid_sc(input_template, input_unit_system, lid, lid_id, count, 0, None, None, 'outlet', 'outlet')
 
     return pp_results
 
@@ -373,7 +523,7 @@ def add_pp(input_template, input_unit_system, lid, lid_id, count):
 # Bio Retencion Cell Functions
 #   add_bc()
 # -----------------------------------------------------------------------
-def add_bc(input_template, input_unit_system, lid, lid_id, count):
+def add_bc(input_template, input_unit_system, lid, lid_id, roofs, roof_sc, count):
     """Inject parameters into a SWMM input template.
     Args:
         input_template (dict): The input to inject parameters into.
@@ -382,9 +532,11 @@ def add_bc(input_template, input_unit_system, lid, lid_id, count):
     Note: Currently not impacted by the number of roofs
     """
     
-    # invoke helper function to add bio retention cells
-    bc_results = add_lid_sc(input_template, input_unit_system, lid, lid_id, count)
-
+    # invoke helper function to add bio retention cells and associated treatment areas
+    bc_results = add_lid_sc(
+        input_template, input_unit_system, lid, lid_id, count, 1, 
+        roofs, roof_sc, 'outlet')
+  
     return bc_results
 
 # -----------------------------------------------------------------------
@@ -409,25 +561,27 @@ def add_gr(input_template, input_unit_system, lid, lid_id, count):
 # Infiltration Trench Functions
 #   add_it()
 # -----------------------------------------------------------------------
-def add_it(input_template, input_unit_system, lid, lid_id, count):
+def add_it(input_template, input_unit_system, lid, lid_id, roofs, roof_sc, count):
     """Inject parameters into a SWMM input template.
     Args:
         input_template (dict): The input to inject parameters into.
     Returns:
         it_results, a list of lid (the it properties) and excess_it
     Note: Currently not impacted by the number of roofs
-    """
-    
-    # invoke helper function to add infiltration trenches
-    it_results = add_lid_sc(input_template, input_unit_system, lid, lid_id, count)
+    """    
+   
+    # invoke helper function to add infiltration trenches and associated treatment areas
+    it_results = add_lid_sc(
+        input_template, input_unit_system, lid, lid_id, count, 1, 
+        roofs, roof_sc, 'outlet')   
 
     return it_results
 
 # -----------------------------------------------------------------------
-# Rooftop Disconnect Functions
-#   add_rd()
+# Rain Garden Functions
+#   add_rg()
 # -----------------------------------------------------------------------
-def add_it(input_template, input_unit_system, lid, lid_id, count):
+def add_rg(input_template, input_unit_system, lid, lid_id, roofs, roof_sc, count):
     """Inject parameters into a SWMM input template.
     Args:
         input_template (dict): The input to inject parameters into.
@@ -436,10 +590,12 @@ def add_it(input_template, input_unit_system, lid, lid_id, count):
     Note: Currently not impacted by the number of roofs
     """
     
-    # invoke helper function to add rooftop disconnects
-    rd_results = add_lid_sc(input_template, input_unit_system, lid, lid_id, count)
+    # invoke helper function to add infiltration trenches and associated treatment areas
+    rg_results = add_lid_sc(
+        input_template, input_unit_system, lid, lid_id, count, 1, 
+        roofs, roof_sc, 'subcat', 'outlet')   
 
-    return rd_results
+    return rg_results
 
 # -----------------------------------------------------------------------
 # Vegetative Swale Functions
@@ -453,8 +609,13 @@ def add_vs(input_template, input_unit_system, lid, lid_id, count):
         it_results, a list of lid (the it properties) and excess_it
     Note: Currently not impacted by the number of roofs
     """
-    
+                  
     # invoke helper function to add vegetative swales
-    vs_results = add_lid_sc(input_template, input_unit_system, lid, lid_id, count)
+    vs_results = add_lid_sc(
+        input_template, 
+        input_unit_system, 
+        lid, lid_id, count, 
+        0, None, None, 
+        'outlet', 'lid')
 
     return vs_results

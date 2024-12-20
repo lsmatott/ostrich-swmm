@@ -100,6 +100,49 @@ def get_subcatchment_definition(swmm_input, sc_name):
         if line['values'] and line['values'][sc_name_index] == sc_name
     ), None)
 
+def get_subarea_definition(swmm_input, sc_name):
+    """Get a subarea definition from SWMM input.
+
+    Args:
+        swmm_input (dict): The input to extract a subarea definition from.
+        sc_name (string): The name of the subcatchment for the subarea to extract.
+
+    Returns:
+        list|None: The input file definition for the subarea or None if
+            not found.
+    """
+    if 'SUBAREAS' not in swmm_input:
+        return None
+
+    sc_name_index = si.data_indices['SUBAREAS']['Subcatchment']
+    return next((
+        line['values']
+        for line
+        in swmm_input['SUBAREAS']['lines']
+        if line['values'] and line['values'][sc_name_index] == sc_name
+    ), None)
+
+def get_infiltration_definition(swmm_input, sc_name):
+    """Get an infiltration definition from SWMM input.
+
+    Args:
+        swmm_input (dict): The input to extract an infiltration definition from.
+        sc_name (string): The name of the subcatchment for the infiltration to extract.
+
+    Returns:
+        list|None: The input file definition for the infiltration or None if
+            not found.
+    """
+    if 'INFILTRATION' not in swmm_input:
+        return None
+
+    sc_name_index = si.data_indices['INFILTRATION']['Subcatchment']
+    return next((
+        line['values']
+        for line
+        in swmm_input['INFILTRATION']['lines']
+        if line['values'] and line['values'][sc_name_index] == sc_name
+    ), None)
 
 def get_subcatchment_from_map_coords(coordinates, subcatchments):
     """Get the subcatchment a set of map coordinates falls within.
@@ -167,9 +210,24 @@ def inject_parameters_into_input(input_parameters, input_template):
     # For each LID in the input parameters...
     lids = input_parameters.get("lids", [])
     lid_counter = Counter()
+    
     #add in rooftop connections
+    # Note: "roofs" originally served as an input data structure
+    # for rooftop connections. It has been expanded to include
+    # storage of treatment areas associated with various GIS.
     roofs = input_parameters.get("roofs", [])
+    
+    #some GIs have "treatment areas" that have the same input
+    #structure as rooftop connections. Accept both "roofs" and
+    #"treatment_areas" as a keyword for these types of input
+    #parameters.
+    if(len(roofs) == 0):
+        roofs = input_parameters.get("treatment_areas", [])    
     count = -1
+    
+    # Note: rbcount originally served as a count of roofs connected to
+    # rain barrels. It has been expanded to include counts of treatment
+    # areas associated with any GI (BioCells, InfilTrenches, etc.)
     rbcount = -1
 
     # lid_sc_info maps newly created subcatchments to corresponding LID info
@@ -240,7 +298,7 @@ def inject_parameters_into_input(input_parameters, input_template):
                 print("without a corresponding roof specification.")
                 roof_sc = []
             else :
-                roof_sc = LIDS.add_roofs(input_template, roofs, rbcount)
+                roof_sc = LIDS.add_roofs(input_template, roofs, rbcount, lid_type)
             rb_values = LIDS.add_rb(input_template, input_unit_system, lid, lid_id, roofs, roof_sc, rbcount)
             lid = rb_values[0]
             excess = rb_values[1]
@@ -257,7 +315,16 @@ def inject_parameters_into_input(input_parameters, input_template):
             lid_num_units=lid['number']
         #bio-retention cell
         elif lid_type == 'BC':
-            bc_values = LIDS.add_bc(input_template, input_unit_system, lid, lid_id, count)
+            rbcount = rbcount + 1
+           
+            if len( roofs ) == 0 :
+                print("Warning - BioCells are included in the configuration file")
+                print("without a corresponding treatment area specification.")
+                treatment_area_sc = []
+            else :
+                treatment_area_sc = LIDS.add_roofs(input_template, roofs, rbcount, lid_type)                
+            
+            bc_values = LIDS.add_bc(input_template, input_unit_system, lid, lid_id, roofs, treatment_area_sc, rbcount)
             lid = bc_values[0]
             excess = bc_values[1]
             lid_base_sc = bc_values[2]
@@ -265,45 +332,57 @@ def inject_parameters_into_input(input_parameters, input_template):
             lid_num_units=lid['number']
         #rain garden
         elif lid_type == 'RG':
-             rg_values = LIDS.add_rg(input_template, input_unit_system, lid, lid_id, count)
-             lid = rg_values[0]
-             excess = rg_values[1]
-             lid_base_sc = rg_values[2]
-             excess_lid.append(excess)
-             lid_num_units=lid['number']
+            rbcount = rbcount + 1
+           
+            if len( roofs ) == 0 :
+                print("Warning - Rain Gardens are included in the configuration file")
+                print("without a corresponding treatment area specification.")
+                treatment_area_sc = []
+            else :
+                treatment_area_sc = LIDS.add_roofs(input_template, roofs, rbcount, lid_type)
+            
+            rg_values = LIDS.add_rg(input_template, input_unit_system, lid, lid_id, roofs, treatment_area_sc, rbcount)           
+
+            lid = rg_values[0]
+            excess = rg_values[1]
+            lid_base_sc = rg_values[2]
+            excess_lid.append(excess)
+            lid_num_units=lid['number']                        
         #vegetative swale
         elif lid_type == 'VS':
-             vs_values = LIDS.add_vs(input_template, input_unit_system, lid, lid_id, count)
-             lid = vs_values[0]
-             excess = vs_values[1]
-             lid_base_sc = vs_values[2]
-             excess_lid.append(excess)
-             lid_num_units=lid['number']
-        #rooftop disconnection
-        elif lid_type == 'RD':
-             rd_values = LIDS.add_rd(input_template, input_unit_system, lid, lid_id, count)
-             lid = rd_values[0]
-             excess = rd_values[1]
-             lid_base_sc = rd_values[2]
-             excess_lid.append(excess)
-             lid_num_units=lid['number']
+            vs_values = LIDS.add_vs(input_template, input_unit_system, lid, lid_id, count)
+            lid = vs_values[0]
+            excess = vs_values[1]
+            lid_base_sc = vs_values[2]
+            excess_lid.append(excess)
+            lid_num_units=lid['number']
         #green roof
         elif lid_type == 'GR':
-             gr_values = LIDS.add_gr(input_template, input_unit_system, lid, lid_id, count)
-             lid = gr_values[0]
-             excess = gr_values[1]
-             lid_base_sc = gr_values[2]
-             excess_lid.append(excess)
-             lid_num_units=lid['number']
+            gr_values = LIDS.add_gr(input_template, input_unit_system, lid, lid_id, count)
+            lid = gr_values[0]
+            excess = gr_values[1]
+            lid_base_sc = gr_values[2]
+            excess_lid.append(excess)
+            lid_num_units=lid['number']
         #infiltration trench
-        elif lid_type == 'IT':
-             it_values = LIDS.add_it(input_template, input_unit_system, lid, lid_id, count)
-             lid = it_values[0]
-             excess = it_values[1]
-             lid_base_sc = it_values[2]
-             excess_lid.append(excess)
-             lid_num_units=lid['number']
-##        #trees?
+        elif lid_type == 'IT':           
+            rbcount = rbcount + 1
+           
+            if len( roofs ) == 0 :
+                print("Warning - Infiltration Trenches are included in the configuration file")
+                print("without a corresponding treatment area specification.")
+                treatment_area_sc = []
+            else :
+                treatment_area_sc = LIDS.add_roofs(input_template, roofs, rbcount, lid_type)
+            
+            it_values = LIDS.add_it(input_template, input_unit_system, lid, lid_id, roofs, treatment_area_sc, rbcount)           
+
+            lid = it_values[0]
+            excess = it_values[1]
+            lid_base_sc = it_values[2]
+            excess_lid.append(excess)
+            lid_num_units=lid['number']
+##       trees, rooftop disconnect?
         else:
             logging.warning(
                 (
