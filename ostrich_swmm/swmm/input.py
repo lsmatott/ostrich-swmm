@@ -23,6 +23,24 @@ data_indices = {
         'Clength': 7,
         'Spack': 8,
     },
+    'SUBAREAS': {
+        'Subcatchment': 0,
+        'N-Imperv': 1,
+        'N-Perv': 2,
+        'S-Imperv': 3,
+        'S-Perv': 4,
+        'PctZero': 5,
+        'RouteTo': 6,
+        'PctRouted': 7,        
+    },
+    'INFILTRATION': {
+        'Subcatchment': 0,
+        'Param1': 1,
+        'Param2': 2,
+        'Param3': 3,
+        'Param4': 4,
+        'Param5': 5,
+    },    
     'LID_CONTROLS': {
         'Common': {
             'Name': 0,
