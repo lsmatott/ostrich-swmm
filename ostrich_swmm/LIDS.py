@@ -271,8 +271,20 @@ def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 
             r_inf1 = lid_base_infil[si.data_indices['INFILTRATION']['Param1']]
             r_inf2 = lid_base_infil[si.data_indices['INFILTRATION']['Param2']]
             r_inf3 = lid_base_infil[si.data_indices['INFILTRATION']['Param3']]
-            r_inf4 = lid_base_infil[si.data_indices['INFILTRATION']['Param4']]
-            r_inf5 = lid_base_infil[si.data_indices['INFILTRATION']['Param5']]            
+            
+            # Not all infiltration strategies have more than 3 parameters
+            idx = si.data_indices['INFILTRATION']['Param4']
+            if idx < len(lid_base_infil) :
+                r_inf4 = lid_base_infil[idx]
+            else :
+                r_inf4 = 0
+                
+            # Not all infiltration strategies have more than 4 parameters
+            idx = si.data_indices['INFILTRATION']['Param5']
+            if idx < len(lid_base_infil) :
+                r_inf5 = lid_base_infil[idx]
+            else :
+                r_inf5 = 0
         ind_roof = r_area
     
     # --------------------------------------------------------------------------
@@ -469,13 +481,28 @@ def add_lid_sc(input_template, input_unit_system, lid, lid_id, count, fromImp = 
     input_template['SUBAREAS']['lines'].append({
         'values': lid_sa_values,
         'comment': None, })
+    
+    # Not all infiltration strategies have more than 3 parameters
+    idx = si.data_indices['INFILTRATION']['Param4']
+    if idx < len(lid_base_infil) :
+        r_inf4 = lid_base_infil[idx]
+    else :
+        r_inf4 = 0
+        
+    # Not all infiltration strategies have more than 4 parameters
+    idx = si.data_indices['INFILTRATION']['Param5']
+    if idx < len(lid_base_infil) :
+        r_inf5 = lid_base_infil[idx]
+    else :
+        r_inf5 = 0
+    
     lid_infil_values = [
         lid_sc_name, 
         lid_base_infil[si.data_indices['INFILTRATION']['Param1']],
         lid_base_infil[si.data_indices['INFILTRATION']['Param2']],
-        lid_base_infil[si.data_indices['INFILTRATION']['Param3']],
-        lid_base_infil[si.data_indices['INFILTRATION']['Param4']],
-        lid_base_infil[si.data_indices['INFILTRATION']['Param5']],]
+        lid_base_infil[si.data_indices['INFILTRATION']['Param3']],               
+        r_inf4,
+        r_inf5,]
     input_template['INFILTRATION']['lines'].append({
         'values': lid_infil_values,
         'comment': None, })
