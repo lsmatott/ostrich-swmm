@@ -2,7 +2,7 @@
 
 # Activate the python environment
 eval "$(conda shell.bash hook)"
-conda activate /home/lsmatott/mygit/ostswmm
+conda activate pyswmm
 
 # Delete report file 
 rm -f lid_model.rpt
